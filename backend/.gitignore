@@ -1,0 +1,17 @@
+# Node.js specific
+node_modules/
+npm-debug.log
+yarn-error.log
+# .env
+# Logs
+logs
+*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+# Optional npm cache directory
+.npm
+.DS_Store
+.idea/
+.vscode/
