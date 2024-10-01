@@ -1,0 +1,43 @@
+1.	Events Table
+	•	GET /api/events: Get all events.
+	•	GET /api/events/:id: Get an event by ID.
+	•	POST /api/events: Create a new event.
+	•	POSt /api/events/:id: Update an existing event by ID.
+	•	DELETE /api/events/:id: Delete an event by ID.
+2.	Venues Table
+	•	GET /api/venues: Get all venues.
+	•	GET /api/venues/:id: Get a venue by ID.
+	•	POST /api/venues: Create a new venue.
+	•	POST /api/venues/:id: Update an existing venue by ID.
+	•	DELETE /api/venues/:id: Delete a venue by ID.
+3.	Organizers Table
+	•	GET /api/organizers: Get all organizers.
+	•	GET /api/organizers/:id: Get an organizer by ID.
+	•	POST /api/organizers: Create a new organizer.
+	•	PUT /api/organizers/:id: Update an organizer by ID.
+	•	DELETE /api/organizers/:id: Delete an organizer by ID.
+4.	Sponsors Table
+	•	GET /api/sponsors: Get all sponsors.
+	•	GET /api/sponsors/:id: Get a sponsor by ID.
+	•	POST /api/sponsors: Create a new sponsor.
+	•	PUT /api/sponsors/:id: Update a sponsor by ID.
+	•	DELETE /api/sponsors/:id: Delete a sponsor by ID.
+5.	Users Table
+	•	Post /api/signp: Create a new Users.
+	•	Post /api/login: login.
+	•	Post /api/forgotpwd: reset password.
+
+	•	GET /api/Users: Get all Users.
+	•	GET /api/Users/:id: Get an User by ID.
+	•	POST /api/Users: Create a new User.
+	•	PUT /api/Users/:id: Update an User by ID.
+	•	DELETE /api/Users/:id: Delete an User by ID.
+
+6.	UserEvent (Tickets) Table
+	•	GET /api/tickets: Get all tickets.
+	•	GET /api/tickets/:id: Get a ticket by ID.
+	•	POST /api/tickets: Create a new ticket.
+	•	PUT /api/tickets/:id: Update a ticket by ID.
+	•	DELETE /api/tickets/:id: Delete a ticket by ID.
+7. EventSponsor Table
+	•	To fill up..

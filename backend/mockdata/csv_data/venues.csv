@@ -1,101 +1,21 @@
-VenueID,VenueName,Location,Capacity
-1,Bush Ltd,Jenniferburgh,3368
-2,Gonzalez LLC,Boydshire,1771
-3,Williams-Christensen,Bakerville,1306
-4,Hall and Sons,South Annport,4493
-5,"Lopez, Mitchell and Powell",North Lauramouth,929
-6,Barton Group,North Nicholas,4137
-7,"Stevenson, Chaney and Jackson",Carterport,1495
-8,Barr-Williams,Ronaldtown,2916
-9,Wilson-Lopez,Swansonton,3527
-10,Taylor-James,Gomezmouth,3722
-11,Taylor-Suarez,West Tamara,4220
-12,Horn-Diaz,Ramseytown,4511
-13,Miller-Barrett,East Daniel,4937
-14,"White, Smith and Patel",Williamborough,4917
-15,Taylor Ltd,Port Ann,4371
-16,Hancock LLC,East Lindsey,1605
-17,James-Williams,Omarland,1975
-18,Long and Sons,North Vincenthaven,1576
-19,"Mejia, Walter and Brandt",West Nicholas,3699
-20,Bell Group,Port Rogermouth,1746
-21,"Booker, Orozco and Mcdonald",New Jaime,4743
-22,Coleman LLC,Amyfort,4439
-23,White Inc,Mcgeeland,4611
-24,"Powell, Rosario and Navarro",Kristentown,4959
-25,Larson Ltd,West Anthonymouth,1658
-26,Lee-Sanders,Stephenview,284
-27,Thomas-Hernandez,East Joel,1950
-28,Higgins Ltd,Millerside,3037
-29,Barker Group,Peggyton,677
-30,"Williams, Ross and Edwards",Adamville,520
-31,"Brown, Edwards and Gonzalez",Lake Thomas,3311
-32,"Moreno, Buchanan and Brown",Williamsland,3622
-33,Wright LLC,East Andreaborough,1881
-34,Fischer Ltd,New Gina,1123
-35,"Trevino, Richardson and Hernandez",Ruizton,3175
-36,"Villa, Mcdowell and Richardson",Johnsonborough,4072
-37,Schwartz-Lee,Friedmanville,3706
-38,"Smith, Berry and Roberts",Teresaborough,2570
-39,Randall-Powell,Jenkinsport,3044
-40,"Watson, Smith and Bernard",New Teresa,2342
-41,"Cantrell, Freeman and Henderson",Onealport,3341
-42,Wilson and Sons,New Jacqueline,1197
-43,Davis LLC,East Angela,4932
-44,Mueller and Sons,Roblesbury,3041
-45,"Parker, Clark and Christensen",Stacieshire,362
-46,Davis Group,Wendyberg,1054
-47,Jackson Inc,Johnsonton,1438
-48,Winters and Sons,Montoyamouth,1337
-49,"Parks, Owens and Parsons",South Billville,1944
-50,"West, Williams and Daniels",New David,4565
-51,"Bass, Larson and Bates",Williamsland,4408
-52,Logan-Landry,North Jeremy,4928
-53,Harding Inc,Michaelhaven,2873
-54,Murphy-Malone,Port Robert,4101
-55,Williams-Bradley,Port Shannontown,4553
-56,"Martin, Gill and Armstrong",West Mark,1000
-57,"Schroeder, Small and Allen",North Tracifurt,4351
-58,"Kennedy, Roberts and Hurley",New Michellechester,915
-59,House Ltd,Stewartport,2819
-60,Patel Inc,Amandachester,3053
-61,Brown Ltd,Justinmouth,1153
-62,"Mcdaniel, Robles and Mckinney",Johnbury,255
-63,Williams-Jacobson,Lake Colleen,322
-64,Flowers Inc,South George,2453
-65,Cruz-Gibson,New Austinside,4133
-66,"Griffin, Davis and Lowe",Dianeport,2929
-67,Church-Peck,South Johnathanbury,2299
-68,Duarte-Cook,Charlesberg,741
-69,"Hodges, Wells and Mendoza",Fosterville,4238
-70,Oconnor and Sons,Nicholaschester,1041
-71,Kim LLC,Lake Samantha,4303
-72,Hart PLC,West Kellytown,4655
-73,"Jimenez, Klein and Kim",Nathanfort,283
-74,"Peters, May and Fernandez",Lake Eric,295
-75,Fisher-Dyer,West Anita,2662
-76,Wolfe-Williams,Jeffreyfort,3475
-77,Rose PLC,Kyleberg,654
-78,Stafford-Wang,South Emilyside,338
-79,Chen-Collins,Valeriemouth,1784
-80,"Jimenez, Elliott and Vega",Sheenafort,4913
-81,"Wilson, Herrera and Wright",Rowefort,3481
-82,"Horton, Young and Jacobs",North Davidhaven,1172
-83,"Johnson, Woodard and Solis",Lake Robertfort,3772
-84,"Anderson, Washington and Bailey",Normanfort,1495
-85,Bailey-Huang,Wallaceland,4445
-86,"Hernandez, Miller and Mcguire",North Shanemouth,4983
-87,Gillespie Group,Marioside,820
-88,"Dillon, Kelly and Harrison",Port Peterstad,2457
-89,Price-Adams,Port Curtis,1104
-90,Howard-Buchanan,South Ellenmouth,3221
-91,Luna-Hurst,Nunezhaven,1702
-92,Fitzpatrick-Garcia,New Micheleberg,1074
-93,"Kim, Jackson and Reeves",North John,3434
-94,"Sexton, Young and Howard",West Jamesbury,4580
-95,"Moore, Humphrey and Mccarty",North Michele,450
-96,Lewis-Edwards,Stephensville,494
-97,"Solis, Johnson and Leonard",Hughesfort,2139
-98,Jones LLC,Davisborough,2453
-99,Jackson-Johnston,Kimville,2943
-100,"Harris, Smith and Mcclain",New Priscillahaven,2858
+VenueName,Location,Capacity
+LLC Convention Center,Port Christopherfurt,2065
+PLC Convention Center,Elizabethmouth,2598
+Inc Convention Center,New Melissamouth,1029
+Ltd Convention Center,Staciestad,1882
+LLC Convention Center,Scottfurt,2586
+and Sons Convention Center,South Diane,3808
+LLC Convention Center,New Kyleview,2043
+Inc Convention Center,New Charlesland,4066
+Group Convention Center,Camposside,3421
+PLC Convention Center,Alvaradoville,1798
+Ltd Convention Center,Port Jasmineton,3051
+and Sons Convention Center,Edwardhaven,3092
+Ltd Convention Center,Fordshire,4157
+Inc Convention Center,Austinside,2780
+and Sons Convention Center,Port Craigville,3830
+LLC Convention Center,Jasonborough,1144
+LLC Convention Center,Deniseborough,1530
+Group Convention Center,Port James,1481
+Inc Convention Center,South Jennifertown,3773
+Ltd Convention Center,New Timothy,1857
