@@ -1,6 +1,9 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./index");
 
+const User = require('./user');
+const Event = require('./event');
+
 const UserEvent = sequelize.define(
 	"UserEvent",
 	{
@@ -13,17 +16,21 @@ const UserEvent = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "User", // References the User model
+                model: User, // References the User model
                 key: "UserID",
             },
+			onDelete: 'CASCADE',
+			onUpdate: 'CASCADE',
         },
         EventID: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "Event", // References the Event model
+                model: Event, // References the Event model
                 key: "EventID",
             },
+			onDelete: 'CASCADE',
+			onUpdate: 'CASCADE',
         },
 		NumberPurchased: {
 			type: DataTypes.INTEGER,
