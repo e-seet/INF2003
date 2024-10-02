@@ -4,28 +4,27 @@ const sequelize = require("./index");
 const UserEvent = sequelize.define(
 	"UserEvent",
 	{
-		UserEventID: {
-			type: DataTypes.INTEGER,
-			autoIncrement: true,
-		},
-		UserID: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			references: {
-				model: "Users", // References the User model
-				key: "UserID",
-			},
-			primaryKey: true,
-		},
-		EventID: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			references: {
-				model: "Events", // References the Event model
-				key: "EventID",
-			},
-			primaryKey: true,
-		},
+		UserEventID: {  // This will be the unique identifier for each purchase
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,  // Unique auto-increment ID for each purchase
+        },
+        UserID: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: "User", // References the User model
+                key: "UserID",
+            },
+        },
+        EventID: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: "Event", // References the Event model
+                key: "EventID",
+            },
+        },
 		NumberPurchased: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -43,6 +42,12 @@ const UserEvent = sequelize.define(
 	},
 	{
 		tableName: "UserEvent",
+		indexes: [
+            {
+                fields: ['UserID', 'EventID'],
+                unique: false,  // Remove the unique constraint here
+            }
+        ],
 	}
 );
 

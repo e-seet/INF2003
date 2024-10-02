@@ -93,7 +93,8 @@ event_sponsor = []
 for i in range(n_event_sponsor_links):
     event_sponsor.append({
         "EventID": random.randint(1, n_events),
-        "SponsorID": random.randint(1, n_sponsors)
+        "SponsorID": random.randint(1, n_sponsors),
+		"SponsorshipAmount": random.randint(500, 50000)  # Generate a random sponsorship amount between 1000 and 50000
     })
 
 # Convert to DataFrames

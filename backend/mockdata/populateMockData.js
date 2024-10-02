@@ -67,11 +67,42 @@ const populateMockData = async () => {
 			PurchaseDate: new Date(userevent.PurchaseDate) // Convert to Date object
 		}));
 
-		await UserEvent.bulkCreate(mappedUserEventData)
+		// Filter out duplicates (same UserID and EventID combination)
+		const uniqueUserEventData = mappedUserEventData.filter((value, index, self) =>
+			index === self.findIndex((t) => (
+				t.UserID === value.UserID && t.EventID === value.EventID
+			))
+		);
+
+		// Map the CSV data to match the fields of the UserEvent model
+		// const mappedUserEventData = usereventData.map(userevent => ({
+		// 	UserID: parseInt(userevent.UserID), // Ensure it's a number
+		// 	EventID: parseInt(userevent.EventID), // Ensure it's a number
+		// 	NumberPurchased: parseInt(userevent.TicketCount), // Ensure it's a number
+		// 	TicketType: userevent.TicketType, // Leave as is
+		// 	PurchaseDate: new Date(userevent.PurchaseDate) // Convert to Date object
+		// }));
+		await UserEvent.bulkCreate(uniqueUserEventData,
+		)
 
 		// // # 7. EventSponsor Table Mock Data (sponsors for events)
 		const eventSponsorData = await readCSV(path.join(__dirname, 'csv_data', 'event_sponsor.csv'));
-		await EventSponsor.bulkCreate(eventSponsorData)
+		
+		const mappedEventSponsorData = eventSponsorData.map(eventsponsor => ({
+			EventID: parseInt(eventsponsor.EventID), // Ensure it's a number
+			SponsorID: parseInt(eventsponsor.SponsorID), // Ensure it's a number
+			SponsorshipAmount: parseInt(eventsponsor.SponsorshipAmount) || 0,  // New field: Ensure it's a number or default to 0
+		}));
+		
+		// Filter out duplicates (same EventID and SponsorID combination)
+		const uniqueEventSponsorData = mappedEventSponsorData.filter((value, index, self) =>
+			index === self.findIndex((t) => (
+				t.EventID === value.EventID && t.SponsorID === value.SponsorID
+			))
+		);
+
+		await EventSponsor.bulkCreate(uniqueEventSponsorData,
+		)
 
 
         console.log('Mock data inserted successfully.');
