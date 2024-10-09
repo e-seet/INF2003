@@ -1,0 +1,42 @@
+<div class="register-container">
+    <h2>Register</h2>
+    <form class="register-form">
+      <!-- Name Input -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" [(ngModel)]="name" type="text" placeholder="Enter your name" required />
+      </div>
+      
+      <!-- Email Input -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" [(ngModel)]="email" type="email" placeholder="Enter your email" required />
+      </div>
+      
+      <!-- Phone Number Input -->
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input id="phone" [(ngModel)]="phoneNumber" type="tel" placeholder="Enter your phone number" required />
+      </div>
+      
+      <!-- Password Input -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" [(ngModel)]="password" type="password" placeholder="Enter your password" required />
+      </div>
+      
+      <!-- Confirm Password Input -->
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input id="confirm-password" [(ngModel)]="confirmPassword" type="password" placeholder="Confirm your password" required />
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="button-group">
+        <button type="button" class="btn" (click)="register()">Register</button>
+      </div>
+      <!-- Error Message Display -->
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+    </form>
+  </div>
+  
