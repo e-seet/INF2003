@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('./index');
 const Organization = require('./organization');
 const Venue = require('./venue');
-const Sponsor = require('./sponsor');
 
 const Event = sequelize.define('Event', {
 	EventID: {

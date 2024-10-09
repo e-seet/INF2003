@@ -2,7 +2,6 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./index");
 
 const Event = require("./event"); // Import the Event model
-// const Sponsor = require("./sponsor"); // Import the Sponsor model
 const User = require("./user")
 
 const EventSponsor = sequelize.define(
