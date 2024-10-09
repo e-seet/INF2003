@@ -7,66 +7,196 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .navbar-container {
+}
+
+.navbar-container {
     width: 80%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  /* Center the logo */
-  .navbar-left {
+}
+
+/* Center the logo */
+.navbar-left {
     flex: 1;
     display: flex;
     justify-content: center;
-  }
-  
-  .navbar-logo {
+}
+
+.navbar-logo {
     font-size: 24px;
     text-decoration: none;
     color: white;
-  }
-  
-  .navbar-menu {
+}
+
+.navbar-menu {
     list-style: none;
     display: flex;
     gap: 20px;
     flex: 2;
     justify-content: center; /* Centers the menu items */
-  }
-  
-  .navbar-item {
+}
+
+.navbar-item {
     font-size: 18px;
-  }
-  
-  .navbar-link {
+}
+
+.navbar-link {
     text-decoration: none;
     color: white;
     transition: color 0.3s;
-  }
-  
-  .navbar-link:hover {
+}
+
+.navbar-link:hover {
     color: #ddd;
-  }
-  
-  /* Style for Login/Logout buttons */
-  .navbar-right {
+}
+
+/* Style for Login/Logout buttons */
+.navbar-right {
     flex: 1;
     display: flex;
     justify-content: flex-end;
-  }
-  
-  .navbar-button {
+}
+
+.navbar-button {
     background-color: #555;
     color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .navbar-button:hover {
+}
+
+.navbar-button:hover {
     background-color: #777;
-  }
+}
+
+/* Add padding to the top of the main content to offset the navbar */
+.main-content {
+  padding-top: 150px; /* Adjust this value based on the height of your navbar */
+}
+
+/* Container for the order confirmation */
+.order-confirmation {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    color: #333;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a background graphic */
+.order-confirmation::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.order-confirmation::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(33, 150, 243, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* Main heading */
+.order-confirmation h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #4CAF50; /* Green color for the heading */
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Paragraph text */
+.order-confirmation p {
+    font-size: 1em;
+    line-height: 1.5;
+    color: #555;
+    position: relative;
+    z-index: 1;
+}
+
+/* Order details section */
+.order-details {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+/* Subheading for order details */
+.order-details h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Strong text for labels */
+.order-details p strong {
+    color: #333;
+}
+
+/* Individual order detail items */
+.order-details p {
+    margin: 5px 0;
+}
+
+/* Styles for the event confirmation component */
+.confirmation-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.confirmation-container h2 {
+    color: #4CAF50;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.confirmation-container p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.event-details {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.event-details p {
+    margin: 5px 0;
+}
+
+.event-details p strong {
+    color: #333;
+}

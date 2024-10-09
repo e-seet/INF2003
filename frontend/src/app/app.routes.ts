@@ -28,6 +28,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: UserDashboardComponent },
   { path: 'order-confirmation', component: OrderConfirmComponent },
   { path: 'event-management/:id', component: EventConfirmComponent },
+  { path: 'event-confirm', component: EventConfirmComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'contact-us', component: ContactUsComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent }
