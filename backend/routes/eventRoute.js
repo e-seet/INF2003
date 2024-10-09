@@ -3,20 +3,15 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/event');  // Assuming an Event model exists
 
-// 1. Search events by location
-router.get('/location', async (req, res) => {
-    const { lat, lon } = req.query;
-    try {
-        const events = await Event.findAll({
-            where: {
-                // Logic to filter events near the given location (lat, lon)
-            }
-        });
-        res.json(events);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// •	GET /api/events: Get all events.
+
+
+// •	GET /api/events/:id: Get an event by ID.
+// •	POST /api/events: Create a new event.
+// •	POSt /api/events/:id: Update an existing event by ID.
+// •	DELETE /api/events/:id: Delete an event by ID.
+
+
 
 // 2. Filter events by category
 // router.get('/categories', async (req, res) => {
@@ -46,18 +41,18 @@ router.get('/location', async (req, res) => {
 // });
 
 // 4. Get event details
-router.get('/:id', async (req, res) => {
-    try {
-        const event = await Event.findByPk(req.params.id);
-        if (event) {
-            res.json(event);
-        } else {
-            res.status(404).json({ message: 'Event not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// router.get('/:id', async (req, res) => {
+//     try {
+//         const event = await Event.findByPk(req.params.id);
+//         if (event) {
+//             res.json(event);
+//         } else {
+//             res.status(404).json({ message: 'Event not found' });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
 
 // 5. RSVP to an event
 // router.post('/:id/rsvp', async (req, res) => {

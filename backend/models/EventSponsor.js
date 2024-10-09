@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./index");
 
 const Event = require("./event"); // Import the Event model
-const Sponsor = require("./sponsor"); // Import the Sponsor model
+const User = require("./user")
 
 const EventSponsor = sequelize.define(
 	"EventSponsor",
@@ -12,6 +12,15 @@ const EventSponsor = sequelize.define(
 		//     primaryKey: true,
 		//     // autoIncrement: true,
 		// },
+		UserID: {
+			type: DataTypes.INTEGER,
+			references: {
+				model: User, // Refers to the Event model
+				key: "UserID",
+			},
+			allowNull: false,
+			onDelete: "CASCADE", // If the event is deleted, the related sponsorship should also be deleted
+		},
 		EventID: {
 			type: DataTypes.INTEGER,
 			references: {
@@ -21,14 +30,17 @@ const EventSponsor = sequelize.define(
 			allowNull: false,
 			onDelete: "CASCADE", // If the event is deleted, the related sponsorship should also be deleted
 		},
-		SponsorID: {
-			type: DataTypes.INTEGER,
-			references: {
-				model: Sponsor, // Refers to the Sponsor model
-				key: "SponsorID",
-			},
-			allowNull: false,
-		},
+
+		// SponsorID: {
+		// 	type: DataTypes.INTEGER,
+		// 	// references: {
+		// 	// 	model: User,
+		// 	// 	key: "UserID"
+		// 	// 	// model: Sponsor, // Refers to the Sponsor model
+		// 	// 	// key: "SponsorID",
+		// 	// },
+		// 	allowNull: false,
+		// },
 		SponsorshipAmount: {
 			// New integer field
 			type: DataTypes.INTEGER,
@@ -37,7 +49,13 @@ const EventSponsor = sequelize.define(
 		},
 	},
 	{
-		tableName: "EventSponsors", // Explicitly naming the table in case you want a custom table name
+		tableName: "EventSponsor", // Explicitly naming the table in case you want a custom table name
+		indexes: [
+			{
+				fields: ['EventID', 'UserID']
+			}
+		]
+		,
 		timestamps: false, // If you don't need `createdAt` and `updatedAt` columns
 	}
 );
