@@ -6,7 +6,7 @@ import { RegisterComponent } from './register/register.component';
 import { EventListComponent } from './event-list/event-list.component';
 import { EventDetailsComponent } from './event-details/event-details.component';
 import { CreateEventComponent } from './create-event/create-event.component';
-import { SponsorComponent } from './sponsor/sponsor.component';
+import { SponsorsComponent } from './sponsors/sponsors.component';
 import { CartComponent } from './cart/cart.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { OrderConfirmComponent } from './order-confirm/order-confirm.component';
@@ -23,7 +23,7 @@ export const routes: Routes = [
   { path: 'events', component: EventListComponent },
   { path: 'event/:id', component: EventDetailsComponent }, // Dynamic route for event details
   { path: 'create-event', component: CreateEventComponent },
-  { path: 'sponsor', component: SponsorComponent },
+  { path: 'sponsors', component: SponsorsComponent },
   { path: 'cart', component: CartComponent },
   { path: 'dashboard', component: UserDashboardComponent },
   { path: 'order-confirmation', component: OrderConfirmComponent },

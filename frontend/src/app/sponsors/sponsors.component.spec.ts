@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SponsorComponent } from './sponsor.component';
+import { SponsorsComponent } from './sponsors.component';
 
-describe('SponsorComponent', () => {
-  let component: SponsorComponent;
-  let fixture: ComponentFixture<SponsorComponent>;
+describe('SponsorsComponent', () => {
+  let component: SponsorsComponent;
+  let fixture: ComponentFixture<SponsorsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SponsorComponent]
+      imports: [SponsorsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SponsorComponent);
+    fixture = TestBed.createComponent(SponsorsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
