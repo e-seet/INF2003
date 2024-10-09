@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common'; // Import CommonModule for *ngIf
   imports: [FormsModule, CommonModule] // Include both FormsModule and CommonModule
 })
 export class LoginComponent {
-  username: string = '';
+  email: string = ''; // Change from username to email
   password: string = '';
   errorMessage: string = '';
 
@@ -19,18 +19,18 @@ export class LoginComponent {
 
   // Method to handle login button click
   login() {
-    if (this.username === '' || this.password === '') {
-      this.errorMessage = 'Please enter both username and password.';
+    if (this.email === '' || this.password === '') { // Check for email
+      this.errorMessage = 'Please enter both email and password.';
     } else {
       // Simulate successful login
       this.errorMessage = '';
-      alert(`Welcome, ${this.username}! You have successfully logged in.`);
-      this.router.navigate(['/home']); // Mock redirect to home page
+      alert(`Welcome, ${this.email}! You have successfully logged in.`);
+      this.router.navigate(['/home']); 
     }
   }
 
   // Method to handle register button click
   register() {
-    this.router.navigate(['/register']); // Mock redirect to register page
+    this.router.navigate(['/register']); 
   }
 }

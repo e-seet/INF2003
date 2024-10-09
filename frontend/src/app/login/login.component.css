@@ -1,7 +1,8 @@
 /* Style for the login container */
 .login-container {
     width: 300px;
-    margin: 100px auto;
+    justify-content: center;
+    margin: 200px auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -19,6 +20,7 @@
   /* Style for each form group */
   .form-group {
     margin-bottom: 15px;
+    margin-right: 20px;
     text-align: left;
   }
   
