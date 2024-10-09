@@ -2,14 +2,14 @@ const express = require('express');
 const sequelize = require('./models/index');
 
 // Import models
-const Event = require('./models/event');
+// const Event = require('./models/event');
 const EventSponsor = require('./models/eventsponsor');
-const Organizer = require('./models/organizer');
-const Sponsor = require('./models/sponsor');
+const Organization = require('./models/organization');
+// const Sponsor = require('./models/sponsor');
 const User = require('./models/user');
 const UserEvent = require('./models/userevent');
 const Venue = require('./models/venue');
-
+const Category = require("./models/category");
 
 // Import the function to populate mock data
 const populateMockData = require('./mockdata/populateMockData'); // Update this path accordingly

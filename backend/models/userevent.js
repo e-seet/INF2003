@@ -7,11 +7,11 @@ const Event = require('./event');
 const UserEvent = sequelize.define(
 	"UserEvent",
 	{
-		UserEventID: {  // This will be the unique identifier for each purchase
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,  // Unique auto-increment ID for each purchase
-        },
+		// UserEventID: {  // This will be the unique identifier for each purchase
+        //     type: DataTypes.INTEGER,
+        //     primaryKey: true,
+        //     autoIncrement: true,  // Unique auto-increment ID for each purchase
+        // },
         UserID: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -32,11 +32,11 @@ const UserEvent = sequelize.define(
 			onDelete: 'CASCADE',
 			onUpdate: 'CASCADE',
         },
-		NumberPurchased: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 1, // Each user must purchase at least one ticket
-		},
+		// NumberPurchased: {
+		// 	type: DataTypes.INTEGER,
+		// 	allowNull: false,
+		// 	defaultValue: 1, // Each user must purchase at least one ticket
+		// },
 		TicketType: {
 			type: DataTypes.STRING, // E.g., 'VIP', 'General Admission', 'Early Bird', etc.
 			allowNull: false,
@@ -52,7 +52,7 @@ const UserEvent = sequelize.define(
 		indexes: [
             {
                 fields: ['UserID', 'EventID'],
-                unique: false,  // Remove the unique constraint here
+                // unique: false,  // Remove the unique constraint here
             }
         ],
 	}

@@ -1,6 +1,6 @@
 const Event = require('../models/event');
 const EventSponsor = require("../models/eventsponsor");
-const Organizer = require('../models/organizer');
+const Organization = require('../models/organization');
 const Sponsor = require('../models/sponsor');
 const User = require('../models/user');
 const UserEvent = require('../models/userevent');
@@ -25,11 +25,6 @@ const readCSV = (filePath) => {
 const populateMockData = async () => {
     try {
 
-
-		// 1. User Table Mock Data
-		const userData = await readCSV(path.join(__dirname, 'csv_data', 'users.csv'));
-		await User.bulkCreate(userData);
-
 		// # 3. Venue Table Mock Data
 		const venueData = await readCSV(path.join(__dirname, 'csv_data', 'venues.csv'));
 		const mappedVenueData = venueData.map(venue => ({
@@ -41,16 +36,27 @@ const populateMockData = async () => {
 
 		// # 4. Organization Table Mock Data
 		const organizationData = await readCSV(path.join(__dirname, 'csv_data', 'organizations.csv'));
-		const mappedOrganizerData = organizationData.map(organizer => ({
-			OrganizerName: organizer.OrganizationName,  // Map OrganizationName from CSV to OrganizerName in model
+		const mappedOrganizationData = organizationData.map(organization => ({
+			OrganizationName: organization.OrganizationName,  // Map OrganizationName from CSV to OrganizationName in model
 		}));
-		await Organizer.bulkCreate(mappedOrganizerData);
+		await Organization.bulkCreate(mappedOrganizationData);
 
-		// # 5. Sponsor Table Mock Data
-		const sponsorData = await readCSV(path.join(__dirname, 'csv_data', 'sponsors.csv'));
-		await Sponsor.bulkCreate(sponsorData);
 
-		// //  2. Event Table Mock Data
+		// 1. User Table Mock Data
+		const userData = await readCSV(path.join(__dirname, 'csv_data', 'users.csv'));
+		await User.bulkCreate(userData);
+
+		// // # 5. Sponsor Table Mock Data
+		// const sponsorData = await readCSV(path.join(__dirname, 'csv_data', 'sponsors.csv'));
+		// await Sponsor.bulkCreate(sponsorData);
+
+
+		// category
+
+
+
+
+		//  2. Event Table Mock Data
 		const eventData = await readCSV(path.join(__dirname, 'csv_data', 'events.csv'));
 		await Event.bulkCreate(eventData);
 

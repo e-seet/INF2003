@@ -26,9 +26,9 @@ const User = sequelize.define('User',
 		Phone: {
 			type: DataTypes.STRING,
 		},
-		Role: {
-			type: DataTypes.ENUM('organizer', 'sponsor', 'attendee'),
-			allowNull: false,
+		OrganizationID: {
+			type: DataTypes.INTEGER,
+			allowNull: true,
 		},
 	},
 	{

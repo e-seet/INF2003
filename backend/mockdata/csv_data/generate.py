@@ -12,11 +12,17 @@ n_organizations = 50
 n_sponsors = 100
 n_user_event_links = 300  # Users attending events
 n_event_sponsor_links = 150  # Sponsors sponsoring events
+n_category = 50
+n_event_category = 200
 
 # Helper function to create unique emails
 def generate_email(first_name, last_name):
     domains = ["@gmail.com", "@yahoo.com", "@hotmail.com"]
     return f"{first_name.lower()}_{last_name.lower()}{random.choice(domains)}"
+
+def generate_organization_email(organization_email):
+    domains = ["@gmail.com", "@yahoo.com", "@hotmail.com"]
+    return f"{organization_name.lower()}{random.choice(domains)}"
 
 # Function to randomly return None for a nullable field
 def nullable_field(value, probability_of_null=0.1):
@@ -61,9 +67,12 @@ for i in range(n_venues):
 # 4. Organization Table Mock Data
 organizations = []
 for i in range(n_organizations):
+    organization_name = fake.company(),
     organizations.append({
         # "OrganizationID": i + 1,
-        "OrganizationName": fake.company()
+        "OrganizationName": organization_name,
+        "Email": generate_organization_email(organization_name),
+        "Phone": fake.phone_number()
     })
 
 # 5. Sponsor Table Mock Data
@@ -95,6 +104,21 @@ for i in range(n_event_sponsor_links):
         "EventID": random.randint(1, n_events),
         "SponsorID": random.randint(1, n_sponsors),
 		"SponsorshipAmount": random.randint(500, 50000)  # Generate a random sponsorship amount between 1000 and 50000
+    })
+
+# 8 Category
+category = []
+for i in range(n_category):
+    event_sponsor.append({
+         "CategoryName": fake.word().capitalize(),
+    })
+
+# 9 EventCategory
+event_category = []
+for i in range(n_event_category):
+    event_sponsor.append({
+		"CategoryID": random.randint(1, n_events),
+        "EventID": random.randint(1, n_sponsors),
     })
 
 # Convert to DataFrames
