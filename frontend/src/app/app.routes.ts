@@ -26,7 +26,7 @@ export const routes: Routes = [
   { path: 'sponsors', component: SponsorsComponent },
   { path: 'cart', component: CartComponent },
   { path: 'dashboard', component: UserDashboardComponent },
-  { path: 'order-confirmation', component: OrderConfirmComponent },
+  { path: 'order-confirm', component: OrderConfirmComponent },
   { path: 'event-management/:id', component: EventConfirmComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'contact-us', component: ContactUsComponent },

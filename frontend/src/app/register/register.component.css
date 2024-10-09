@@ -28,22 +28,6 @@
     font-size: 16px;
   }
   
-  /* Button Style */
-  .btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-  }
-  
-  .btn:hover {
-    background-color: #0056b3;
-  }
-  
   /* Error Message Style */
   .validation-error {
     color: red;
