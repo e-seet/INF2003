@@ -15,14 +15,15 @@ const Category = require("./models/category");
 const populateMockData = require("./mockdata/populateMockData"); // Update this path accordingly
 
 // import all the routes here
-const eventRoute = require("./routes/eventRoute");
-const organizationRoute = require("./routes/organizationRoute");
-const cors = require("cors");
+const eventRoutes = require("./routes/eventRoute");
+const organizationRoutes = require("./routes/organizationRoute");
+const userRoutes = require("./routes/userRoute");
 
 const app = express();
 app.use(express.json());
 
 // Enable CORS for all routes
+const cors = require("cors");
 app.use(cors());
 // temp
 const corsOptions = {
@@ -32,18 +33,32 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Use the routes for each resource
-// app.use('/user', userRoutes);
+app.use("/user", userRoutes);
 // app.use('/ticket', ticketRoutes);
 // app.use('/venue',  venueRoutes);
 // app.use('/sponsor', sponsorRoutes);
 // app.use('/attendee', attendeeRoutes);
 
-app.use('/event', eventRoute);
-app.use("/organization", organizationRoute);
+app.use("/event", eventRoutes);
+
+app.use("/organization", organizationRoutes);
 
 // Routes Example (List all venues)
+// app.post("/register", async (req, res) => {
+// 	console.log("Request received on /user/register");
+// 	console.log(req.body); // This will log the body sent in the request
+
+// 	try {
+// 		const user = req.body;
+// 		res.status(201).json(user);
+// 	} catch (error) {
+// 		res.status(400).json({ error: error.message });
+// 	}
+// });
+
 // localhost:3000/venues
 app.get("/venues", async (req, res) => {
+	console.log("venues");
 	try {
 		const venues = await Venue.findAll();
 		res.json(venues);

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LoginService } from '../services/login.service';
 
 @Component({
   standalone: true,
@@ -25,7 +26,31 @@ export class RegisterComponent {
   passwordError: string = '';
   confirmPasswordError: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private loginService: LoginService) {}
+
+  register2(){
+
+		// Take note that i am passing my temp variable
+		var theVariable2 = {
+			Name: "eddie",
+			Password: "123eddie321",
+			Email: "13eddie07@gmail.com",
+			Phone: "91234567",
+			OrganizationName:"Peters-Chavez"
+		}
+		this.loginService.registerUser(theVariable2)
+		.subscribe({
+			next: (data) => {
+				console.log(data);
+			},
+			error: (error) => {
+			  console.error('Error:', error);
+			},
+			complete: () => {
+			  console.log('Completed the call'); // Complete callback
+			},
+		})
+	}
 
   // Method to handle registration
   register() {
