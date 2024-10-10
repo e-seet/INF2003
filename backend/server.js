@@ -79,6 +79,43 @@ app.get("/venues/:id", async (req, res) => {
 	}
 });
 
+// Ticket Purchase Route
+app.post('/userevent/purchase', async (req, res) => {
+	try {
+	  const { UserID, EventID, TicketType, PurchaseDate } = req.body;
+  
+	  const userEvent = await UserEvent.create({
+		UserID: UserID,
+		EventID: EventID,
+		TicketType: TicketType,
+		PurchaseDate: PurchaseDate
+	  });
+  
+	  res.status(201).json({ message: 'Ticket purchased successfully', userEvent });
+	} catch (err) {
+	  res.status(500).json({ error: err.message });
+	}
+  });
+
+  // Ticket Purchase Confirmation
+  app.get('/userevent/:userId/:eventId', async (req, res) => {
+    const { userId, eventId } = req.params;
+    try {
+        const orderDetails = await UserEvent.findOne({
+            where: { UserID: userId, EventID: eventId },
+            include: [{ model: Event }, { model: User }], // Include related data if needed
+        });
+        
+        if (orderDetails) {
+            res.json(orderDetails);
+        } else {
+            res.status(404).json({ error: 'Order not found' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Set up associations
 require("./models/associations"); // This file contains all the association logic
 

@@ -1,22 +1,19 @@
-<div class="main-content"> </div>
+<div class="main-content"></div>
 <div class="order-confirmation">
     <h1>Order Confirmation</h1>
     <p>Thank you for your purchase! Your ticket order has been successfully processed.</p>
     
     <div class="order-details">
         <h2>Order Details</h2>
-        <p><strong>Order Number:</strong> #123456</p>
-        <p><strong>Date:</strong> October 10, 2023</p>
-        <p><strong>Event:</strong> Concert XYZ</p>
-        <p><strong>Venue:</strong> ABC Arena</p>
-        <p><strong>Seats:</strong> Section A, Row 5, Seats 10-12</p>
+        <p><strong>Date:</strong> {{ eventDate }}</p>
+        <p><strong>Event:</strong> {{ eventName }}</p>
+        <p><strong>Venue:</strong> {{ venue }}</p>
+        <p><strong>Ticket Type:</strong> {{ ticketType }}</p>
     </div>
     
     <div class="receipt">
         <h2>Receipt</h2>
-        <p><strong>Subtotal:</strong> $150.00</p>
-        <p><strong>Tax:</strong> $15.00</p>
-        <p><strong>Total:</strong> $165.00</p>
+        <p><strong>Total:</strong> ${{ total }}</p>
     </div>
     
     <p>If you have any questions, please contact our support team.</p>
