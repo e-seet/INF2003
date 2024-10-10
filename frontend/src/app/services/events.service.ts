@@ -53,6 +53,16 @@ export class EventsService {
         catchError(this.handleError)
       )
   }
+
+  purchaseTicket(eventData: { UserID: number, EventID: number, TicketType: string, PurchaseDate: Date }): Observable<any> {
+    return this.httpClient.post("http://localhost:3000/userevent/purchase", eventData).pipe(
+      tap(response => {
+        console.log("Ticket purchase response:", response);
+      }),
+      catchError(this.handleError)
+    );
+  }
+  
 //   private handleError(res: HttpErrorResponse) {
 //     console.error(res);
 //     return throwError(res.error || 'Server error');
