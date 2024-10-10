@@ -7,46 +7,49 @@ const Organization = require("../models/organization");
 
 // 1. Register a new user
 router.post("/register", async (req, res) => {
-	console.log("running");
-	console.log(req.body);
+	console.log("Running registration process");
+	console.log("Request Body:", req.body);
 
 	try {
-		// Step 1: Find the OrganizationID based on OrganizationName
-		var organization = await Organization.findOne({
-			where: {
-				OrganizationName: req.body.OrganizationName,
-			},
-			attributes: ["OrganizationID"], // Only retrieve OrganizationID
+		// Step 1: Find or create the Organization based on OrganizationName
+		let organization = await Organization.findOne({
+			where: { OrganizationName: req.body.OrganizationName },
+			attributes: ["OrganizationID"] // Only retrieve OrganizationID
 		});
 
-		if (organization) {
-			console.log("Organization found with ID:", organization.OrganizationID);
+		// If the organization does not exist, create a new one
+		if (!organization) {
+			console.log("Organization not found. Creating a new organization...");
 
-			let newUser = await User.create({
-				Name: req.body.Name,
-				Password: req.body.Password,
-				Email: req.body.Email,
-				Phone: req.body.Phone,
-				OrganizationID: organization.OrganizationID,
+			organization = await Organization.create({
+				OrganizationName: req.body.OrganizationName
 			});
 
-			console.log("User created successfully:", newUser);
-			console.log("waiting for new request\n");
-			// return newUser;
-	    	res.status(201).json(newUser);
-		} 
-		else 
-		{
-			console.log("Organization not found");
-			console.log("waiting for new request\n");
-		    res.status(400).json({ error: error.message });
+			console.log("New organization created with ID:", organization.OrganizationID);
+		} else {
+			console.log("Organization found with ID:", organization.OrganizationID);
 		}
-	} catch (error) {
-		console.error("Error creating user:", error);
-		console.log("waiting for new request\n");
-	    res.status(400).json({ error: error.message });
-	}
 
+		// Step 2: Create a new user with the OrganizationID
+		let newUser = await User.create({
+			Name: req.body.Name,
+			Password: req.body.Password,
+			Email: req.body.Email,
+			Phone: req.body.Phone,
+			OrganizationID: organization.OrganizationID, // Use the existing or new OrganizationID
+		});
+
+		console.log("User created successfully:", newUser);
+		console.log("Waiting for new request\n");
+
+		// Return the created user
+		res.status(201).json(newUser);
+
+	} catch (error) {
+		console.error("Error during registration process:", error);
+		console.log("Waiting for new request\n");
+		res.status(400).json({ error: error.message });
+	}
 	// try {
 	//     // const user = await User.create(req.body);  // Create new user with request body
 	//     res.status(201).json(user);

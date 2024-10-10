@@ -47,6 +47,21 @@
         <div class="validation-error" *ngIf="phoneNumberError">{{ phoneNumberError }}</div>
       </div>
   
+      <!-- Organization Name Field -->
+      <div class="form-group">
+        <label for="organization">Organization Name</label>
+        <input
+          id="organization"
+          type="text"
+          [(ngModel)]="organizationName"
+          name="organizationName"
+          class="form-control"
+          placeholder="Enter your organization name"
+          required
+        />
+        <div class="validation-error" *ngIf="organizationNameError">{{ organizationNameError }}</div>
+      </div>
+      
       <!-- Password Field -->
       <div class="form-group">
         <label for="password">Password</label>

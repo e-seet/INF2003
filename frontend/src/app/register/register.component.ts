@@ -9,7 +9,7 @@ import { LoginService } from '../services/login.service';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  imports: [FormsModule, CommonModule] // Import FormsModule and CommonModule
+  imports: [FormsModule, CommonModule] 
 })
 export class RegisterComponent {
   name: string = '';
@@ -17,6 +17,7 @@ export class RegisterComponent {
   phoneNumber: string = '';
   password: string = '';
   confirmPassword: string = '';
+  organizationName: string = ''; 
   errorMessage: string = '';
 
   // Validation Error Messages
@@ -25,6 +26,7 @@ export class RegisterComponent {
   phoneNumberError: string = '';
   passwordError: string = '';
   confirmPasswordError: string = '';
+  organizationNameError: string = ''; 
 
   constructor(private router: Router, private loginService: LoginService) {}
 
@@ -32,33 +34,38 @@ export class RegisterComponent {
   register() {
     // Reset error messages
     this.resetErrors();
-  
+
     // Validate fields
     if (!this.name) {
       this.nameError = 'Name is required';
     }
-  
+
     if (!this.email || !this.validateEmail(this.email)) {
       this.emailError = 'Valid email is required';
     }
-  
+
     if (!this.phoneNumber || !this.validatePhoneNumber(this.phoneNumber)) {
       this.phoneNumberError = 'Valid phone number is required';
     }
-  
+
+    if (!this.organizationName) {
+      this.organizationNameError = 'Organization Name is required'; 
+    }
+
     if (!this.password || this.password.length < 6) {
       this.passwordError = 'Password must be at least 6 characters long';
     }
-  
+
     if (this.password !== this.confirmPassword) {
       this.confirmPasswordError = 'Passwords do not match';
     }
-  
+
     // If no validation errors, proceed with registration
     if (
       !this.nameError &&
       !this.emailError &&
       !this.phoneNumberError &&
+      !this.organizationNameError && // Include check for organizationNameError
       !this.passwordError &&
       !this.confirmPasswordError
     ) {
@@ -68,9 +75,9 @@ export class RegisterComponent {
         Password: this.password,
         Email: this.email,
         Phone: this.phoneNumber,
-        OrganizationName: "Peters-Chavez" // Use a default organization or add a field for organization
+        OrganizationName: this.organizationName 
       };
-  
+
       // Call the registerUser method from LoginService to send a POST request to the backend
       this.loginService.registerUser(userData)
         .subscribe({
@@ -89,7 +96,6 @@ export class RegisterComponent {
       this.errorMessage = 'Please fix the above errors and try again.';
     }
   }
-  
 
   // Helper method to reset error messages
   resetErrors() {
@@ -98,6 +104,7 @@ export class RegisterComponent {
     this.phoneNumberError = '';
     this.passwordError = '';
     this.confirmPasswordError = '';
+    this.organizationNameError = ''; 
     this.errorMessage = '';
   }
 
