@@ -33,12 +33,12 @@ app.use(cors(corsOptions));
 
 // Use the routes for each resource
 // app.use('/user', userRoutes);
-// app.use('/event', eventRoute);
 // app.use('/ticket', ticketRoutes);
 // app.use('/venue',  venueRoutes);
 // app.use('/sponsor', sponsorRoutes);
 // app.use('/attendee', attendeeRoutes);
 
+app.use('/event', eventRoute);
 app.use("/organization", organizationRoute);
 
 // Routes Example (List all venues)

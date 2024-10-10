@@ -1,1 +1,83 @@
-<p>event-list works!</p>
+<!-- <div class="mat-elevation-z8">
+	<mat-table mat-table [dataSource]="dataSource" matsort>
+  
+		<ng-container matColumnDef="EventID">
+		<th mat-header-cell *matHeaderCellDef> ID </th>
+		<td mat-cell *matCellDef="let element"> {{element.EventID}} </td>
+	  </ng-container>
+
+	  <ng-container matColumnDef="Organizer">
+		<th mat-header-cell *matHeaderCellDef> Organizer </th>
+		<td mat-cell *matCellDef="let element"> {{element.Organizer}} </td>
+	  </ng-container>
+	  
+	  <ng-container matColumnDef="VenueName">
+		<th mat-header-cell *matHeaderCellDef> Venue </th>
+		<td mat-cell *matCellDef="let element"> {{element.VenueName}} </td>
+	  </ng-container>
+
+	  <ng-container matColumnDef="Location">
+		<th mat-header-cell *matHeaderCellDef> Location </th>
+		<td mat-cell *matCellDef="let element"> {{element.VenueLocation}} </td>
+	  </ng-container>
+
+	  <ng-container matColumnDef="EventName">
+		<th mat-header-cell *matHeaderCellDef> Name </th>
+		<td mat-cell *matCellDef="let element"> {{element.EventName}} </td>
+	  </ng-container>
+  
+	  <ng-container matColumnDef="EventDate">
+		<th mat-header-cell *matHeaderCellDef> Date </th>
+		<td mat-cell *matCellDef="let element"> {{element.EventDate}} </td>
+	  </ng-container>
+
+	  <ng-container matColumnDef="TicketPrice">
+		<th mat-header-cell *matHeaderCellDef> Price </th>
+		<td mat-cell *matCellDef="let element"> {{element.TicketPrice}} </td>
+	  </ng-container>
+	  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</mat-table>
+
+	<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+   -->
+   <div class="mat-elevation-z8">
+	<table class="mat-table">
+  
+	  <!-- Table Header -->
+	  <thead>
+		<tr>
+		  <th>ID</th>
+		  <th>Organizer</th>
+		  <th>Venue</th>
+		  <th>Location</th>
+		  <th>Name</th>
+		  <th>Date</th>
+		  <th>Price</th>
+		</tr>
+	  </thead>
+  
+	  <!-- Table Body using ngFor -->
+	  <tbody>
+		<tr *ngFor="let element of dataSource.data" class="clickable-row"  (click)="onRowClick(element)">
+		  <td>{{ element.EventID }}</td>
+		  <td>{{ element.Organizer }}</td>
+		  <td>{{ element.VenueName }}</td>
+		  <td>{{ element.VenueLocation }}</td>
+		  <td>{{ element.EventName }}</td>
+		  <td>{{ element.EventDate | date }}</td>
+		  <td>{{ element.TicketPrice }}</td>
+		</tr>
+	  </tbody>
+  
+	</table>
+    <!-- Display a button with the clicked event detail -->
+	<!-- <button *ngIf="selectedEvent" (click)="handleButtonClick(selectedEvent)">
+		Click for Event: {{ selectedEvent.EventName }}
+	  </button> -->
+
+	  
+	<!-- Pagination Control -->
+	<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+  </div>

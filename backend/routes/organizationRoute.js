@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Organization = require('../models/organization');
 
-// 1. Get organization's dashboard
+// Get an Organization by id
 router.get('/:id', async (req, res) => {
 	var id = req.params.id;  
     try {
@@ -15,6 +15,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// Get all Organization
 router.get('/', async (req, res) => {
 	try {
         const events = await Organization.findAll();

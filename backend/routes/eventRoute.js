@@ -1,12 +1,62 @@
 // routes/events.js
 const express = require('express');
 const router = express.Router();
-const Event = require('../models/event');  // Assuming an Event model exists
+const Event = require('../models/event');
+const Venue = require('../models/venue');
+const Organization = require('../models/organization');
 
-// •	GET /api/events: Get all events.
+// •	GET /event/getAllEvents: Get all events.
+router.get('/getAllEvents', async (req, res) => {
+	try {
+        data = await Event.findAll(
+			{
+				// to include these FK to get the tables back
+				include:[
+					{
+						model: Venue,
+						// Specify the fields we want to get from Venue
+						attributes: ['VenueName', 'Location']  
+					},
+					{
+						model: Organization,
+						attributes: ['OrganizationName']
+					}
+				]
+			}
+		);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
+// •	GET /event/getEvent/:id: Get all events.
+router.get('/getEvent/:id', async (req, res) => {
+	var id = req.params.id;  
+    try {
+		data = await Event.findAll(
+			{
+				where:{ EventID: id},
+				// to include these FK to get the tables back
+				include:[
+					{
+						model: Venue,
+						// Specify the fields we want to get from Venue
+						attributes: ['VenueName', 'Location']  
+					},
+					{
+						model: Organization,
+						attributes: ['OrganizationName']
+					}
+				]
+			}
+		);
+		res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
-// •	GET /api/events/:id: Get an event by ID.
 // •	POST /api/events: Create a new event.
 // •	POSt /api/events/:id: Update an existing event by ID.
 // •	DELETE /api/events/:id: Delete an event by ID.

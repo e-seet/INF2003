@@ -14,13 +14,37 @@ export class EventsService {
   private url = 'localhost:3000/';  // Example API URL
   data: any[] = [];
 
+  displayEvents():Observable<any>
+  {
+	console.log("calling services to get events data from the server & database")
+    return this.httpClient.get<any[]>("http://localhost:3000/event/getAllEvents")
+	.pipe(
+		tap(databack => {
+			// console.log(databack)
+		}),
+		catchError(this.handleError)
+		)
+  }
+  
+  viewEventDetails(eventID:any):Observable<any>
+  {
+	console.log("calling services to get events data from the server & database")
+    return this.httpClient.get<any[]>("http://localhost:3000/event/getEvent/" + eventID)
+	.pipe(
+		tap(databack => {
+			console.log("received data back from service");
+		}),
+		catchError(this.handleError)
+		)
+  }
+  
+
   displayVenue(): Observable<any>
   {
 	console.log("service:");
 
-    // return this.httpClient.get<any[]>("http://localhost:3000/venues/" + id)
-    return this.httpClient.get<any[]>("http://localhost:3000/venues")
-      .pipe(
+    return this.httpClient.get<any[]>("http://localhost:3000/venues/")
+	.pipe(
         tap(databack => {
           console.log(databack)
 			// console.log(databack)
