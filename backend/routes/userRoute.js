@@ -1,6 +1,7 @@
 // routes/users.js
 const express = require("express");
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const User = require("../models/user"); // Assuming a User model exists
 const Organization = require("../models/organization");
 
@@ -54,15 +55,39 @@ router.post("/register", async (req, res) => {
 	// }
 });
 
-// 2. User login
-router.post("/login", async (req, res) => {
-	// try {
-	//     // Logic to handle login (check username/password, issue token, etc.)
-	//     res.status(200).json({ message: 'Login successful' });
-	// } catch (error) {
-	//     res.status(400).json({ error: error.message });
-	// }
-});
+// POST route for user login
+router.post('/login', async (req, res) => {
+	try {
+	  const { Email, Password } = req.body; // Extract email and password from request body
+  
+	  // Check if the user with the given email exists in the database
+	  const user = await User.findOne({ where: { Email } });
+  
+	  if (!user) {
+		return res.status(404).json({ error: 'User not found. Please register first.' });
+	  }
+  
+	  // Check if the password is correct by comparing it to the hashed password in the database
+	  const isPasswordValid = await bcrypt.compare(Password, user.Password);
+  
+	  if (!isPasswordValid) {
+		return res.status(401).json({ error: 'Invalid password. Please try again.' });
+	  }
+  
+	  // If successful, return user information (excluding sensitive fields like password)
+	  const userResponse = {
+		Name: user.Name,
+		Email: user.Email,
+		Phone: user.Phone,
+		OrganizationID: user.OrganizationID,
+	  };
+  
+	  return res.status(200).json({ message: 'Login successful!', user: userResponse });
+	} catch (error) {
+	  console.error('Error during login:', error);
+	  res.status(500).json({ error: 'Something went wrong. Please try again later.' });
+	}
+  });
 
 // 3. Get user wishlist
 router.get("/:id/wishlist", async (req, res) => {

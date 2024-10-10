@@ -16,24 +16,47 @@ export class LoginService {
   private url = 'localhost:3000/'; // Example API URL
   data: any[] = [];
 
+  // Existing registerUser method
   registerUser(theVariable: any): Observable<any> {
-	console.log("login service: register user")
-    
-	const headers= new HttpHeaders()
-	.set('content-type', 'application/json')
-	.set('Access-Control-Allow-Origin', '*');
+    console.log('login service: register user');
 
-	return this.httpClient
-	  .post<any[]>('http://localhost:3000/user/register',theVariable, {'headers': headers })
-	  .pipe(
-		tap((databack) => {
-		  console.log('received data back from service');
-		  console.log(databack)
-		}),
-		catchError(this.handleError)
-	  );
+    const headers = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('Access-Control-Allow-Origin', '*');
+
+    return this.httpClient
+      .post<any[]>('http://localhost:3000/user/register', theVariable, {
+        headers: headers,
+      })
+      .pipe(
+        tap((databack) => {
+          console.log('received data back from service');
+          console.log(databack);
+        }),
+        catchError(this.handleError)
+      );
   }
 
+  // New loginUser method
+  loginUser(userCredentials: any): Observable<any> {
+    console.log('login service: login user');
+
+    const headers = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('Access-Control-Allow-Origin', '*');
+
+    return this.httpClient
+      .post<any>('http://localhost:3000/user/login', userCredentials, {
+        headers: headers,
+      })
+      .pipe(
+        tap((response) => {
+          console.log('Login successful!');
+          console.log(response);
+        }),
+        catchError(this.handleError)
+      );
+  }
   // viewEventDetails(eventID:any):Observable<any>
   // {
   //   console.log("calling services to get events data from the server & database")

@@ -28,55 +28,32 @@ export class RegisterComponent {
 
   constructor(private router: Router, private loginService: LoginService) {}
 
-  register2(){
-
-		// Take note that i am passing my temp variable
-		var theVariable2 = {
-			Name: "eddie",
-			Password: "123eddie321",
-			Email: "13eddie07@gmail.com",
-			Phone: "91234567",
-			OrganizationName:"Peters-Chavez"
-		}
-		this.loginService.registerUser(theVariable2)
-		.subscribe({
-			next: (data) => {
-				console.log(data);
-			},
-			error: (error) => {
-			  console.error('Error:', error);
-			},
-			complete: () => {
-			  console.log('Completed the call'); // Complete callback
-			},
-		})
-	}
-
   // Method to handle registration
   register() {
-    this.resetErrors(); // Reset error messages
-
+    // Reset error messages
+    this.resetErrors();
+  
     // Validate fields
     if (!this.name) {
       this.nameError = 'Name is required';
     }
-
+  
     if (!this.email || !this.validateEmail(this.email)) {
       this.emailError = 'Valid email is required';
     }
-
+  
     if (!this.phoneNumber || !this.validatePhoneNumber(this.phoneNumber)) {
       this.phoneNumberError = 'Valid phone number is required';
     }
-
+  
     if (!this.password || this.password.length < 6) {
       this.passwordError = 'Password must be at least 6 characters long';
     }
-
+  
     if (this.password !== this.confirmPassword) {
       this.confirmPasswordError = 'Passwords do not match';
     }
-
+  
     // If no validation errors, proceed with registration
     if (
       !this.nameError &&
@@ -85,14 +62,34 @@ export class RegisterComponent {
       !this.passwordError &&
       !this.confirmPasswordError
     ) {
-      // Simulate successful registration
-      this.errorMessage = '';
-      alert(`Registration successful! Welcome, ${this.name}`);
-      this.router.navigate(['/login']); // Redirect to login page
+      // Construct user data object
+      const userData = {
+        Name: this.name,
+        Password: this.password,
+        Email: this.email,
+        Phone: this.phoneNumber,
+        OrganizationName: "Peters-Chavez" // Use a default organization or add a field for organization
+      };
+  
+      // Call the registerUser method from LoginService to send a POST request to the backend
+      this.loginService.registerUser(userData)
+        .subscribe({
+          next: (data) => {
+            console.log('User registered successfully:', data);
+            alert('Registration successful! Welcome, ' + this.name);
+            this.router.navigate(['/login']); // Redirect to login page on success
+          },
+          error: (error) => {
+            console.error('Error during registration:', error);
+            this.errorMessage = 'Registration failed. Please try again.';
+          },
+          complete: () => console.log('Registration request completed.')
+        });
     } else {
       this.errorMessage = 'Please fix the above errors and try again.';
     }
   }
+  
 
   // Helper method to reset error messages
   resetErrors() {
@@ -112,7 +109,7 @@ export class RegisterComponent {
 
   // Validate phone number format
   validatePhoneNumber(phoneNumber: string): boolean {
-    const phonePattern = /^\+?\d{10,15}$/; // Accepts numbers with or without '+' and 10-15 digits
+    const phonePattern = /^\+?\d{6,15}$/; // Accepts numbers with or without '+' and 6-15 digits
     return phonePattern.test(phoneNumber);
   }
 }

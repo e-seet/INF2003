@@ -1,32 +1,51 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // Import FormsModule for ngModel
-import { CommonModule } from '@angular/common'; // Import CommonModule for *ngIf
+import { LoginService } from '../services/login.service';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
 
 @Component({
-  standalone: true, // Declare this component as a standalone component
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  imports: [FormsModule, CommonModule] // Include both FormsModule and CommonModule
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = ''; // Change from username to email
+  email: string = '';
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private loginService: LoginService, private router: Router) {}
 
-  // Method to handle login button click
+  // Method to handle login
   login() {
-    if (this.email === '' || this.password === '') { // Check for email
+    // Check if email or password is empty
+    if (!this.email || !this.password) {
       this.errorMessage = 'Please enter both email and password.';
-    } else {
-      // Simulate successful login
-      this.errorMessage = '';
-      alert(`Welcome, ${this.email}! You have successfully logged in.`);
-      this.router.navigate(['/home']); 
+      return; // Stop further execution if validation fails
     }
+
+    // Clear previous error messages
+    this.errorMessage = '';
+
+    // Prepare login data
+    const loginData = {
+      Email: this.email,
+      Password: this.password,
+    };
+
+    // Call the loginUser method from the LoginService
+    this.loginService.loginUser(loginData).subscribe({
+      next: (data) => {
+        console.log('Login successful!', data);
+        alert('Login successful!');
+        this.router.navigate(['/dashboard']); // Redirect to a dashboard or homepage
+      },
+      error: (error) => {
+        console.error('Error during login:', error);
+        this.errorMessage = 'Login failed. Please check your credentials and try again.';
+      }
+    });
   }
 
   // Method to handle register button click
@@ -34,3 +53,12 @@ export class LoginComponent {
     this.router.navigate(['/register']); 
   }
 }
+@NgModule({
+  declarations: [LoginComponent],
+  imports: [
+    CommonModule,
+    FormsModule // Include FormsModule here
+  ],
+  exports: [LoginComponent]
+})
+export class LoginModule { }
