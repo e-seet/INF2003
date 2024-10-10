@@ -1,64 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService } from '../services/login.service';
-import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { LoginService } from '../services/login.service'; 
 
 @Component({
+  standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  imports: [FormsModule, CommonModule] 
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private router: Router, private loginService: LoginService) {} 
 
-  // Method to handle login
-  login() {
-    // Check if email or password is empty
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Please enter both email and password.';
-      return; // Stop further execution if validation fails
+  ngOnInit(): void {
+    // Check if the user is already logged in and redirect to the home page if so
+    if (this.loginService.isLoggedIn()) {
+      this.router.navigate(['/home']);
     }
+  }
 
-    // Clear previous error messages
-    this.errorMessage = '';
-
-    // Prepare login data
-    const loginData = {
-      Email: this.email,
-      Password: this.password,
-    };
-
-    // Call the loginUser method from the LoginService
-    this.loginService.loginUser(loginData).subscribe({
-      next: (data) => {
-        console.log('Login successful!', data);
-        alert('Login successful!');
-        this.router.navigate(['/dashboard']); // Redirect to a dashboard or homepage
-      },
-      error: (error) => {
-        console.error('Error during login:', error);
-        this.errorMessage = 'Login failed. Please check your credentials and try again.';
-      }
-    });
+  // Method to handle login button click
+  login() {
+    if (this.email === '' || this.password === '') {
+      this.errorMessage = 'Please enter both email and password.';
+    } else {
+      const loginData = { Email: this.email, Password: this.password };
+      this.loginService.loginUser(loginData).subscribe({
+        next: (data) => {
+          alert('Login successful!');
+          this.router.navigate(['/home']); // Redirect to home page after login
+        },
+        error: (error) => {
+          this.errorMessage = 'Login failed. Please check your credentials and try again.';
+          console.error('Error during login:', error);
+        }
+      });
+    }
   }
 
   // Method to handle register button click
   register() {
-    this.router.navigate(['/register']); 
+    this.router.navigate(['/register']);
   }
 }
-@NgModule({
-  declarations: [LoginComponent],
-  imports: [
-    CommonModule,
-    FormsModule // Include FormsModule here
-  ],
-  exports: [LoginComponent]
-})
-export class LoginModule { }

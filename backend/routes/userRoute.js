@@ -55,9 +55,11 @@ router.post("/register", async (req, res) => {
 	// }
 });
 
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'TEMP_KEY';
 // POST route for user login
 router.post('/login', async (req, res) => {
-	try {
+	try {	
 	  const { Email, Password } = req.body; // Extract email and password from request body
   
 	  // Check if the user with the given email exists in the database
@@ -73,7 +75,19 @@ router.post('/login', async (req, res) => {
 	  if (!isPasswordValid) {
 		return res.status(401).json({ error: 'Invalid password. Please try again.' });
 	  }
-  
+	  
+	  // Generate JWT token
+	  const token = jwt.sign(
+		{
+		  userId: user.UserID,
+		  name: user.Name,
+		  email: user.Email,
+		  phone: user.Phone,
+		  organizationID: user.OrganizationID,
+		},
+		SECRET_KEY,
+		{ expiresIn: '1h' } // Token expires in 1 hour
+	  );
 	  // If successful, return user information (excluding sensitive fields like password)
 	  const userResponse = {
 		Name: user.Name,
@@ -82,7 +96,17 @@ router.post('/login', async (req, res) => {
 		OrganizationID: user.OrganizationID,
 	  };
   
-	  return res.status(200).json({ message: 'Login successful!', user: userResponse });
+	  // Return token and user information
+	  return res.status(200).json({
+		message: 'Login successful!',
+		token: token, 
+		user: {
+		  Name: user.Name,
+		  Email: user.Email,
+		  Phone: user.Phone,
+		  OrganizationID: user.OrganizationID,
+		},
+	  });
 	} catch (error) {
 	  console.error('Error during login:', error);
 	  res.status(500).json({ error: 'Something went wrong. Please try again later.' });

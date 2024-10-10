@@ -1,24 +1,31 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule for NgIf
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { LoginService } from '../services/login.service'; 
 
 @Component({
   selector: 'app-navbar',
-  standalone: true, // Mark this component as standalone
+  standalone: true,
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
-  imports: [CommonModule, RouterModule] // Add CommonModule to imports
+  imports: [CommonModule, RouterModule] 
 })
-export class NavbarComponent {
-  isLoggedIn: boolean = false; // This will control the Login/Logout button state
+export class NavbarComponent implements OnInit {
+  isLoggedIn: boolean = false;
 
-  // Method to handle login action
-  login() {
-    this.isLoggedIn = true;
+  constructor(private loginService: LoginService, private router: Router) {}
+
+  ngOnInit(): void {
+    // Subscribe to login status changes
+    this.loginService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
+    });
   }
 
-  // Method to handle logout action
+  // Method to handle logout button click
   logout() {
-    this.isLoggedIn = false;
+    this.loginService.logout(); // Call the logout method in LoginService
+    this.router.navigate(['/login']); // Navigate to login page after logout
   }
 }

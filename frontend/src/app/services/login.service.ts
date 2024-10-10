@@ -4,60 +4,81 @@ import {
   HttpHeaders,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { map, tap, catchError } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
+  private TOKEN_KEY = 'authToken'; // Key for storing JWT token in localStorage
+  private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn()); // BehaviorSubject to track login status
+
+  private url = 'http://localhost:3000/'; 
+
   constructor(public httpClient: HttpClient) {}
 
-  private url = 'localhost:3000/'; // Example API URL
-  data: any[] = [];
-
-  // Existing registerUser method
-  registerUser(theVariable: any): Observable<any> {
-    console.log('login service: register user');
-
-    const headers = new HttpHeaders()
-      .set('content-type', 'application/json')
-      .set('Access-Control-Allow-Origin', '*');
-
-    return this.httpClient
-      .post<any[]>('http://localhost:3000/user/register', theVariable, {
-        headers: headers,
-      })
-      .pipe(
-        tap((databack) => {
-          console.log('received data back from service');
-          console.log(databack);
-        }),
-        catchError(this.handleError)
-      );
+  // Observable to broadcast the login status
+  get isLoggedIn$(): Observable<boolean> {
+    return this.loggedIn.asObservable();
   }
 
-  // New loginUser method
-  loginUser(userCredentials: any): Observable<any> {
-    console.log('login service: login user');
-
-    const headers = new HttpHeaders()
-      .set('content-type', 'application/json')
-      .set('Access-Control-Allow-Origin', '*');
-
+  // Method to register a user
+  registerUser(userData: any): Observable<any> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
     return this.httpClient
-      .post<any>('http://localhost:3000/user/login', userCredentials, {
-        headers: headers,
-      })
+      .post<any[]>(`${this.url}user/register`, userData, { headers: headers })
       .pipe(
         tap((response) => {
-          console.log('Login successful!');
-          console.log(response);
+          console.log('User registered successfully', response);
         }),
         catchError(this.handleError)
       );
   }
-  // viewEventDetails(eventID:any):Observable<any>
+
+  // Method to log in a user and store JWT token
+  loginUser(userCredentials: any): Observable<any> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
+
+    return this.httpClient
+      .post<any>(`${this.url}user/login`, userCredentials, { headers: headers })
+      .pipe(
+        tap((response) => {
+          if (response && response.token) {
+            // Store the token in localStorage
+            localStorage.setItem(this.TOKEN_KEY, response.token);
+            console.log('Login successful, token stored!');
+            this.loggedIn.next(true); // Notify subscribers that the user is logged in
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  // Method to log out the user and remove the token from localStorage
+  logout(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    console.log('User logged out and token removed from storage.');
+    this.loggedIn.next(false); // Notify subscribers that the user is logged out
+  }
+
+  // Method to check if the user is logged in
+  isLoggedIn(): boolean {
+    return localStorage.getItem(this.TOKEN_KEY) !== null;
+  }
+
+  // Handle HTTP errors
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `An error occurred: ${error.error.message}`;
+    } else {
+      errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
+  }
+}
+// viewEventDetails(eventID:any):Observable<any>
   // {
   //   console.log("calling services to get events data from the server & database")
   //   return this.httpClient.get<any[]>("http://localhost:3000/event/getEvent/" + eventID)
@@ -68,16 +89,3 @@ export class LoginService {
   // 	  catchError(this.handleError)
   // 	  )
   // }
-
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side or network error
-      errorMessage = `An error occurred: ${error.error.message}`;
-    } else {
-      // Backend returned an unsuccessful response code
-      errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
-    }
-    return throwError(() => new Error(errorMessage));
-  }
-}
