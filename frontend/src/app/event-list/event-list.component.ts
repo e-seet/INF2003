@@ -3,18 +3,19 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { EventsService } from '../services/events.service';
 import { CommonModule } from '@angular/common';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, CommonModule],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, CommonModule],
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.css',
 })
 export class EventListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private eventService: EventsService, private router: Router) {}
 
@@ -37,15 +38,17 @@ export class EventListComponent {
         data.forEach((item: any) => {
           theobjects.push({
             EventID: item.EventID,
-            EventName: item.EventName,
-            EventDate: item.EventDate,
-            TicketPrice: item.TicketPrice,
+            Organizer: item.Organization.OrganizationName,
             VenueName: item.Venue.VenueName,
             VenueLocation: item.Venue.Location,
-            Organizer: item.Organization.OrganizationName,
+            EventName: item.EventName,
+            EventDate: item.EventDate,
+            TicketPrice: item.TicketPrice
           });
         });
         this.dataSource.data = theobjects;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: (error) => {
         console.error('Error:', error);
@@ -72,5 +75,6 @@ export class EventListComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 }
