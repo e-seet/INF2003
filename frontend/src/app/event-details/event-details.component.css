@@ -24,6 +24,7 @@
 	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 	background-color: white;
 	text-align: center;
+	
 }
 
 .event-details {
@@ -35,6 +36,21 @@
 
 .event-info {
 	padding: 0.5%;
+}
+
+.ticket-type-selection {
+	position: relative;
+	z-index: 10;
+}
+
+.sponsor-section {
+	position: absolute;
+	bottom: 16px;
+	left: 16px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	z-index: 5;
 }
 
 mat-grid-tile h3 {

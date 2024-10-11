@@ -36,7 +36,7 @@ app.use(cors(corsOptions));
 app.use("/user", userRoutes);
 // app.use('/ticket', ticketRoutes);
 // app.use('/venue',  venueRoutes);
-// app.use('/sponsor', sponsorRoutes);
+// app.use("/sponsor", SponsorRoutes);
 // app.use('/attendee', attendeeRoutes);
 
 app.use("/event", eventRoutes);
@@ -79,7 +79,7 @@ app.get("/venues/:id", async (req, res) => {
 	}
 });
 
-// Ticket Purchase Route
+// Ticket Purchase
 app.post('/userevent/purchase', async (req, res) => {
 	try {
 	  const { UserID, EventID, TicketType, PurchaseDate } = req.body;
@@ -97,23 +97,40 @@ app.post('/userevent/purchase', async (req, res) => {
 	}
   });
 
-  // Ticket Purchase Confirmation
-  app.get('/userevent/:userId/:eventId', async (req, res) => {
-    const { userId, eventId } = req.params;
-    try {
-        const orderDetails = await UserEvent.findOne({
-            where: { UserID: userId, EventID: eventId },
-            include: [{ model: Event }, { model: User }], // Include related data if needed
-        });
-        
-        if (orderDetails) {
-            res.json(orderDetails);
-        } else {
-            res.status(404).json({ error: 'Order not found' });
-        }
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+// Ticket Purchase Confirmation
+app.get('/userevent/:userId/:eventId', async (req, res) => {
+const { userId, eventId } = req.params;
+try {
+	const orderDetails = await UserEvent.findOne({
+		where: { UserID: userId, EventID: eventId },
+		include: [{ model: Event }, { model: User }], // Include related data if needed
+	});
+	
+	if (orderDetails) {
+		res.json(orderDetails);
+	} else {
+		res.status(404).json({ error: 'Order not found' });
+	}
+} catch (err) {
+	res.status(500).json({ error: err.message });
+}
+});
+
+// Event Sponsorship
+app.post('/eventsponsor', async (req, res) => {
+	try {
+		const { UserID, EventID, SponsorshipAmount } = req.body;
+
+		const sponsorEvent = await EventSponsor.create({
+			UserID: UserID,
+			EventID: EventID,
+			SponsorshipAmount: SponsorshipAmount
+		});
+
+		res.status(201).json({ message: 'Sponsorship submitted successfully', sponsorEvent });
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
 });
 
 // Set up associations

@@ -62,6 +62,15 @@ export class EventsService {
       catchError(this.handleError)
     );
   }
+
+  submitSponsorship(sponsorData: { UserID: number, EventID: number, SponsorshipAmount: number }): Observable<any> {
+    return this.httpClient.post("http://localhost:3000/eventsponsor", sponsorData).pipe(
+      tap(response => {
+        console.log("Sponsorship response:", response);
+      }),
+      catchError(this.handleError)
+    );
+  }
   
 //   private handleError(res: HttpErrorResponse) {
 //     console.error(res);
