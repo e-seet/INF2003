@@ -1,2 +1,49 @@
-<h2>User Dashboard</h2>
-<p>Welcome to your dashboard! Here you can manage your profile, view your events, and more.</p>
+<div class="user-dashboard">
+    <!-- Welcome Header -->
+    <h2>Welcome, {{ userName }}!</h2>
+    <p>This is your personal dashboard where you can manage your profile and events.</p>
+  
+    <!-- Profile Information Section -->
+    <div class="profile-info">
+      <h3>Your Profile Information</h3>
+      <p><strong>Name:</strong> {{ userName }}</p>
+      <p><strong>Email:</strong> {{ userEmail }}</p>
+      <button class="btn-edit-profile" routerLink="/profile">Edit Profile</button>
+    </div>
+  
+    <!-- Upcoming Events Section -->
+    <div class="upcoming-events">
+      <h3>Your Upcoming Events</h3>
+      <ul>
+        <li *ngFor="let event of upcomingEvents">
+          <strong>{{ event.name }}</strong> - {{ event.date | date:'shortDate' }} at {{ event.location }}
+          <button class="btn-view-event" [routerLink]="['/event', event.id]">View Details</button>
+        </li>
+      </ul>
+      <button class="btn-create-event" routerLink="/create-event">Create New Event</button>
+    </div>
+  
+    <!-- My Events Section -->
+    <div class="my-events">
+      <h3>Events You Created</h3>
+      <ul>
+        <li *ngFor="let event of myEvents">
+          <strong>{{ event.name }}</strong> - {{ event.date | date:'shortDate' }}
+          <button class="btn-edit-event" [routerLink]="['/edit-event', event.id]">Edit</button>
+          <button class="btn-delete-event" (click)="deleteEvent(event.id)">Delete</button>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Notifications Section -->
+    <div class="notifications">
+      <h3>Notifications</h3>
+      <p *ngIf="notifications.length === 0">No new notifications.</p>
+      <ul>
+        <li *ngFor="let notification of notifications">
+          {{ notification.message }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  

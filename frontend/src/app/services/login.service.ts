@@ -67,6 +67,38 @@ export class LoginService {
     return localStorage.getItem(this.TOKEN_KEY) !== null;
   }
 
+// Method to retrieve the stored JWT token
+getToken(): string | null {
+  return localStorage.getItem(this.TOKEN_KEY);
+}
+
+// Method to parse JWT token and retrieve user ID
+getUserIdFromToken(): number | null {
+  const token = this.getToken();
+  if (token) {
+    try {
+      // Decode the JWT token to extract user ID (replace this with a JWT decoding library if necessary)
+      const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+      return payload.userId; 
+    } catch (error) {
+      console.error('Error parsing JWT token:', error);
+      return null;
+    }
+  }
+  return null;
+}
+
+// Method to retrieve user data based on user ID
+getUserData(userId: number): Observable<any> {
+  const headers = new HttpHeaders().set('Content-Type', 'application/json');
+  return this.httpClient
+    .get<any>(`${this.url}user/${userId}`, { headers: headers })
+    .pipe(
+      tap((response) => console.log('User data retrieved:', response)),
+      catchError(this.handleError)
+    );
+}
+
   // Handle HTTP errors
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
