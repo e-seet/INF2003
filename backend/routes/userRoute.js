@@ -3,23 +3,12 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
 const User = require("../models/user"); // Assuming a User model exists
 const Organization = require("../models/organization");
 const verifyToken = require('../middleware/verifyToken');
 
 const SECRET_KEY = 'TEMP_KEY';
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
-
-const upload = multer({ storage: storage });
 
 // Middleware to verify token
 const verifyTokenMiddleware = (req, res, next) => {
@@ -147,12 +136,7 @@ router.get('/profile', verifyToken, async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id);
     if (!user) return res.status(404).send('User not found');
-    res.json({
-      name: user.Name,
-      email: user.Email,
-      phoneNumber: user.Phone,
-      organizationName: user.OrganizationID,
-    });
+    res.json(user);
   } catch (error) {
     res.status(500).send('Server error');
   }
@@ -165,36 +149,31 @@ router.put('/profile', verifyToken, async (req, res) => {
     if (!user) return res.status(404).send('User not found');
 
     const { name, phoneNumber, organizationName } = req.body;
-    user.Name = name || user.Name;
-    user.Phone = phoneNumber || user.Phone;
-    user.OrganizationID = organizationName || user.OrganizationID;
+    user.name = name;
+    user.phoneNumber = phoneNumber;
+    user.organizationName = organizationName;
     await user.save();
 
-    res.json({
-      name: user.Name,
-      email: user.Email,
-      phoneNumber: user.Phone,
-      organizationName: user.OrganizationID,
-    });
+    res.json(user);
   } catch (error) {
     res.status(500).send('Server error');
   }
 });
 
-// Upload profile picture
-router.post('/profile/picture', verifyToken, upload.single('profilePicture'), async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.id);
-    if (!user) return res.status(404).send('User not found');
+// Remove profile picture upload route
+// router.post('/profile/picture', verifyToken, upload.single('profilePicture'), async (req, res) => {
+//   try {
+//     const user = await User.findByPk(req.user.id);
+//     if (!user) return res.status(404).send('User not found');
 
-    user.profilePictureUrl = `/uploads/${req.file.filename}`;
-    await user.save();
+//     user.profilePictureUrl = `/uploads/${req.file.filename}`;
+//     await user.save();
 
-    res.json({ profilePictureUrl: user.profilePictureUrl });
-  } catch (error) {
-    res.status(500).send('Server error');
-  }
-});
+//     res.json({ profilePictureUrl: user.profilePictureUrl });
+//   } catch (error) {
+//     res.status(500).send('Server error');
+//   }
+// });
 
 // 3. Get user wishlist
 router.get("/:id/wishlist", async (req, res) => {

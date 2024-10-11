@@ -15,20 +15,6 @@
       />
     </div>
 
-    <!-- Profile Picture Section -->
-    <div class="form-group">
-      <label for="profilePicture">Profile Picture</label>
-      <div>
-        <img [src]="user.profilePictureUrl" alt="Profile Picture" class="profile-picture" />
-      </div>
-      <input
-        id="profilePicture"
-        type="file"
-        (change)="onFileSelected($event)"
-        class="form-control"
-      />
-    </div>
-
     <!-- Email Field -->
     <div class="form-group">
       <label for="email">Email</label>
@@ -54,6 +40,20 @@
         placeholder="Enter your phone number"
         class="form-control"
         required
+      />
+    </div>
+
+    <!-- Profile Picture Section -->
+    <div class="form-group">
+      <label for="profilePicture">Profile Picture</label>
+      <div>
+        <img [src]="user.profilePictureUrl" alt="Profile Picture" class="profile-picture" />
+      </div>
+      <input
+        id="profilePicture"
+        type="file"
+        (change)="onFileSelected($event)"
+        class="form-control"
       />
     </div>
 
