@@ -5,9 +5,9 @@ const sequelize = new Sequelize(
 	//db name
 	'inf2003db',
 	//username
-	'corn',
+	'root',
 	// password
-	'corn1234',
+	'13Eddie07',
 	{
 		host:'127.0.0.1',
 		dialect:'mysql',
