@@ -27,10 +27,21 @@
 				<h3>Location:{{ event.VenueLocation }}</h3>	
 				<!-- </mat-grid-list> -->
 			</div>
+			<!-- Ticket Type Selection -->
+			<div class="ticket-type-selection">
+				<mat-form-field appearance="fill">
+					<mat-label>Ticket Type</mat-label>
+					<mat-select [(value)]="selectedTicketType">
+						<mat-option value="Standard">Standard</mat-option>
+						<mat-option value="Premium">Premium</mat-option>
+						<mat-option value="VIP">VIP</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
 		</mat-card-content>
 
 		<mat-card-actions align="end">
-			<button mat-raised-button color="primary">Buy Tickets</button>
+			<button mat-raised-button color="primary" (click)="buyTicket()">Buy Ticket</button>
 		</mat-card-actions>
 	</mat-card>
 </div>
