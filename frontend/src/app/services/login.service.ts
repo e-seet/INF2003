@@ -88,15 +88,26 @@ getUserIdFromToken(): number | null {
   return null;
 }
 
-// Method to retrieve user data based on user ID
-getUserData(userId: number): Observable<any> {
-  const headers = new HttpHeaders().set('Content-Type', 'application/json');
-  return this.httpClient
-    .get<any>(`${this.url}user/${userId}`, { headers: headers })
-    .pipe(
-      tap((response) => console.log('User data retrieved:', response)),
-      catchError(this.handleError)
-    );
+// Method to decode JWT token and return its payload
+getDecodedToken(): any | null {
+  const token = this.getToken(); // Retrieve the token from localStorage
+  if (token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload); // Parse the JSON payload from the token
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  return null;
 }
 
   // Handle HTTP errors
