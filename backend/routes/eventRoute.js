@@ -21,6 +21,9 @@ router.get('/getAllEvents', async (req, res) => {
 						model: Organization,
 						attributes: ['OrganizationName']
 					}
+				],
+				order: [
+					['EventDate', 'ASC']  // Sorting by 'EventDate' in ascending order ('ASC')
 				]
 			}
 		);
