@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../services/login.service';
-import { EventsService } from '../services/events.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { DatePipe } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -11,69 +9,43 @@ import { DatePipe } from '@angular/common';
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
   imports: [CommonModule, RouterModule],
-  providers: [DatePipe],
 })
 export class UserDashboardComponent implements OnInit {
   userName: string = '';
   userEmail: string = '';
-  userId: number | null = null; // Make userId nullable
-  upcomingEvents: any[] = [];
-  myEvents: any[] = [];
-  notifications: any[] = [];
+  
+  // Add these missing properties
+  upcomingEvents: any[] = []; // Initialize as an empty array or use a specific type for events
+  myEvents: any[] = []; // Initialize as an empty array or use a specific type for events
+  notifications: any[] = []; // Initialize as an empty array or use a specific type for notifications
 
-  constructor(private loginService: LoginService, private eventService: EventsService) {}
+  constructor(private loginService: LoginService) {}
 
   ngOnInit(): void {
-    // Retrieve user ID from the JWT token and load profile
-    this.userId = this.loginService.getUserIdFromToken();
-    if (this.userId) {
-      this.loadUserProfile(); // Load user data only if userId is valid
-      this.loadUserEvents();
-      this.loadUserNotifications();
+    // Extract user details from the JWT token
+    const decodedToken = this.loginService.getDecodedToken();
+    if (decodedToken) {
+      this.userName = decodedToken.name; 
+      this.userEmail = decodedToken.email; 
     } else {
-      console.error('User ID not found in token');
+      console.error('Failed to decode token or token is missing.');
     }
-  }
 
-  // Load user profile information from the backend
-  loadUserProfile() {
-    if (this.userId) {
-      this.loginService.getUserData(this.userId).subscribe({
-        next: (userData) => {
-          this.userName = userData.Name;
-          this.userEmail = userData.Email;
-        },
-        error: (error) => {
-          console.error('Error fetching user data:', error);
-        }
-      });
-    }
-  }
-
-  // Load events created by the user
-  loadUserEvents() {
-    this.myEvents = [
+    //TEMP DATA
+    this.upcomingEvents = [
       { id: 1, name: 'Event 1', date: new Date(), location: 'Location 1' },
       { id: 2, name: 'Event 2', date: new Date(), location: 'Location 2' }
     ];
-  }
 
-  // Load notifications
-  loadUserNotifications() {
-    this.notifications = [
-      { message: 'Your event "Event 1" is happening soon!' },
-      { message: 'New event "Event 3" created successfully.' }
+    this.myEvents = [
+      { id: 3, name: 'My Event 1', date: new Date(), location: 'My Location 1' }
     ];
+
   }
 
-  // Method to delete an event
+  // Define the deleteEvent method
   deleteEvent(eventId: number): void {
-    const eventIndex = this.myEvents.findIndex((event) => event.id === eventId);
-    if (eventIndex > -1) {
-      this.myEvents.splice(eventIndex, 1);
-      console.log(`Event with ID ${eventId} deleted successfully.`);
-    } else {
-      console.warn(`Event with ID ${eventId} not found.`);
-    }
+    console.log('Event deleted:', eventId);
+    this.myEvents = this.myEvents.filter(event => event.id !== eventId);
   }
 }
