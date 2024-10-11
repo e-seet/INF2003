@@ -126,7 +126,30 @@ router.get("/:id/wishlist", async (req, res) => {
 	// }
 });
 
-
+// GET user data by ID
+router.get('/user/:id', async (req, res) => {
+	try {
+	  const userId = req.params.id; // Extract userId from URL params
+	  console.log(`Received request to fetch user data for ID: ${userId}`); // Log the request
+  
+	  // Find user by ID in the database
+	  const user = await User.findOne({
+		where: { UserID: userId }, // Assuming the primary key is UserID
+		attributes: ['UserID', 'Name', 'Email'] // Include only necessary fields
+	  });
+  
+	  if (!user) {
+		console.log(`User with ID ${userId} not found`);
+		return res.status(404).json({ error: 'User not found.' });
+	  }
+  
+	  console.log(`User data for ID ${userId} retrieved successfully:`, user); // Log successful retrieval
+	  return res.status(200).json(user);
+	} catch (error) {
+	  console.error('Error fetching user data:', error);
+	  return res.status(500).json({ error: 'Internal server error.' });
+	}
+  });
   
 
 module.exports = router;

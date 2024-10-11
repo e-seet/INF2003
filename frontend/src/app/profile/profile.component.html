@@ -1,36 +1,43 @@
-
 <div class="main-content"></div>
 <div class="edit-profile-container">
-    <h2>Edit Profile</h2>
-    <form>
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="company">Company:</label>
-            <input type="text" id="company" name="company">
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone">
-        </div>
-        <div class="form-group">
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address">
-        </div>
-        <div class="form-group">
-            <label for="password">New Password:</label>
-            <input type="password" id="password" name="password">
-        </div>
-        <div class="form-group">
-            <label for="confirm-password">Confirm New Password:</label>
-            <input type="password" id="confirm-password" name="confirm-password">
-        </div>
-        <button type="submit">Save Changes</button>
-    </form>
+  <h2>Edit Profile</h2>
+  <form [formGroup]="profileForm" (ngSubmit)="onSaveChanges()">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" formControlName="name" required>
+      <div class="error" *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched">
+        Name is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="organizationName">Organization Name:</label>
+      <input type="text" id="organizationName" formControlName="organizationName">
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" formControlName="email" required>
+      <div class="error" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+        Valid email is required.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" formControlName="phone">
+    </div>
+    <div class="form-group">
+      <label for="password">New Password:</label>
+      <input type="password" id="password" formControlName="password">
+      <div class="error" *ngIf="profileForm.get('password')?.invalid && profileForm.get('password')?.touched">
+        Password must be at least 6 characters.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="confirm-password">Confirm New Password:</label>
+      <input type="password" id="confirm-password" formControlName="confirmPassword">
+      <div class="error" *ngIf="profileForm.get('confirmPassword')?.value !== profileForm.get('password')?.value && profileForm.get('confirmPassword')?.touched">
+        Passwords do not match.
+      </div>
+    </div>
+    <button type="submit" [disabled]="!profileForm.valid">Save Changes</button>
+  </form>
 </div>
