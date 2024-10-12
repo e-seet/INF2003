@@ -33,10 +33,11 @@ export class CreateEventComponent implements OnInit {
     // Fetch the logged-in user's data
     this.userService.getUserProfile().subscribe({
       next: (data) => {
+        console.log(data);
         this.event.organizationID = data.organizationID; // Set organizationID from user data
       },
       error: (error) => {
-        this.errorMessage = "Failed to load user data.";
+        // this.errorMessage = "Failed to load user data.";
         console.error("Error fetching user data:", error);
       },
     });

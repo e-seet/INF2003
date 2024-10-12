@@ -1,17 +1,17 @@
 // models/associations.js
-const User = require('./user');
-const Event = require('./event');
-const Venue = require('./venue');
-const Organization = require('./organization');
+const User = require("./user");
+const Event = require("./event");
+const Venue = require("./venue");
+const Organization = require("./organization");
 // const Sponsor = require('./sponsor');
-const UserEvent = require('./userevent');
-const EventSponsor = require('./eventsponsor');
+const UserEvent = require("./userevent");
+const EventSponsor = require("./eventsponsor");
 
-const Category = require('./category');
+const Category = require("./category");
 
 // Venue-Event association (one-to-many)
-Venue.hasMany(Event, { foreignKey: 'VenueID' });
-Event.belongsTo(Venue, { foreignKey: 'VenueID' });
+Venue.hasMany(Event, { foreignKey: "VenueID" });
+Event.belongsTo(Venue, { foreignKey: "VenueID" });
 
 // Organization-Event association (one-to-many)
 // Organization.hasMany(Event, { foreignKey: 'OrganizationID' });
@@ -19,16 +19,16 @@ Event.belongsTo(Venue, { foreignKey: 'VenueID' });
 
 // User-Event association (many-to-many through UserEvent)
 // first set
-User.belongsToMany(Event, { through: 'UserEvent', foreignKey: 'UserID' });
-Event.belongsToMany(User, { through: 'UserEvent', foreignKey: 'EventID' });
+User.belongsToMany(Event, { through: "UserEvent", foreignKey: "UserID" });
+Event.belongsToMany(User, { through: "UserEvent", foreignKey: "EventID" });
 
 Category.belongsToMany(Event, {
-  through: 'EventCategory',
-  foreignKey: 'CategoryID',
+  through: "EventCategory",
+  foreignKey: "CategoryID",
 });
 Event.belongsToMany(Category, {
-  through: 'EventCategory',
-  foreignKey: 'EventID',
+  through: "EventCategory",
+  foreignKey: "EventID",
 });
 
 // Setup a One-to-Many relationship between User and Grant
@@ -52,8 +52,8 @@ Event.belongsToMany(Category, {
 // Sponsor.belongsToMany(Event, { through: 'EventSponsor', foreignKey: 'SponsorID' });
 
 // For linking both Event and User
-Event.belongsToMany(User, { through: 'EventSponsor', foreignKey: 'EventID' });
-User.belongsToMany(Event, { through: 'EventSponsor', foreignKey: 'UserID' });
+Event.belongsToMany(User, { through: "EventSponsor", foreignKey: "EventID" });
+User.belongsToMany(Event, { through: "EventSponsor", foreignKey: "UserID" });
 
 // if i ever need a primary key instead of composite priamry key
 // Event.hasMany(EventSponsor, { foreignKey: 'EventID'});
@@ -78,14 +78,14 @@ User.belongsToMany(Event, { through: 'EventSponsor', foreignKey: 'UserID' });
 //   };
 
 User.belongsTo(Organization, {
-  foreignKey: 'OrganizationID',
-  as: 'organization',
+  foreignKey: "OrganizationID",
+  as: "organization",
 });
 
 Organization.hasMany(User, {
-  foreignKey: 'OrganizationID',
-  as: 'user',
-  onDelete: 'SET NULL', // If organization is deleted, set organizationId to NULL for users
+  foreignKey: "OrganizationID",
+  as: "user",
+  onDelete: "SET NULL", // If organization is deleted, set organizationId to NULL for users
 });
 
 module.exports = {

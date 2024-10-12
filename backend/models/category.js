@@ -1,8 +1,8 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./index');
+const { DataTypes } = require("sequelize");
+const sequelize = require("./index");
 
 const Category = sequelize.define(
-  'Category',
+  "Category",
   {
     CategoryID: {
       type: DataTypes.INTEGER,
@@ -15,7 +15,7 @@ const Category = sequelize.define(
     },
   },
   {
-    tableName: 'Category',
+    tableName: "Category",
   },
 );
 

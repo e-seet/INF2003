@@ -1,10 +1,10 @@
 // models/User.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('./index');
-const bcrypt = require('bcrypt');
+const { DataTypes } = require("sequelize");
+const sequelize = require("./index");
+const bcrypt = require("bcrypt");
 
 const User = sequelize.define(
-  'User',
+  "User",
   {
     UserID: {
       type: DataTypes.INTEGER,
@@ -34,6 +34,17 @@ const User = sequelize.define(
     OrganizationID: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    admin: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        isIn: {
+          args: [[0, 1]], // Ensures 'available' is either 0 or 1
+          msg: "Available value must be either 0 or 1",
+        },
+      },
     },
   },
   {

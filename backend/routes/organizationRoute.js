@@ -1,10 +1,10 @@
 // routes/organization.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Organization = require('../models/organization');
+const Organization = require("../models/organization");
 
 // Get an Organization by id
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   var id = req.params.id;
   try {
     console.log(id);
@@ -16,7 +16,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Get all Organization
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const events = await Organization.findAll();
     res.json(events);

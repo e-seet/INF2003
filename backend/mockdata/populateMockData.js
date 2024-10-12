@@ -7,28 +7,28 @@
 // 7.	Insert into UserEvent
 // 8.	Insert into EventSponsor
 
-const Organization = require('../models/organization');
-const Category = require('../models/category');
+const Organization = require("../models/organization");
+const Category = require("../models/category");
 
-const Venue = require('../models/venue');
-const User = require('../models/user');
-const Event = require('../models/event');
-const EventCategory = require('../models/eventcategory');
-const UserEvent = require('../models/userevent');
-const EventSponsor = require('../models/eventsponsor');
+const Venue = require("../models/venue");
+const User = require("../models/user");
+const Event = require("../models/event");
+const EventCategory = require("../models/eventcategory");
+const UserEvent = require("../models/userevent");
+const EventSponsor = require("../models/eventsponsor");
 
-const fs = require('fs');
-const path = require('path');
-const csvParser = require('csv-parser');
+const fs = require("fs");
+const path = require("path");
+const csvParser = require("csv-parser");
 
 const readCSV = (filePath) => {
   return new Promise((resolve, reject) => {
     const results = [];
     fs.createReadStream(filePath)
       .pipe(csvParser())
-      .on('data', (data) => results.push(data))
-      .on('end', () => resolve(results))
-      .on('error', (error) => reject(error));
+      .on("data", (data) => results.push(data))
+      .on("end", () => resolve(results))
+      .on("error", (error) => reject(error));
   });
 };
 
@@ -37,7 +37,7 @@ const populateMockData = async () => {
   try {
     // 1. 	Insert into Organization
     const organizationData = await readCSV(
-      path.join(__dirname, 'csv_data', 'organizations.csv'),
+      path.join(__dirname, "csv_data", "organizations.csv"),
     );
     const mappedOrganizationData = organizationData.map((organization) => ({
       OrganizationName: organization.OrganizationName, // Map OrganizationName from CSV to OrganizationName in model
@@ -46,7 +46,7 @@ const populateMockData = async () => {
 
     // 2.	Insert into Category
     const categoryData = await readCSV(
-      path.join(__dirname, 'csv_data', 'category.csv'),
+      path.join(__dirname, "csv_data", "category.csv"),
     );
     const mappedCategoryData = categoryData.map((category) => ({
       CategoryName: category.CategoryName,
@@ -55,7 +55,7 @@ const populateMockData = async () => {
 
     // 3.	Insert into Venues
     const venueData = await readCSV(
-      path.join(__dirname, 'csv_data', 'venues.csv'),
+      path.join(__dirname, "csv_data", "venues.csv"),
     );
     const mappedVenueData = venueData.map((venue) => ({
       VenueName: venue.VenueName, // Ensure field names match your model
@@ -66,7 +66,7 @@ const populateMockData = async () => {
 
     // 4.	Insert into Users
     const userData = await readCSV(
-      path.join(__dirname, 'csv_data', 'users.csv'),
+      path.join(__dirname, "csv_data", "users.csv"),
     );
     const mappedUserData = userData.map((user) => ({
       Name: user.Name, // Ensure field names match your model
@@ -81,14 +81,14 @@ const populateMockData = async () => {
 
     // 5.	Insert into Events
     const eventData = await readCSV(
-      path.join(__dirname, 'csv_data', 'events.csv'),
+      path.join(__dirname, "csv_data", "events.csv"),
     );
     await Event.bulkCreate(eventData);
 
     // 6.	Insert into EventCategory
     // to do
     const eventCategoryData = await readCSV(
-      path.join(__dirname, 'csv_data', 'event_category.csv'),
+      path.join(__dirname, "csv_data", "event_category.csv"),
     );
     const mappedEventCategoryData = eventCategoryData.map((eventCategory) => ({
       CategoryID: parseInt(eventCategory.CategoryID),
@@ -119,7 +119,7 @@ const populateMockData = async () => {
     // /*
     // Map the CSV data to match the fields of the UserEvent model
     const usereventData = await readCSV(
-      path.join(__dirname, 'csv_data', 'user_event.csv'),
+      path.join(__dirname, "csv_data", "user_event.csv"),
     );
     const mappedUserEventData = usereventData.map((userevent) => ({
       UserID: parseInt(userevent.UserID), // Ensure it's a number
@@ -142,7 +142,7 @@ const populateMockData = async () => {
 
     // 8.	Insert into EventSponsor
     const eventSponsorData = await readCSV(
-      path.join(__dirname, 'csv_data', 'event_sponsor.csv'),
+      path.join(__dirname, "csv_data", "event_sponsor.csv"),
     );
 
     const mappedEventSponsorData = eventSponsorData.map((eventsponsor) => ({
@@ -162,9 +162,9 @@ const populateMockData = async () => {
     );
     await EventSponsor.bulkCreate(uniqueEventSponsorData);
 
-    console.log('Mock data inserted successfully.');
+    console.log("Mock data inserted successfully.");
   } catch (error) {
-    console.error('Error populating mock data:', error);
+    console.error("Error populating mock data:", error);
   }
 };
 
