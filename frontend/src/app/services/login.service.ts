@@ -93,6 +93,24 @@ export class LoginService {
       );
   }
 
+  // method to edit profile
+  editProfile(profileData:any)
+  {
+	var token = localStorage.getItem(this.TOKEN_KEY);
+    const headers = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('Authorization', `Bearer ${token}`);
+
+	  return this.httpClient
+      .post<any>(`${this.url}/user/editProfile`, profileData, { headers: headers })
+      .pipe(
+        tap((response) => {
+          console.log(response);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
   // Method to log out the user and remove the token from localStorage
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);

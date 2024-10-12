@@ -34,11 +34,12 @@ import { S3serviceService } from '../../services/s3service.service';
 export class ProfileComponent {
   form: FormGroup;
   selectedFiles: File[] = []; // Array to hold multiple files
+  blocking = 0;
 
   constructor(
     private fb: FormBuilder,
     private loginService: LoginService,
-	private s3Service: S3serviceService
+    private s3Service: S3serviceService,
   ) {
     this.form = this.fb.group({
       file: [null],
@@ -65,35 +66,44 @@ export class ProfileComponent {
   }
 
   onUpload(): void {
-	this.selectedFiles.forEach(file => {
-		this.s3Service.uploadFile(file).then(response => {
-		  console.log('File uploaded successfully:', response.location);
-		}).catch(error => {
-		  console.error('Error uploading file:', error);
-		});
-	  });
-	}
-  
+    this.blocking = 1;
+    this.selectedFiles.forEach((file) => {
+      this.s3Service
+        .uploadFile(file)
+        .then((response) => {
+          console.log('File uploaded successfully:', response.location);
+          this.editProfileForm.patchValue({
+            file: response.location,
+          });
+
+          this.blocking = 0;
+        })
+        .catch((error) => {
+          console.error('Error uploading file:', error);
+          this.blocking = 0;
+        });
+    });
+  }
 
   ngOnInit() {
     this.editProfileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
-      company: [''],
+      OrganizationName: [''],
       file: [''],
     });
 
     this.loginService.getProfile().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         console.log('data bakc');
         console.log(data);
         this.editProfileForm.patchValue({
           name: data.Name,
           email: data.Email,
           phone: data.Phone,
-          company: data.organization.OrganizationName,
-		});
+          OrganizationName: data.organization.OrganizationName,
+        });
       },
       error: (error) => {
         console.error('Error:', error);
@@ -107,9 +117,33 @@ export class ProfileComponent {
   // Method to handle form submission
   onSubmit(): void {
     console.log('onsubmit\n');
-    if (this.editProfileForm.valid) {
+    if (this.editProfileForm.valid && this.blocking == 0) {
       console.log('Form Submitted', this.editProfileForm.value);
-      // Here you can send the form data to the backend to save the changes
+
+	// let profileData = this.editProfileForm.value;
+		let profileData =
+		{
+			Name: this.editProfileForm.value.name,
+			Email: this.editProfileForm.value.email,
+			Phone:this.editProfileForm.value.phone,
+			OrganizationName: this.editProfileForm.value.OrganizationName,
+			Photourl:this.editProfileForm.value.file
+		}
+		console.log(profileData)
+
+      this.loginService.editProfile(profileData).subscribe({
+        next: (data: any) => {
+          console.log('data bakc');
+          console.log(data);
+          
+        },
+        error: (error:any) => {
+          console.error('Error:', error);
+        },
+        complete: () => {
+          console.log('Completed the call'); // Complete callback
+        },
+      });
     } else {
       console.log('Form is invalid');
     }
