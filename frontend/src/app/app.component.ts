@@ -7,10 +7,10 @@ import { NavbarComponent } from './navbar/navbar.component';
   standalone: true,
   imports: [RouterOutlet, NavbarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'frontend'; 
+  title = 'frontend';
   isLoggedIn: boolean = false; // Default to not logged in
 
   // Method to simulate login

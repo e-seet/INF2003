@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderConfirmService {
-
   private orderData: any = null;
 
   setOrderData(data: any) {
@@ -15,5 +14,5 @@ export class OrderConfirmService {
     return this.orderData;
   }
 
-  constructor() { }
+  constructor() {}
 }

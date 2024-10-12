@@ -1,67 +1,70 @@
 /* General table styling */
 .table-container {
-	width: 100%;
-	overflow-x: auto;  /* Enables scrolling if the table is too wide */
-  }
-  
-  .custom-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin: 20px 0;
-	font-size: 18px;
-	text-align: left;
-  }
-  
-  /* Styling for the table header */
-  .custom-table thead {
-	background-color: #4CAF50;
-	color: white;
-  }
-  
-  /* Styling for each table header cell */
-  .custom-table th {
-	padding: 0.5% 0.5%;
-	border-bottom: 2px solid #ddd;
-  }
-  
-  /* Styling for table rows */
-  .custom-table tr {
-	border-bottom: 1px solid #ddd;
-	padding: 0.2%
-  }
-  
-  /* Styling for each table cell */
-  .custom-table td {
-	padding: 2%;
-  }
-  
-  /* Hover effect for table rows */
-  .custom-table tbody tr:hover {
-	background-color: #f1f1f1;
-  }
-  
-  /* Pagination buttons margin */
-  .mat-paginator {
-	margin-top: 20px;
-  }
-  /* Hover effect for table rows */
+  width: 100%;
+  overflow-x: auto; /* Enables scrolling if the table is too wide */
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+/* Styling for the table header */
+.custom-table thead {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* Styling for each table header cell */
+.custom-table th {
+  padding: 0.5% 0.5%;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Styling for table rows */
+.custom-table tr {
+  border-bottom: 1px solid #ddd;
+  padding: 0.2%;
+}
+
+/* Styling for each table cell */
+.custom-table td {
+  padding: 2%;
+}
+
+/* Hover effect for table rows */
 .custom-table tbody tr:hover {
-	background-color: #f1f1f1;
-	cursor: pointer; /* Changes the cursor to a pointer to indicate it's clickable */
-  }
-  
-  /* Optional: Add specific styling for the clickable row */
-  .clickable-row:hover {
-	background-color: #e0e0e0;  /* Slightly darker hover effect */
-	/* transition: background-color 0.3s ease; Smooth transition */
-	 transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  
-  /* Add an icon or right arrow to indicate interactivity */
+  background-color: #f1f1f1;
+}
+
+/* Pagination buttons margin */
+.mat-paginator {
+  margin-top: 20px;
+}
+/* Hover effect for table rows */
+.custom-table tbody tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer; /* Changes the cursor to a pointer to indicate it's clickable */
+}
+
+/* Optional: Add specific styling for the clickable row */
+.clickable-row:hover {
+  background-color: #e0e0e0; /* Slightly darker hover effect */
+  /* transition: background-color 0.3s ease; Smooth transition */
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Add an icon or right arrow to indicate interactivity */
 .clickable-row::after {
-  content: '➡'; /* Right arrow indicator */
+  content: "➡"; /* Right arrow indicator */
   font-size: 16px;
-  color: #4CAF50;
+  color: #4caf50;
   margin-left: 10px;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;

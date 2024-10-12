@@ -10,7 +10,7 @@ import { UserService } from '../services/user.service'; // Import UserService
   selector: 'app-create-event',
   templateUrl: './create-event.component.html',
   styleUrls: ['./create-event.component.css'],
-  imports: [FormsModule, CommonModule]
+  imports: [FormsModule, CommonModule],
 })
 export class CreateEventComponent implements OnInit {
   event = {
@@ -18,7 +18,7 @@ export class CreateEventComponent implements OnInit {
     eventDate: '',
     ticketPrice: null,
     venueName: '', // Changed from venueID to venueName
-    organizationID: null // This will be set from the logged-in user's data
+    organizationID: null, // This will be set from the logged-in user's data
   };
   errorMessage: string = '';
   successMessage: string = '';
@@ -26,7 +26,7 @@ export class CreateEventComponent implements OnInit {
   constructor(
     private eventService: EventsService,
     private userService: UserService, // Inject UserService
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +38,7 @@ export class CreateEventComponent implements OnInit {
       error: (error) => {
         this.errorMessage = 'Failed to load user data.';
         console.error('Error fetching user data:', error);
-      }
+      },
     });
   }
 
@@ -51,7 +51,7 @@ export class CreateEventComponent implements OnInit {
       error: (error: any) => {
         this.errorMessage = 'Failed to create event.';
         console.error('Error creating event:', error);
-      }
+      },
     });
   }
 }

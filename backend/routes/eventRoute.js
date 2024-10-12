@@ -1,70 +1,64 @@
 // routes/events.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Event = require('../models/event');
-const Venue = require('../models/venue');
-const Organization = require('../models/organization');
+const Event = require("../models/event");
+const Venue = require("../models/venue");
+const Organization = require("../models/organization");
 
 // •	GET /event/getAllEvents: Get all events.
-router.get('/getAllEvents', async (req, res) => {
-	try {
-        data = await Event.findAll(
-			{
-				// to include these FK to get the tables back
-				include:[
-					{
-						model: Venue,
-						// Specify the fields we want to get from Venue
-						attributes: ['VenueName', 'Location']  
-					},
-					{
-						model: Organization,
-						attributes: ['OrganizationName']
-					}
-				],
-				order: [
-					['EventDate', 'ASC']  // Sorting by 'EventDate' in ascending order ('ASC')
-				]
-			}
-		);
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+router.get("/getAllEvents", async (req, res) => {
+  try {
+    data = await Event.findAll({
+      // to include these FK to get the tables back
+      include: [
+        {
+          model: Venue,
+          // Specify the fields we want to get from Venue
+          attributes: ["VenueName", "Location"],
+        },
+        {
+          model: Organization,
+          attributes: ["OrganizationName"],
+        },
+      ],
+      order: [
+        ["EventDate", "ASC"], // Sorting by 'EventDate' in ascending order ('ASC')
+      ],
+    });
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // •	GET /event/getEvent/:id: Get all events.
-router.get('/getEvent/:id', async (req, res) => {
-	var id = req.params.id;  
-    try {
-		data = await Event.findAll(
-			{
-				where:{ EventID: id},
-				// to include these FK to get the tables back
-				include:[
-					{
-						model: Venue,
-						// Specify the fields we want to get from Venue
-						attributes: ['VenueName', 'Location']  
-					},
-					{
-						model: Organization,
-						attributes: ['OrganizationName']
-					}
-				]
-			}
-		);
-		res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+router.get("/getEvent/:id", async (req, res) => {
+  var id = req.params.id;
+  try {
+    data = await Event.findAll({
+      where: { EventID: id },
+      // to include these FK to get the tables back
+      include: [
+        {
+          model: Venue,
+          // Specify the fields we want to get from Venue
+          attributes: ["VenueName", "Location"],
+        },
+        {
+          model: Organization,
+          attributes: ["OrganizationName"],
+        },
+      ],
+    });
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // •	POST /api/events: Create a new event.
 // •	POSt /api/events/:id: Update an existing event by ID.
 // •	DELETE /api/events/:id: Delete an event by ID.
-
-
 
 // 2. Filter events by category
 // router.get('/categories', async (req, res) => {
@@ -153,5 +147,5 @@ router.get('/getEvent/:id', async (req, res) => {
 //     // }
 // });
 
-const eventRoutes = router
+const eventRoutes = router;
 module.exports = eventRoutes;

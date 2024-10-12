@@ -14,7 +14,6 @@ import { ProfileComponent } from './profile/profile.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
-
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // Set HomeComponent as the default route
   { path: 'home', component: HomeComponent },
@@ -31,12 +30,12 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'contact-us', component: ContactUsComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
-  { path: 'user-dashboard', component: UserDashboardComponent }
+  { path: 'user-dashboard', component: UserDashboardComponent },
   // Add other routes here
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

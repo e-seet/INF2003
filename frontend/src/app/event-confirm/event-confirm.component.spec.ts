@@ -8,9 +8,8 @@ describe('EventConfirmComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventConfirmComponent]
-    })
-    .compileComponents();
+      imports: [EventConfirmComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EventConfirmComponent);
     component = fixture.componentInstance;

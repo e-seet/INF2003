@@ -17,7 +17,10 @@ export class EventListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private eventService: EventsService, private router: Router) {}
+  constructor(
+    private eventService: EventsService,
+    private router: Router,
+  ) {}
 
   dataSource = new MatTableDataSource<any>();
 
@@ -43,7 +46,7 @@ export class EventListComponent {
             VenueLocation: item.Venue.Location,
             EventName: item.EventName,
             EventDate: item.EventDate,
-            TicketPrice: item.TicketPrice
+            TicketPrice: item.TicketPrice,
           });
         });
         this.dataSource.data = theobjects;
@@ -58,7 +61,7 @@ export class EventListComponent {
       },
     });
   }
-  
+
   // Method to handle row click and set the selected event
   onRowClick(event: any) {
     console.log('Event clicked:', event);

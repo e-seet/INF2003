@@ -2,62 +2,61 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./index");
 
 const Event = require("./event"); // Import the Event model
-const User = require("./user")
+const User = require("./user");
 
 const EventSponsor = sequelize.define(
-	"EventSponsor",
-	{
-		// EventSponsorID: {
-		//     type: DataTypes.INTEGER,
-		//     primaryKey: true,
-		//     // autoIncrement: true,
-		// },
-		UserID: {
-			type: DataTypes.INTEGER,
-			references: {
-				model: User, // Refers to the Event model
-				key: "UserID",
-			},
-			allowNull: false,
-			onDelete: "CASCADE", // If the event is deleted, the related sponsorship should also be deleted
-		},
-		EventID: {
-			type: DataTypes.INTEGER,
-			references: {
-				model: Event, // Refers to the Event model
-				key: "EventID",
-			},
-			allowNull: false,
-			onDelete: "CASCADE", // If the event is deleted, the related sponsorship should also be deleted
-		},
+  "EventSponsor",
+  {
+    // EventSponsorID: {
+    //     type: DataTypes.INTEGER,
+    //     primaryKey: true,
+    //     // autoIncrement: true,
+    // },
+    UserID: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: User, // Refers to the Event model
+        key: "UserID",
+      },
+      allowNull: false,
+      onDelete: "CASCADE", // If the event is deleted, the related sponsorship should also be deleted
+    },
+    EventID: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Event, // Refers to the Event model
+        key: "EventID",
+      },
+      allowNull: false,
+      onDelete: "CASCADE", // If the event is deleted, the related sponsorship should also be deleted
+    },
 
-		// SponsorID: {
-		// 	type: DataTypes.INTEGER,
-		// 	// references: {
-		// 	// 	model: User,
-		// 	// 	key: "UserID"
-		// 	// 	// model: Sponsor, // Refers to the Sponsor model
-		// 	// 	// key: "SponsorID",
-		// 	// },
-		// 	allowNull: false,
-		// },
-		SponsorshipAmount: {
-			// New integer field
-			type: DataTypes.INTEGER,
-			allowNull: false, // Field cannot be null
-			defaultValue: 0, // Default value set to 0 if no amount is provided
-		},
-	},
-	{
-		tableName: "EventSponsor", // Explicitly naming the table in case you want a custom table name
-		indexes: [
-			{
-				fields: ['EventID', 'UserID']
-			}
-		]
-		,
-		timestamps: false, // If you don't need `createdAt` and `updatedAt` columns
-	}
+    // SponsorID: {
+    // 	type: DataTypes.INTEGER,
+    // 	// references: {
+    // 	// 	model: User,
+    // 	// 	key: "UserID"
+    // 	// 	// model: Sponsor, // Refers to the Sponsor model
+    // 	// 	// key: "SponsorID",
+    // 	// },
+    // 	allowNull: false,
+    // },
+    SponsorshipAmount: {
+      // New integer field
+      type: DataTypes.INTEGER,
+      allowNull: false, // Field cannot be null
+      defaultValue: 0, // Default value set to 0 if no amount is provided
+    },
+  },
+  {
+    tableName: "EventSponsor", // Explicitly naming the table in case you want a custom table name
+    indexes: [
+      {
+        fields: ["EventID", "UserID"],
+      },
+    ],
+    timestamps: false, // If you don't need `createdAt` and `updatedAt` columns
+  },
 );
 
 module.exports = EventSponsor;

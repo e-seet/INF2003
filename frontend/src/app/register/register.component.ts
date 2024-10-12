@@ -9,7 +9,7 @@ import { LoginService } from '../services/login.service';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  imports: [FormsModule, CommonModule] 
+  imports: [FormsModule, CommonModule],
 })
 export class RegisterComponent {
   name: string = '';
@@ -17,7 +17,7 @@ export class RegisterComponent {
   phoneNumber: string = '';
   password: string = '';
   confirmPassword: string = '';
-  organizationName: string = ''; 
+  organizationName: string = '';
   errorMessage: string = '';
 
   // Validation Error Messages
@@ -26,9 +26,12 @@ export class RegisterComponent {
   phoneNumberError: string = '';
   passwordError: string = '';
   confirmPasswordError: string = '';
-  organizationNameError: string = ''; 
+  organizationNameError: string = '';
 
-  constructor(private router: Router, private loginService: LoginService) {}
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+  ) {}
 
   // Method to handle registration
   register() {
@@ -49,7 +52,7 @@ export class RegisterComponent {
     }
 
     if (!this.organizationName) {
-      this.organizationNameError = 'Organization Name is required'; 
+      this.organizationNameError = 'Organization Name is required';
     }
 
     if (!this.password || this.password.length < 6) {
@@ -75,23 +78,22 @@ export class RegisterComponent {
         Password: this.password,
         Email: this.email,
         Phone: this.phoneNumber,
-        OrganizationName: this.organizationName 
+        OrganizationName: this.organizationName,
       };
 
       // Call the registerUser method from LoginService to send a POST request to the backend
-      this.loginService.registerUser(userData)
-        .subscribe({
-          next: (data) => {
-            console.log('User registered successfully:', data);
-            alert('Registration successful! Welcome, ' + this.name);
-            this.router.navigate(['/login']); // Redirect to login page on success
-          },
-          error: (error) => {
-            console.error('Error during registration:', error);
-            this.errorMessage = 'Registration failed. Please try again.';
-          },
-          complete: () => console.log('Registration request completed.')
-        });
+      this.loginService.registerUser(userData).subscribe({
+        next: (data) => {
+          console.log('User registered successfully:', data);
+          alert('Registration successful! Welcome, ' + this.name);
+          this.router.navigate(['/login']); // Redirect to login page on success
+        },
+        error: (error) => {
+          console.error('Error during registration:', error);
+          this.errorMessage = 'Registration failed. Please try again.';
+        },
+        complete: () => console.log('Registration request completed.'),
+      });
     } else {
       this.errorMessage = 'Please fix the above errors and try again.';
     }
@@ -104,7 +106,7 @@ export class RegisterComponent {
     this.phoneNumberError = '';
     this.passwordError = '';
     this.confirmPasswordError = '';
-    this.organizationNameError = ''; 
+    this.organizationNameError = '';
     this.errorMessage = '';
   }
 

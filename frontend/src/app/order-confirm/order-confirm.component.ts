@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrderConfirmService } from '../services/order-confirm.service';
 
@@ -7,7 +7,7 @@ import { OrderConfirmService } from '../services/order-confirm.service';
   standalone: true,
   imports: [],
   templateUrl: './order-confirm.component.html',
-  styleUrls: ['./order-confirm.component.css']
+  styleUrls: ['./order-confirm.component.css'],
 })
 export class OrderConfirmComponent {
   eventDate: Date | null = null;
@@ -17,8 +17,8 @@ export class OrderConfirmComponent {
   total: number | null = null;
 
   constructor(
-    private route: ActivatedRoute, 
-    private orderConfirmService: OrderConfirmService
+    private route: ActivatedRoute,
+    private orderConfirmService: OrderConfirmService,
   ) {}
 
   ngOnInit() {

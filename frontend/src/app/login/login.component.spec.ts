@@ -7,9 +7,8 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoginComponent]
-    })
-    .compileComponents();
+      imports: [LoginComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
@@ -29,7 +28,9 @@ describe('LoginComponent', () => {
     component.email = '';
     component.password = '';
     component.login();
-    expect(component.errorMessage).toBe('Please enter both email and password.');
+    expect(component.errorMessage).toBe(
+      'Please enter both email and password.',
+    );
   });
 
   it('should navigate to home on successful login', () => {

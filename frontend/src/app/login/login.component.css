@@ -1,54 +1,53 @@
 /* Style for the login container */
 .login-container {
-    width: 300px;
-    justify-content: center;
-    margin: 200px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  /* Style for the login form */
-  .login-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Style for each form group */
-  .form-group {
-    margin-bottom: 15px;
-    margin-right: 20px;
-    text-align: left;
-  }
-  
-  /* Style for the labels */
-  .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  /* Style for the input fields */
-  .form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  /* Style for the button group */
-  .button-group {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  /* Style for the error message */
-  .error-message {
-    color: red;
-    margin-top: 15px;
-  }
-  
+  width: 300px;
+  justify-content: center;
+  margin: 200px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Style for the login form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Style for each form group */
+.form-group {
+  margin-bottom: 15px;
+  margin-right: 20px;
+  text-align: left;
+}
+
+/* Style for the labels */
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Style for the input fields */
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Style for the button group */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Style for the error message */
+.error-message {
+  color: red;
+  margin-top: 15px;
+}
