@@ -138,6 +138,69 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// edit user profile
+router.post("/editProfile", async (req, res) => {
+  console.log("\nedit profile\n");
+  //check for token
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.split(" ")[1]; // Extract the token part
+    console.log("token:" + token); // This will output just the token string
+  } else {
+    console.log("No token found or invalid format");
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized due to session expired!" });
+    }
+    // console.log(decoded);
+    decodedToken = decoded;
+  });
+
+  console.log("")
+//   console.log(req.body)
+//   console.log(decodedToken.userID)
+  console.log("updating")
+
+    const updateUser = async (userId, updatedData) => {
+  	try {
+		// console.log("object details")
+		// console.log(updatedData)
+
+		// find by organization name first then get id
+		orgdata = await Organization.findOrCreate
+		({
+			where:{
+				OrganizationName: updatedData.OrganizationName	
+			},
+		})
+		updatedData.OrganizationID = orgdata[0].OrganizationID;
+		// console.log(updatedData);
+		data = await User.update(updatedData, 
+		{
+			where : {userId}
+		})
+		if (data > 0) 
+		{
+			console.log('User updated successfully.');
+			console.log(data);
+		} 
+		else 
+		{
+			console.log('User not found or no changes made.');
+		}
+  	}
+	catch (error)
+	{
+  	  console.error('Error updating user:', error);
+  	}
+    };
+	updateUser(decodedToken.userID, req.body);
+});
+
 // Get user profile
 // router.get('/profile', verifyToken, async (req, res) => {
 //   try {
