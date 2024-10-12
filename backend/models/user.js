@@ -26,6 +26,10 @@ const User = sequelize.define('User',
 		Phone: {
 			type: DataTypes.STRING,
 		},
+		Photourl: {
+			type: DataTypes.TEXT,
+			allowNull: true,
+		},
 		OrganizationID: {
 			type: DataTypes.INTEGER,
 			allowNull: true,
@@ -34,7 +38,7 @@ const User = sequelize.define('User',
 	{
 		hooks: {
 			// Hash the password before saving the user
-			beforeCreate: async (user) => {
+			beforeSave: async (user) => {
 				if (user.Password) {
 				const salt = await bcrypt.genSalt(10);
 				user.Password = await bcrypt.hash(user.Password, salt);

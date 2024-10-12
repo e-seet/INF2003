@@ -1,36 +1,57 @@
-
 <div class="main-content"></div>
 <div class="edit-profile-container">
-    <h2>Edit Profile</h2>
-    <form>
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="company">Company:</label>
-            <input type="text" id="company" name="company">
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input type="tel" id="phone" name="phone">
-        </div>
-        <div class="form-group">
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address">
-        </div>
-        <div class="form-group">
-            <label for="password">New Password:</label>
-            <input type="password" id="password" name="password">
-        </div>
-        <div class="form-group">
-            <label for="confirm-password">Confirm New Password:</label>
-            <input type="password" id="confirm-password" name="confirm-password">
-        </div>
-        <button type="submit">Save Changes</button>
-    </form>
+	<h2>Edit Profile</h2>
+
+	<form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+		<mat-form-field appearance="fill" class="form-group">
+			<mat-label for="name">Name</mat-label>
+			<input matInput type="text" id="name" formControlName="name" required>
+		</mat-form-field>
+		<br>
+		<mat-form-field appearance="fill" class="form-group">
+			<mat-label for="email">Email</mat-label>
+			<input matInput type="email" id="email" formControlName="email" required>
+		</mat-form-field>
+		<br>
+		<mat-form-field appearance="fill" class="form-group">
+			<mat-label for="phone">Phone</mat-label>
+			<input matInput type="tel" id="phone" formControlName="phone">
+		</mat-form-field>
+		<br>
+
+		<mat-form-field appearance="fill" class="form-group">
+			<mat-label for="company">Organization</mat-label>
+			<input matInput type="text" id="company" formControlName="company">
+		</mat-form-field>
+
+		<!-- File Upload Section -->
+		<div class="file-upload-section">
+			<!-- Hidden File Input -->
+			<input type="file" #fileInput (change)="onFilesSelected($event)" multiple style="display: none;" />
+
+			<!-- Custom Button to Trigger File Selection -->
+			<button type="button" mat-raised-button color="accent" (click)="fileInput.click()">Choose Files</button>
+
+			<!-- Display Selected Files -->
+			<div *ngIf="selectedFiles.length > 0">
+				<div>Added these Files:</div>
+				<div>Please click upload before submitting</div>
+				<ul>
+					<li *ngFor="let file of selectedFiles; let i = index">
+						{{ file.name }}
+						<button mat-icon-button (click)="removeFile(i)">
+							<mat-icon>delete</mat-icon>
+						</button>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Upload Button -->
+			<button type="button" (click) ="onUpload()" mat-raised-button color="primary" 
+				[disabled]="selectedFiles.length === 0">Upload</button>
+		</div>
+
+		<!-- Save Changes Button -->
+		<button mat-raised-button color="primary" type="submit">Save Changes</button>
+	</form>
 </div>

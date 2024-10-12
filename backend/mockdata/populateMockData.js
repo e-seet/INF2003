@@ -71,7 +71,7 @@ const populateMockData = async () => {
 			Phone: user.Phone,
 			OrganizationID: user.OrganizationID ? parseInt(user.OrganizationID) || null : null,
 		  }));
-		await User.bulkCreate(mappedUserData);
+		await User.bulkCreate(mappedUserData, {individualHooks:true});
 
 		// 5.	Insert into Events
 		const eventData = await readCSV(path.join(__dirname, 'csv_data', 'events.csv'));

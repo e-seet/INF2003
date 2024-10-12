@@ -57,20 +57,32 @@ User.belongsToMany(Event, { through: 'EventSponsor', foreignKey: 'UserID' });
 // EventSponsor.belongsTo(Sponsor, { foreignKey: 'SponsorID' });
 
 // for user
-User.associate = function(models) {
-    User.belongsTo(Organization, {
-      foreignKey: 'OrganizationId',
-      as: 'organization'
-    });
-  };
+// User.associate = function(models) {
+//     User.belongsTo(Organization, {
+//       foreignKey: 'OrganizationID',
+//       as: 'organization'
+//     });
+// };
 
-  Organization.associate = function(models) {
-    Organization.hasMany(models.User, {
-      foreignKey: 'organizationId',
-      as: 'users',
-      onDelete: 'SET NULL'  // If organization is deleted, set organizationId to NULL for users
-    });
-  };
+//   Organization.associate = function(models) {
+//     Organization.hasMany(models.User, {
+//       foreignKey: 'OrganizationID',
+//       as: 'user',
+//       onDelete: 'SET NULL'  // If organization is deleted, set organizationId to NULL for users
+//     });
+//   };
+
+User.belongsTo(Organization, {
+	foreignKey: 'OrganizationID',
+	as: 'organization'
+});
+
+Organization.hasMany(User, {
+	foreignKey: 'OrganizationID',
+	as: 'user',
+	onDelete: 'SET NULL'  // If organization is deleted, set organizationId to NULL for users
+});
+
   
 module.exports = {
     User,

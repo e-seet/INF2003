@@ -6,6 +6,8 @@ import {
 } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+// Import the jwt-decode function
+import {jwtDecode} from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,7 @@ export class LoginService {
   private TOKEN_KEY = 'authToken'; // Key for storing JWT token in localStorage
   private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn()); // BehaviorSubject to track login status
 
-  private url = 'http://localhost:3000/'; 
+  private url = 'http://localhost:3000'; 
 
   constructor(public httpClient: HttpClient) {}
 
@@ -27,7 +29,7 @@ export class LoginService {
   registerUser(userData: any): Observable<any> {
     const headers = new HttpHeaders().set('content-type', 'application/json');
     return this.httpClient
-      .post<any[]>(`${this.url}user/register`, userData, { headers: headers })
+      .post<any[]>(`${this.url}/user/register`, userData, { headers: headers })
       .pipe(
         tap((response) => {
           console.log('User registered successfully', response);
@@ -41,7 +43,7 @@ export class LoginService {
     const headers = new HttpHeaders().set('content-type', 'application/json');
 
     return this.httpClient
-      .post<any>(`${this.url}user/login`, userCredentials, { headers: headers })
+      .post<any>(`${this.url}/user/login`, userCredentials, { headers: headers })
       .pipe(
         tap((response) => {
           if (response && response.token) {
@@ -53,6 +55,42 @@ export class LoginService {
         }),
         catchError(this.handleError)
       );
+  }
+
+  getDecodedAccessToken(token: any): any {
+	console.log("decode access token\n");
+	try {
+		// console.log(jwtDecode(token));
+		var decodedToken = jwtDecode(token);
+		return decodedToken;
+	} catch (Error) {
+	  return null;
+	}
+  }
+
+  // return the profile details of a particualr user based by the userID
+  getProfile()
+  {
+	console.log("get profile. Get JWT")
+	var token = localStorage.getItem(this.TOKEN_KEY);
+	// console.log(token);
+	// var decodedToken = this.getDecodedAccessToken(token);
+	// console.log(decodedToken.userID)
+    const headers = new HttpHeaders()
+			.set('content-type', 'application/json')
+			.set('Authorization', `Bearer ${token}`);
+
+	console.log("gotten token", token);
+	
+	return this.httpClient
+      .get<any>(`${this.url}/user/profile`, { headers: headers })
+      .pipe(
+        tap((response) => {
+			// console.log(response);
+		}),
+        catchError(this.handleError)
+      );
+
   }
 
   // Method to log out the user and remove the token from localStorage
