@@ -158,7 +158,7 @@ sequelize
   .sync({ force: false }) // force: true will drop tables if they exist
   .then(() => {
     console.log("Database synced");
-    populateMockData();
+    // populateMockData();
     app.listen(3000, () => console.log("Server is running on port 3000"));
   })
   .catch((err) => console.log("Error syncing database: " + err));

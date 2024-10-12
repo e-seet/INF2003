@@ -86,6 +86,25 @@ export class EventsService {
       );
   }
 
+  // focus on UserEevent table and a specific event
+  viewTicketDetails(eventID: any): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .get<any[]>("http://localhost:3000/event/getTicketDetails/" + eventID, {
+        headers: headers,
+      })
+      .pipe(
+        tap((databack) => {
+          console.log("received data back from service");
+        }),
+        catchError(this.handleError),
+      );
+  }
+
   displayVenue(): Observable<any> {
     console.log("service:");
 

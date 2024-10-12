@@ -46,8 +46,9 @@ export class TicketDetailComponent {
     // get all my tickets
     var id = this.route.snapshot.paramMap.get("id");
 
-    this.eventService.viewEventDetails(id).subscribe({
+    this.eventService.viewTicketDetails(id).subscribe({
       next: (data) => {
+        console.log(data);
         this.ticket.EventName = data[0]["EventName"];
         this.ticket.EventID = data[0]["EventID"];
         this.ticket.EventDate = new Date(data[0]["EventDate"]);
@@ -55,6 +56,7 @@ export class TicketDetailComponent {
         this.ticket.VenueName = data[0]["Venue"]["VenueName"];
         this.ticket.VenueLocation = data[0]["Venue"]["Location"];
         this.ticket.Organizer = data[0]["Organization"]["OrganizationName"];
+        this.ticket.ticketType = data[0]["UserEvents"]["TicketType"];
         // doesnt work in viewEventDetails
         //this.ticket.TicketType = data[0]["TicketType"];
         //this.ticket.PurchaseDate = new Date(data[0]["PurchaseDate"]);
@@ -70,24 +72,24 @@ export class TicketDetailComponent {
     });
   }
 
-    // Method to adjust the ticket price
-    adjustTicketPrice() {
-      if (!this.selectedTicketType) {
-        this.selectedTicketType = this.ticket.TicketType;
-      }
-      switch (this.selectedTicketType) {
-        case "Premium":
-          this.adjustedTicketPrice = parseFloat(
-            (this.ticket.TicketPrice * 1.5).toFixed(2),
-          ); // 2 d.p.
-          break;
-        case "VIP":
-          this.adjustedTicketPrice = parseFloat(
-            (this.ticket.TicketPrice * 2).toFixed(2),
-          );
-          break;
-        default:
-          this.adjustedTicketPrice = this.ticket.TicketPrice;
-      }
+  // Method to adjust the ticket price
+  adjustTicketPrice() {
+    if (!this.selectedTicketType) {
+      this.selectedTicketType = this.ticket.TicketType;
     }
+    switch (this.selectedTicketType) {
+      case "Premium":
+        this.adjustedTicketPrice = parseFloat(
+          (this.ticket.TicketPrice * 1.5).toFixed(2),
+        ); // 2 d.p.
+        break;
+      case "VIP":
+        this.adjustedTicketPrice = parseFloat(
+          (this.ticket.TicketPrice * 2).toFixed(2),
+        );
+        break;
+      default:
+        this.adjustedTicketPrice = this.ticket.TicketPrice;
+    }
+  }
 }

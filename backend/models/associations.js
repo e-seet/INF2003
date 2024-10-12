@@ -94,7 +94,14 @@ Organization.hasMany(User, {
   as: "user",
   onDelete: "SET NULL", // If organization is deleted, set organizationId to NULL for users
 });
-
+User.hasMany(Event, {
+  foreignKey: "CreatedBy",
+});
+Event.hasMany(UserEvent, {
+  foreignKey: "EventID",
+});
+Event.hasMany(EventSponsor, { foreignKey: "EventID" });
+EventSponsor.belongsTo(Event, { foreignKey: "EventID" });
 module.exports = {
   User,
   Event,

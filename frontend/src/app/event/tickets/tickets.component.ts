@@ -51,7 +51,7 @@ export class TicketsComponent {
     "VenueLocation",
     "Organizer",
   ];
-  TicketType: string = '';
+  TicketType: string = "";
   TicketPrice: number = 0;
   adjustedTicketPrice: number = 0; // Hold adjusted price
 
@@ -64,7 +64,10 @@ export class TicketsComponent {
           const ticketPrice = item.Event.TicketPrice;
           const ticketType = item.TicketType;
           // Use the method to calculate adjusted price
-          const adjustedTicketPrice = this.adjustTicketPrice(ticketType, ticketPrice);
+          const adjustedTicketPrice = this.adjustTicketPrice(
+            ticketType,
+            ticketPrice,
+          );
           theobjects.push({
             UserID: item.UserID,
             EventID: item.EventID,
@@ -106,7 +109,12 @@ export class TicketsComponent {
   // Method to handle row click and set the selected ticket
   onRowClick(event: any) {
     console.log("Ticket clicked:", event);
-    this.router.navigate(['/myticket', event.UserID, event.EventID]);
+    this.router.navigate([
+      "/myticket",
+      // event.UserID,
+      event.EventID,
+    ]);
+    // this.router.navigate(['/myticket', event.UserID, event.EventID]);
   }
 
   // Method to handle button click and take further action

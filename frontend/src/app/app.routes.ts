@@ -40,7 +40,7 @@ export const routes: Routes = [
   { path: "event-management/:id", component: EventConfirmComponent },
   { path: "event-confirm", component: EventConfirmComponent },
   { path: "myticket", component: TicketsComponent },
-  { path: "myticket/:id/:id", component: TicketDetailComponent },
+  { path: "myticket/:id", component: TicketDetailComponent },
   // only if logged in
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
   { path: "contact-us", component: ContactUsComponent },

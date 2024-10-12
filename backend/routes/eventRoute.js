@@ -61,6 +61,73 @@ router.get("/getEvent/:id", async (req, res) => {
   }
 });
 
+// •	GET /event/getEvent/:id: Get all events.
+router.get("/getTicketDetails/:id", async (req, res) => {
+  console.log("getTicketDetails");
+  console.log("\n");
+
+  console.log(req.params.id);
+
+  var token = null;
+  var decodedToken = null;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.split(" ")[1]; // Extract the token part
+  } else {
+    console.log("No token found or invalid format");
+  }
+
+  if (token == null || token == "null") {
+    console.log("token is null");
+    return res.status(401).send({ message: "Unauthorized!" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    // console.log(decoded);
+    decodedToken = decoded;
+    console.log(decodedToken);
+  });
+
+  console.log("token");
+  console.log(token);
+  console.log("decoded token");
+  console.log(decodedToken);
+
+  try {
+    data = await Event.findAll({
+      where: { EventID: req.params.id },
+      include: [
+        {
+          model: Venue,
+          // Specify the fields we want to get from Venue
+          attributes: ["VenueName", "Location"],
+        },
+        {
+          model: Organization,
+          attributes: ["OrganizationName"],
+        },
+        {
+          model: UserEvent,
+          attributes: ["TicketType", "UserID"],
+          where: {
+            UserID: decodedToken.userID,
+          },
+        },
+      ],
+    });
+    console.log(data);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Create a new event.
 // •	GET /event/getEvent/:id: Get all events.
 router.post("/createEvent", async (req, res) => {
