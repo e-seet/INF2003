@@ -35,6 +35,22 @@ export class EventsService {
       );
   }
 
+  getTickets(): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .get<any[]>("http://localhost:3000/event/getTickets", { headers })
+      .pipe(
+        tap((data) => {
+          //   console.log(data);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
   createEvent(eventData: any): Observable<any> {
     var token = this.loginService.getToken();
 

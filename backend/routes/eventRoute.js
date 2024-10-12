@@ -4,8 +4,10 @@ const router = express.Router();
 const Event = require("../models/event");
 const Venue = require("../models/venue");
 const Organization = require("../models/organization");
+const User = require("../models/user");
 
 const jwt = require("jsonwebtoken");
+const UserEvent = require("../models/userevent");
 const SECRET_KEY = "TEMP_KEY";
 
 // •	GET /event/getAllEvents: Get all events.
@@ -63,6 +65,7 @@ router.get("/getEvent/:id", async (req, res) => {
 // •	GET /event/getEvent/:id: Get all events.
 router.post("/createEvent", async (req, res) => {
   console.log("event/createEvent\n");
+
   var token;
   var decodedToken = null;
   if (
@@ -124,6 +127,48 @@ router.post("/createEvent", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+router.get("/getTickets", async (req, res) => {
+  console.log("/getTickets\n");
+  var token;
+  var decodedToken = null;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.split(" ")[1]; // Extract the token part
+    console.log("token:" + token); // This will output just the token string
+  } else {
+    console.log("No token found or invalid format");
+  }
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    // console.log(decoded);
+    decodedToken = decoded;
+  });
+
+  console.log(decodedToken);
+  console.log(decodedToken.userID);
+
+  UserEvent.findAll({
+    where: { UserID: decodedToken.userID },
+    include: [{ model: Event }, { model: User }],
+  })
+    .then((data) => {
+      console.log(data[0]);
+      console.log("\n\n\n");
+      console.log(data[1]);
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      console.error("Error fetching user events:", error);
+      res
+        .status(500)
+        .json({ error: "An error occurred while fetching user events" });
+    });
 });
 
 // •	POSt /api/events/:id: Update an existing event by ID.

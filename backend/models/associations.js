@@ -21,6 +21,13 @@ Event.belongsTo(Venue, { foreignKey: "VenueID" });
 // first set
 User.belongsToMany(Event, { through: "UserEvent", foreignKey: "UserID" });
 Event.belongsToMany(User, { through: "UserEvent", foreignKey: "EventID" });
+UserEvent.belongsTo(User, { foreignKey: "UserID" });
+UserEvent.belongsTo(Event, { foreignKey: "EventID" });
+// User.belongsToMany(Event, { through: UserEvent, foreignKey: "UserID" });
+// Event.belongsToMany(User, { through: UserEvent, foreignKey: "EventID" });
+
+// UserEvent.belongsTo(User, { foreignKey: "UserID" });
+// UserEvent.belongsTo(Event, { foreignKey: "EventID" });
 
 Category.belongsToMany(Event, {
   through: "EventCategory",

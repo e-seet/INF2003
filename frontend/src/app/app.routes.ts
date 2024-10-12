@@ -14,6 +14,8 @@ import { ProfileComponent } from "./profile/profile.component";
 import { ContactUsComponent } from "./contact-us/contact-us.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { AuthGuard } from "./auth.guard";
+import { TicketsComponent } from "./event/tickets/tickets.component";
+import { TicketDetailComponent } from "./event/ticket-detail/ticket-detail.component";
 
 export const routes: Routes = [
   { path: "", component: HomeComponent }, // Set HomeComponent as the default route
@@ -34,8 +36,11 @@ export const routes: Routes = [
   { path: "sponsors", component: SponsorsComponent },
   { path: "dashboard", component: UserDashboardComponent },
   { path: "order-confirmation", component: OrderConfirmComponent },
+
   { path: "event-management/:id", component: EventConfirmComponent },
   { path: "event-confirm", component: EventConfirmComponent },
+  { path: "myticket", component: TicketsComponent },
+  { path: "myticket/:id", component: TicketDetailComponent },
   // only if logged in
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
   { path: "contact-us", component: ContactUsComponent },
