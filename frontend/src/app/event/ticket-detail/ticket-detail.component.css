@@ -1,0 +1,54 @@
+.ticket-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 80%;
+    margin: 4% auto;
+    padding-top: 4%;
+    padding-bottom: 4%;
+    background-color: #aaa;
+  }
+  
+  .header-center {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 80%;
+    margin: 4% auto;
+    padding: 4%;
+  }
+  
+  .ticket-card {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    text-align: center;
+  }
+  
+  .ticket-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .ticket-info {
+    padding: 0.5%;
+  }
+  
+  mat-grid-tile h3 {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  mat-grid-tile p {
+    font-size: 14px;
+  }
+  
+  mat-grid-tile-content {
+    margin-bottom: 5px;
+  }
+  
+  mat-grid-list {
+    margin-bottom: 5px;
+  }
+  

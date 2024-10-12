@@ -131,6 +131,7 @@ router.post("/createEvent", async (req, res) => {
 
 router.get("/getTickets", async (req, res) => {
   console.log("/getTickets\n");
+
   var token;
   var decodedToken = null;
   if (
@@ -142,33 +143,46 @@ router.get("/getTickets", async (req, res) => {
   } else {
     console.log("No token found or invalid format");
   }
+
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
-    // console.log(decoded);
     decodedToken = decoded;
   });
 
   console.log(decodedToken);
   console.log(decodedToken.userID);
 
-  UserEvent.findAll({
-    where: { UserID: decodedToken.userID },
-    include: [{ model: Event }, { model: User }],
-  })
-    .then((data) => {
-      console.log(data[0]);
-      console.log("\n\n\n");
-      console.log(data[1]);
-      res.status(200).json(data);
-    })
-    .catch((error) => {
-      console.error("Error fetching user events:", error);
-      res
-        .status(500)
-        .json({ error: "An error occurred while fetching user events" });
+  try {
+    const data = await UserEvent.findAll({
+      where: { UserID: decodedToken.userID },
+      include: [
+        {
+          model: Event,
+          include: [
+            {
+              model: Venue, // Include Venue associated with the Event
+              attributes: ["VenueName", "Location"],
+            },
+            {
+              model: Organization, // Include Organization associated with the Event
+              attributes: ["OrganizationName"],
+            },
+          ],
+        },
+        { model: User },
+      ],
     });
+
+    // Return data to client
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching user events:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching user events" });
+  }
 });
 
 // •	POSt /api/events/:id: Update an existing event by ID.

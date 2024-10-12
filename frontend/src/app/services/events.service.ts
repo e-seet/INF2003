@@ -45,7 +45,7 @@ export class EventsService {
       .get<any[]>("http://localhost:3000/event/getTickets", { headers })
       .pipe(
         tap((data) => {
-          //   console.log(data);
+          console.log(data);
         }),
         catchError(this.handleError),
       );

@@ -1,1 +1,63 @@
-<p>tickets works!</p>
+<div class="mat-elevation-z8">
+    <table class="mat-table" mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="EventID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>EventID</th>
+            <td mat-cell *matCellDef="let element">{{ element.EventID }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="TicketType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Ticket Type</th>
+            <td mat-cell *matCellDef="let element">{{ element.TicketType }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="PurchaseDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchased Date</th>
+            <td mat-cell *matCellDef="let element">{{ element.PurchaseDate | date }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="Organizer">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Organizer</th>
+            <td mat-cell *matCellDef="let element">{{ element.Organizer }}</td>
+        </ng-container>
+    
+        <ng-container matColumnDef="VenueName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Venue</th>
+            <td mat-cell *matCellDef="let element">{{ element.VenueName }}</td>
+        </ng-container>
+    
+        <ng-container matColumnDef="VenueLocation">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
+            <td mat-cell *matCellDef="let element">{{ element.VenueLocation }}</td>
+        </ng-container>
+    
+        <ng-container matColumnDef="EventName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let element">{{ element.EventName }}</td>
+        </ng-container>
+    
+        <ng-container matColumnDef="EventDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date of Event</th>
+            <td mat-cell *matCellDef="let element">{{ element.EventDate | date }}</td>
+        </ng-container>
+    
+        <ng-container matColumnDef="TicketPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+            <td mat-cell *matCellDef="let element">{{ element.TicketPrice }}</td>
+        </ng-container>
+
+        <!-- Table Header and Row -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="onRowClick(row)"
+        ></tr>
+    </table>
+
+    <!-- Paginator -->
+    <mat-paginator
+        [pageSizeOptions]="[10, 25, 50, 100]"
+        showFirstLastButtons
+    ></mat-paginator>
+</div>
+  
