@@ -13,6 +13,7 @@ import { EventConfirmComponent } from "./event-confirm/event-confirm.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { ContactUsComponent } from "./contact-us/contact-us.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
+import { AuthGuard } from "./auth.guard";
 
 export const routes: Routes = [
   { path: "", component: HomeComponent }, // Set HomeComponent as the default route
@@ -21,16 +22,19 @@ export const routes: Routes = [
   { path: "register", component: RegisterComponent },
   { path: "events", component: EventListComponent },
   { path: "event/:id", component: EventDetailsComponent }, // Dynamic route for event details
-  { path: "create-event", component: CreateEventComponent },
+  { path: "create-event", component: CreateEventComponent, canActivate: [AuthGuard]},
   { path: "sponsors", component: SponsorsComponent },
   { path: "dashboard", component: UserDashboardComponent },
   { path: "order-confirmation", component: OrderConfirmComponent },
   { path: "event-management/:id", component: EventConfirmComponent },
   { path: "event-confirm", component: EventConfirmComponent },
-  { path: "profile", component: ProfileComponent },
+  // only if logged in
+  { path: "profile", component: ProfileComponent ,  canActivate: [AuthGuard]},
   { path: "contact-us", component: ContactUsComponent },
   { path: "privacy-policy", component: PrivacyPolicyComponent },
-  { path: "user-dashboard", component: UserDashboardComponent },
+  { path: "user-dashboard", component: UserDashboardComponent,  canActivate: [AuthGuard] },
+  // any other routes to home
+  { path: '**', redirectTo: '/home' },
   // Add other routes here
 ];
 
