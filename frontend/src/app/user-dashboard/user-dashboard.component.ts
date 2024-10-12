@@ -45,9 +45,7 @@ export class UserDashboardComponent implements OnInit {
       error: (error) => {
         console.error("Error:", error);
       },
-      complete: () => {
-        console.log("Completed the call"); // Complete callback
-      },
+      complete: () => {},
     });
 
     //TEMP DATA

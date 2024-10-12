@@ -21,6 +21,7 @@ export class EventsService {
 
   data: any[] = [];
 
+  // display all event [Just a select * from events]
   displayEvents(): Observable<any> {
     console.log(
       "calling services to get events data from the server & database",
@@ -35,8 +36,10 @@ export class EventsService {
       );
   }
 
+  // display all event [Just a select * from events]
   getTickets(): Observable<any> {
     var token = this.loginService.getToken();
+    console.log(token);
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
@@ -45,7 +48,7 @@ export class EventsService {
       .get<any[]>("http://localhost:3000/event/getTickets", { headers })
       .pipe(
         tap((data) => {
-          //   console.log(data);
+          console.log(data);
         }),
         catchError(this.handleError),
       );
@@ -67,6 +70,25 @@ export class EventsService {
       .pipe(
         tap((databack) => {
           console.log(databack);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  // my organized event
+  displayMyEvents(): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    console.log("token");
+    console.log(token);
+    return this.httpClient
+      .get<any[]>("http://localhost:3000/event/getMyEvents", { headers })
+      .pipe(
+        tap((data) => {
+          console.log(data);
         }),
         catchError(this.handleError),
       );

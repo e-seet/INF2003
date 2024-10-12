@@ -16,6 +16,8 @@ import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.componen
 import { AuthGuard } from "./auth.guard";
 import { TicketsComponent } from "./event/tickets/tickets.component";
 import { TicketDetailComponent } from "./event/ticket-detail/ticket-detail.component";
+import { OrganizerComponent } from "./organizer/organizer.component";
+import { OrganizerDetailsComponent } from "./organizer-details/organizer-details.component";
 
 export const routes: Routes = [
   { path: "", component: HomeComponent }, // Set HomeComponent as the default route
@@ -39,10 +41,16 @@ export const routes: Routes = [
 
   { path: "event-management/:id", component: EventConfirmComponent },
   { path: "event-confirm", component: EventConfirmComponent },
+
+  { path: "organizer", component: OrganizerComponent },
+  { path: "organizer/:id", component: OrganizerDetailsComponent },
+
+  // for my Tickets. The tickets i brought for
   { path: "myticket", component: TicketsComponent },
   { path: "myticket/:id", component: TicketDetailComponent },
-  // only if logged in
+
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
+
   { path: "contact-us", component: ContactUsComponent },
   { path: "privacy-policy", component: PrivacyPolicyComponent },
   {

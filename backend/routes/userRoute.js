@@ -202,7 +202,7 @@ router.post("/editProfile", async (req, res) => {
   updateUser(decodedToken.userID, req.body);
 });
 
-// Get user profile
+// Get the user's organization name
 router.get("/profile/organization", async (req, res) => {
   var token = null;
   //check for token
