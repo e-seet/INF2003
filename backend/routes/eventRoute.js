@@ -129,6 +129,8 @@ router.post("/createEvent", async (req, res) => {
   }
 });
 
+// Get all of my ticket details
+// Event, User, UserEvent
 router.get("/getTickets", async (req, res) => {
   console.log("/getTickets\n");
   var token;

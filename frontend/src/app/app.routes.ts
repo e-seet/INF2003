@@ -34,7 +34,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: "sponsors", component: SponsorsComponent },
-  { path: "dashboard", component: UserDashboardComponent },
+  //   { path: "dashboard", component: UserDashboardComponent },
   { path: "order-confirmation", component: OrderConfirmComponent },
 
   { path: "event-management/:id", component: EventConfirmComponent },
