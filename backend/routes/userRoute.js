@@ -2,8 +2,25 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require("../models/user"); // Assuming a User model exists
 const Organization = require("../models/organization");
+const verifyToken = require('../middleware/verifyToken');
+
+const SECRET_KEY = 'TEMP_KEY';
+
+
+// Middleware to verify token
+const verifyTokenMiddleware = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(403).send('Token is required');
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) return res.status(401).send('Invalid token');
+    req.user = decoded.user;
+    next();
+  });
+};
 
 // 1. Register a new user
 router.post("/register", async (req, res) => {
@@ -58,8 +75,6 @@ router.post("/register", async (req, res) => {
 	// }
 });
 
-const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'TEMP_KEY';
 // POST route for user login
 router.post('/login', async (req, res) => {
 	try {	
@@ -112,6 +127,50 @@ router.post('/login', async (req, res) => {
 	  res.status(500).json({ error: 'Something went wrong. Please try again later.' });
 	}
   });
+
+// Get user profile
+// router.get('/profile', verifyToken, async (req, res) => {
+//   try {
+//     const user = await User.findByPk(req.user.id);
+//     if (!user) return res.status(404).send('User not found');
+//     res.json(user);
+//   } catch (error) {
+//     res.status(500).send('Server error');
+//   }
+// });
+
+// Update user profile
+// router.put('/profile', verifyToken, async (req, res) => {
+//   try {
+//     const user = await User.findByPk(req.user.id);
+//     if (!user) return res.status(404).send('User not found');
+
+//     const { name, phoneNumber, organizationName } = req.body;
+//     user.name = name;
+//     user.phoneNumber = phoneNumber;
+//     user.organizationName = organizationName;
+//     await user.save();
+
+//     res.json(user);
+//   } catch (error) {
+//     res.status(500).send('Server error');
+//   }
+// });
+
+// Remove profile picture upload route
+// router.post('/profile/picture', verifyToken, upload.single('profilePicture'), async (req, res) => {
+//   try {
+//     const user = await User.findByPk(req.user.id);
+//     if (!user) return res.status(404).send('User not found');
+
+//     user.profilePictureUrl = `/uploads/${req.file.filename}`;
+//     await user.save();
+
+//     res.json({ profilePictureUrl: user.profilePictureUrl });
+//   } catch (error) {
+//     res.status(500).send('Server error');
+//   }
+// });
 
 // 3. Get user profile
 router.get("/profile", async (req, res) => {

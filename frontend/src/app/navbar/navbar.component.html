@@ -25,6 +25,12 @@
       <li class="navbar-item">
         <a routerLink="/event-confirm" class="navbar-link">Event Confirm</a>
       </li>
+      <li *ngIf="isLoggedIn" class="navbar-item">
+        <a routerLink="/user-dashboard" class="navbar-link">User Dashboard</a> 
+      </li>
+      <li *ngIf="isLoggedIn" class="navbar-item">
+        <a routerLink="/create-event" class="navbar-link">Create Event</a> 
+      </li>
     </ul>
     <div class="navbar-right">
       <!-- Show Login button only if the user is not logged in -->

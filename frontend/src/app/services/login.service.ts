@@ -105,6 +105,49 @@ export class LoginService {
     return localStorage.getItem(this.TOKEN_KEY) !== null;
   }
 
+// Method to retrieve the stored JWT token
+getToken(): string | null {
+  return localStorage.getItem(this.TOKEN_KEY);
+}
+
+// Method to parse JWT token and retrieve user ID
+getUserIdFromToken(): number | null {
+  const token = this.getToken();
+  if (token) {
+    try {
+      // Decode the JWT token to extract user ID (replace this with a JWT decoding library if necessary)
+      const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+      return payload.userId; 
+    } catch (error) {
+      console.error('Error parsing JWT token:', error);
+      return null;
+    }
+  }
+  return null;
+}
+
+// Method to decode JWT token and return its payload
+getDecodedToken(): any | null {
+  const token = this.getToken(); // Retrieve the token from localStorage
+  if (token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload); // Parse the JSON payload from the token
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  return null;
+}
+
   // Handle HTTP errors
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';

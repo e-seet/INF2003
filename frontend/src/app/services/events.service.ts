@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from "@angular/common/http
 import { map, tap, catchError } from "rxjs/operators";
 import { Observable, throwError } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +11,7 @@ export class EventsService {
   constructor(public httpClient: HttpClient) { }
   
   private url = 'localhost:3000/';  // Example API URL
+  
   data: any[] = [];
 
   displayEvents():Observable<any>
@@ -24,6 +24,9 @@ export class EventsService {
 		}),
 		catchError(this.handleError)
 		)
+  }
+  createEvent(eventData: any): Observable<any> {
+    return this.httpClient.post(`${this.url}/events`, eventData);
   }
   
   viewEventDetails(eventID:any):Observable<any>
@@ -62,11 +65,16 @@ export class EventsService {
       catchError(this.handleError)
     );
   }
+
+  submitSponsorship(sponsorData: { UserID: number, EventID: number, SponsorshipAmount: number }): Observable<any> {
+    return this.httpClient.post("http://localhost:3000/eventsponsor", sponsorData).pipe(
+      tap(response => {
+        console.log("Sponsorship response:", response);
+      }),
+      catchError(this.handleError)
+    );
+  }
   
-//   private handleError(res: HttpErrorResponse) {
-//     console.error(res);
-//     return throwError(res.error || 'Server error');
-//   }
 private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
@@ -80,3 +88,4 @@ private handleError(error: HttpErrorResponse) {
   }
   
 }
+
