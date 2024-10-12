@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { LoginService } from '../services/login.service';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { LoginService } from "../services/login.service";
 
 @Component({
-  selector: 'app-navbar',
+  selector: "app-navbar",
   standalone: true,
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
+  templateUrl: "./navbar.component.html",
+  styleUrls: ["./navbar.component.css"],
   imports: [CommonModule, RouterModule],
 })
 export class NavbarComponent implements OnInit {
@@ -29,6 +29,6 @@ export class NavbarComponent implements OnInit {
   // Method to handle logout button click
   logout() {
     this.loginService.logout(); // Call the logout method in LoginService
-    this.router.navigate(['/login']); // Navigate to login page after logout
+    this.router.navigate(["/login"]); // Navigate to login page after logout
   }
 }

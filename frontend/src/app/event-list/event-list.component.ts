@@ -1,17 +1,17 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { EventsService } from '../services/events.service';
-import { CommonModule } from '@angular/common';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { EventsService } from "../services/events.service";
+import { CommonModule } from "@angular/common";
+import { MatSort, MatSortModule } from "@angular/material/sort";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-event-list',
+  selector: "app-event-list",
   standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, CommonModule],
-  templateUrl: './event-list.component.html',
-  styleUrl: './event-list.component.css',
+  templateUrl: "./event-list.component.html",
+  styleUrl: "./event-list.component.css",
 })
 export class EventListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -25,13 +25,13 @@ export class EventListComponent {
   dataSource = new MatTableDataSource<any>();
 
   displayedColumns: string[] = [
-    'EventID',
-    'EventName',
-    'EventDate',
-    'TicketPrice',
-    'VenueName',
-    'VenueLocation',
-    'Organizer',
+    "EventID",
+    "EventName",
+    "EventDate",
+    "TicketPrice",
+    "VenueName",
+    "VenueLocation",
+    "Organizer",
   ];
 
   ngOnInit() {
@@ -54,25 +54,25 @@ export class EventListComponent {
         this.dataSource.sort = this.sort;
       },
       error: (error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       },
       complete: () => {
-        console.log('Completed the call'); // Complete callback
+        console.log("Completed the call"); // Complete callback
       },
     });
   }
 
   // Method to handle row click and set the selected event
   onRowClick(event: any) {
-    console.log('Event clicked:', event);
+    console.log("Event clicked:", event);
     // this.selectedEvent = event; // Save the clicked event to use in the button
     this.router.navigate([`/event`, event.EventID]);
   }
 
   // Method to handle button click and take further action
   handleButtonClick(event: any) {
-    console.log('Button clicked for event:', event);
-    console.log('this:', event.EventID);
+    console.log("Button clicked for event:", event);
+    console.log("this:", event.EventID);
     // Perform any action you want with the event, such as routing or displaying details
   }
 

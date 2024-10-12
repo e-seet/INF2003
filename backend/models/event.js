@@ -1,10 +1,10 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("./index");
-const Organization = require("./organization");
-const Venue = require("./venue");
+const { DataTypes } = require('sequelize');
+const sequelize = require('./index');
+const Organization = require('./organization');
+const Venue = require('./venue');
 
 const Event = sequelize.define(
-  "Event",
+  'Event',
   {
     EventID: {
       type: DataTypes.INTEGER,
@@ -31,28 +31,28 @@ const Event = sequelize.define(
       type: DataTypes.INTEGER,
       references: {
         model: Venue,
-        key: "VenueID",
+        key: 'VenueID',
       },
-      onDelete: "SET NULL", // Optional: If a venue is deleted, set VenueID to NULL in related events
+      onDelete: 'SET NULL', // Optional: If a venue is deleted, set VenueID to NULL in related events
     },
     OrganizationID: {
       // Foreign key column for Organization
       type: DataTypes.INTEGER,
       references: {
         model: Organization,
-        key: "OrganizationID",
+        key: 'OrganizationID',
       },
-      onDelete: "CASCADE", // Optional: If an organization is deleted, related events are deleted
+      onDelete: 'CASCADE', // Optional: If an organization is deleted, related events are deleted
     },
   },
   {
-    tableName: "Events",
+    tableName: 'Events',
   },
 );
 
 // Define the relationships
-Event.belongsTo(Organization, { foreignKey: "OrganizationID" });
-Event.belongsTo(Venue, { foreignKey: "VenueID" });
+Event.belongsTo(Organization, { foreignKey: 'OrganizationID' });
+Event.belongsTo(Venue, { foreignKey: 'VenueID' });
 // Event.belongsTo(Sponsor, { foreignKey: 'SponsorID' });
 
 module.exports = Event;

@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { OrderConfirmService } from '../services/order-confirm.service';
+import { Component } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { OrderConfirmService } from "../services/order-confirm.service";
 
 @Component({
-  selector: 'app-order-confirm',
+  selector: "app-order-confirm",
   standalone: true,
   imports: [],
-  templateUrl: './order-confirm.component.html',
-  styleUrls: ['./order-confirm.component.css'],
+  templateUrl: "./order-confirm.component.html",
+  styleUrls: ["./order-confirm.component.css"],
 })
 export class OrderConfirmComponent {
   eventDate: Date | null = null;

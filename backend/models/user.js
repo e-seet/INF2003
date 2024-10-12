@@ -1,10 +1,10 @@
 // models/User.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("./index");
-const bcrypt = require("bcrypt");
+const { DataTypes } = require('sequelize');
+const sequelize = require('./index');
+const bcrypt = require('bcrypt');
 
 const User = sequelize.define(
-  "User",
+  'User',
   {
     UserID: {
       type: DataTypes.INTEGER,

@@ -1,12 +1,12 @@
 // routes/events.js
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Event = require("../models/event");
-const Venue = require("../models/venue");
-const Organization = require("../models/organization");
+const Event = require('../models/event');
+const Venue = require('../models/venue');
+const Organization = require('../models/organization');
 
 // •	GET /event/getAllEvents: Get all events.
-router.get("/getAllEvents", async (req, res) => {
+router.get('/getAllEvents', async (req, res) => {
   try {
     data = await Event.findAll({
       // to include these FK to get the tables back
@@ -14,15 +14,15 @@ router.get("/getAllEvents", async (req, res) => {
         {
           model: Venue,
           // Specify the fields we want to get from Venue
-          attributes: ["VenueName", "Location"],
+          attributes: ['VenueName', 'Location'],
         },
         {
           model: Organization,
-          attributes: ["OrganizationName"],
+          attributes: ['OrganizationName'],
         },
       ],
       order: [
-        ["EventDate", "ASC"], // Sorting by 'EventDate' in ascending order ('ASC')
+        ['EventDate', 'ASC'], // Sorting by 'EventDate' in ascending order ('ASC')
       ],
     });
     res.json(data);
@@ -32,7 +32,7 @@ router.get("/getAllEvents", async (req, res) => {
 });
 
 // •	GET /event/getEvent/:id: Get all events.
-router.get("/getEvent/:id", async (req, res) => {
+router.get('/getEvent/:id', async (req, res) => {
   var id = req.params.id;
   try {
     data = await Event.findAll({
@@ -42,11 +42,11 @@ router.get("/getEvent/:id", async (req, res) => {
         {
           model: Venue,
           // Specify the fields we want to get from Venue
-          attributes: ["VenueName", "Location"],
+          attributes: ['VenueName', 'Location'],
         },
         {
           model: Organization,
-          attributes: ["OrganizationName"],
+          attributes: ['OrganizationName'],
         },
       ],
     });

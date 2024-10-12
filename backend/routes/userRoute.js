@@ -1,52 +1,52 @@
 // routes/users.js
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user"); // Assuming a User model exists
-const Organization = require("../models/organization");
-const verifyToken = require("../middleware/verifyToken");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user'); // Assuming a User model exists
+const Organization = require('../models/organization');
+const verifyToken = require('../middleware/verifyToken');
 
-const SECRET_KEY = "TEMP_KEY";
+const SECRET_KEY = 'TEMP_KEY';
 
 // Middleware to verify token
 const verifyTokenMiddleware = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(403).send("Token is required");
+  const token = req.headers['authorization'];
+  if (!token) return res.status(403).send('Token is required');
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) return res.status(401).send("Invalid token");
+    if (err) return res.status(401).send('Invalid token');
     req.user = decoded.user;
     next();
   });
 };
 
 // 1. Register a new user
-router.post("/register", async (req, res) => {
-  console.log("Running registration process");
-  console.log("Request Body:", req.body);
+router.post('/register', async (req, res) => {
+  console.log('Running registration process');
+  console.log('Request Body:', req.body);
 
   try {
     // Step 1: Find or create the Organization based on OrganizationName
     let organization = await Organization.findOne({
       where: { OrganizationName: req.body.OrganizationName },
-      attributes: ["OrganizationID"], // Only retrieve OrganizationID
+      attributes: ['OrganizationID'], // Only retrieve OrganizationID
     });
 
     // If the organization does not exist, create a new one
     if (!organization) {
-      console.log("Organization not found. Creating a new organization...");
+      console.log('Organization not found. Creating a new organization...');
 
       organization = await Organization.create({
         OrganizationName: req.body.OrganizationName,
       });
 
       console.log(
-        "New organization created with ID:",
+        'New organization created with ID:',
         organization.OrganizationID,
       );
     } else {
-      console.log("Organization found with ID:", organization.OrganizationID);
+      console.log('Organization found with ID:', organization.OrganizationID);
     }
 
     // Step 2: Create a new user with the OrganizationID
@@ -58,14 +58,14 @@ router.post("/register", async (req, res) => {
       OrganizationID: organization.OrganizationID, // Use the existing or new OrganizationID
     });
 
-    console.log("User created successfully:", newUser);
-    console.log("Waiting for new request\n");
+    console.log('User created successfully:', newUser);
+    console.log('Waiting for new request\n');
 
     // Return the created user
     res.status(201).json(newUser);
   } catch (error) {
-    console.error("Error during registration process:", error);
-    console.log("Waiting for new request\n");
+    console.error('Error during registration process:', error);
+    console.log('Waiting for new request\n');
     res.status(400).json({ error: error.message });
   }
   // try {
@@ -77,7 +77,7 @@ router.post("/register", async (req, res) => {
 });
 
 // POST route for user login
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { Email, Password } = req.body; // Extract email and password from request body
     // Check if the user with the given email exists in the database
@@ -85,7 +85,7 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res
         .status(404)
-        .json({ error: "User not found. Please register first." });
+        .json({ error: 'User not found. Please register first.' });
     }
 
     // Check if the password is correct by comparing it to the hashed password in the database
@@ -96,7 +96,7 @@ router.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       return res
         .status(401)
-        .json({ error: "Invalid password. Please try again." });
+        .json({ error: 'Invalid password. Please try again.' });
     }
 
     // Generate JWT token
@@ -109,7 +109,7 @@ router.post("/login", async (req, res) => {
         organizationID: user.OrganizationID,
       },
       SECRET_KEY,
-      { expiresIn: "1h" }, // Token expires in 1 hour
+      { expiresIn: '1h' }, // Token expires in 1 hour
     );
     // If successful, return user information (excluding sensitive fields like password)
     const userResponse = {
@@ -121,7 +121,7 @@ router.post("/login", async (req, res) => {
 
     // Return token and user information
     return res.status(200).json({
-      message: "Login successful!",
+      message: 'Login successful!',
       token: token,
       user: {
         Name: user.Name,
@@ -131,74 +131,69 @@ router.post("/login", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error during login:", error);
+    console.error('Error during login:', error);
     res
       .status(500)
-      .json({ error: "Something went wrong. Please try again later." });
+      .json({ error: 'Something went wrong. Please try again later.' });
   }
 });
 
 // edit user profile
-router.post("/editProfile", async (req, res) => {
-  console.log("\nedit profile\n");
+router.post('/editProfile', async (req, res) => {
+  console.log('\nedit profile\n');
   //check for token
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer ")
+    req.headers.authorization.startsWith('Bearer ')
   ) {
-    token = req.headers.authorization.split(" ")[1]; // Extract the token part
-    console.log("token:" + token); // This will output just the token string
+    token = req.headers.authorization.split(' ')[1]; // Extract the token part
+    console.log('token:' + token); // This will output just the token string
   } else {
-    console.log("No token found or invalid format");
+    console.log('No token found or invalid format');
   }
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(401).send({ message: "Unauthorized due to session expired!" });
+      return res
+        .status(401)
+        .send({ message: 'Unauthorized due to session expired!' });
     }
     // console.log(decoded);
     decodedToken = decoded;
   });
 
-  console.log("")
-//   console.log(req.body)
-//   console.log(decodedToken.userID)
-  console.log("updating")
+  console.log('');
+  //   console.log(req.body)
+  //   console.log(decodedToken.userID)
+  console.log('updating');
 
-    const updateUser = async (userId, updatedData) => {
-  	try {
-		// console.log("object details")
-		// console.log(updatedData)
+  const updateUser = async (userId, updatedData) => {
+    try {
+      // console.log("object details")
+      // console.log(updatedData)
 
-		// find by organization name first then get id
-		orgdata = await Organization.findOrCreate
-		({
-			where:{
-				OrganizationName: updatedData.OrganizationName	
-			},
-		})
-		updatedData.OrganizationID = orgdata[0].OrganizationID;
-		// console.log(updatedData);
-		data = await User.update(updatedData, 
-		{
-			where : {userId}
-		})
-		if (data > 0) 
-		{
-			console.log('User updated successfully.');
-			console.log(data);
-		} 
-		else 
-		{
-			console.log('User not found or no changes made.');
-		}
-  	}
-	catch (error)
-	{
-  	  console.error('Error updating user:', error);
-  	}
-    };
-	updateUser(decodedToken.userID, req.body);
+      // find by organization name first then get id
+      orgdata = await Organization.findOrCreate({
+        where: {
+          OrganizationName: updatedData.OrganizationName,
+        },
+      });
+      updatedData.OrganizationID = orgdata[0].OrganizationID;
+      // console.log(updatedData);
+      data = await User.update(updatedData, {
+        where: { userId },
+      });
+      if (data > 0) {
+        console.log('User updated successfully.');
+        console.log(data);
+      } else {
+        console.log('User not found or no changes made.');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
+  updateUser(decodedToken.userID, req.body);
 });
 
 // Get user profile
@@ -246,31 +241,31 @@ router.post("/editProfile", async (req, res) => {
 // });
 
 // 3. Get user profile
-router.get("/profile", async (req, res) => {
-  console.log("profile route\n");
+router.get('/profile', async (req, res) => {
+  console.log('profile route\n');
 
   var token;
   var decodedToken = null;
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer ")
+    req.headers.authorization.startsWith('Bearer ')
   ) {
-    token = req.headers.authorization.split(" ")[1]; // Extract the token part
-    console.log("token:" + token); // This will output just the token string
+    token = req.headers.authorization.split(' ')[1]; // Extract the token part
+    console.log('token:' + token); // This will output just the token string
   } else {
-    console.log("No token found or invalid format");
+    console.log('No token found or invalid format');
   }
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(401).send({ message: "Unauthorized!" });
+      return res.status(401).send({ message: 'Unauthorized!' });
     }
     // console.log(decoded);
     decodedToken = decoded;
   });
 
-  console.log("decoded token");
+  console.log('decoded token');
   console.log(decodedToken);
   try {
     // data = await User.findOne(
@@ -293,15 +288,15 @@ router.get("/profile", async (req, res) => {
       include: [
         {
           model: Organization,
-          as: "organization",
-          attributes: ["OrganizationName"],
+          as: 'organization',
+          attributes: ['OrganizationName'],
         },
       ],
     });
     console.log(data);
     res.json(data);
   } catch (error) {
-    console.log("error");
+    console.log('error');
     console.log(error);
     // res.status(500).json({ error: error.message });
   }

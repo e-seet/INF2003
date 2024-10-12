@@ -1,11 +1,11 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("./index");
+const { DataTypes } = require('sequelize');
+const sequelize = require('./index');
 
-const User = require("./user");
-const Event = require("./event");
+const User = require('./user');
+const Event = require('./event');
 
 const UserEvent = sequelize.define(
-  "UserEvent",
+  'UserEvent',
   {
     // UserEventID: {  // This will be the unique identifier for each purchase
     //     type: DataTypes.INTEGER,
@@ -17,20 +17,20 @@ const UserEvent = sequelize.define(
       allowNull: false,
       references: {
         model: User, // References the User model
-        key: "UserID",
+        key: 'UserID',
       },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     EventID: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: Event, // References the Event model
-        key: "EventID",
+        key: 'EventID',
       },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     // NumberPurchased: {
     // 	type: DataTypes.INTEGER,
@@ -48,10 +48,10 @@ const UserEvent = sequelize.define(
     },
   },
   {
-    tableName: "UserEvent",
+    tableName: 'UserEvent',
     indexes: [
       {
-        fields: ["UserID", "EventID"],
+        fields: ['UserID', 'EventID'],
         // unique: false,  // Remove the unique constraint here
       },
     ],

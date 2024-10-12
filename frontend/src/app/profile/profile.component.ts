@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { LoginService } from '../services/login.service';
+import { Component, OnInit } from "@angular/core";
+import { LoginService } from "../services/login.service";
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
-} from '@angular/forms';
+} from "@angular/forms";
 
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { UserService } from '../services/user.service';
-import { S3serviceService } from '../../services/s3service.service';
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { Router } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { UserService } from "../services/user.service";
+import { S3serviceService } from "../../services/s3service.service";
 
 @Component({
   standalone: true,
@@ -28,8 +28,8 @@ import { S3serviceService } from '../../services/s3service.service';
     MatInputModule,
     CommonModule, // for ngif ng for
   ],
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
+  templateUrl: "./profile.component.html",
+  styleUrls: ["./profile.component.css"],
 })
 export class ProfileComponent {
   form: FormGroup;
@@ -55,14 +55,14 @@ export class ProfileComponent {
       const newFiles = Array.from(input.files); // Convert FileList to array
       // Append new files to the existing selectedFiles array
       this.selectedFiles = [...this.selectedFiles, ...newFiles];
-      console.log('Selected files:', this.selectedFiles);
+      console.log("Selected files:", this.selectedFiles);
     }
   }
 
   // Remove a file from the list
   removeFile(index: number): void {
     this.selectedFiles.splice(index, 1); // Remove the file at the given index
-    console.log('Remaining files after removal:', this.selectedFiles);
+    console.log("Remaining files after removal:", this.selectedFiles);
   }
 
   onUpload(): void {
@@ -71,7 +71,7 @@ export class ProfileComponent {
       this.s3Service
         .uploadFile(file)
         .then((response) => {
-          console.log('File uploaded successfully:', response.location);
+          console.log("File uploaded successfully:", response.location);
           this.editProfileForm.patchValue({
             file: response.location,
           });
@@ -79,7 +79,7 @@ export class ProfileComponent {
           this.blocking = 0;
         })
         .catch((error) => {
-          console.error('Error uploading file:', error);
+          console.error("Error uploading file:", error);
           this.blocking = 0;
         });
     });
@@ -87,16 +87,16 @@ export class ProfileComponent {
 
   ngOnInit() {
     this.editProfileForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      OrganizationName: [''],
-      file: [''],
+      name: ["", Validators.required],
+      email: ["", [Validators.required, Validators.email]],
+      phone: [""],
+      OrganizationName: [""],
+      file: [""],
     });
 
     this.loginService.getProfile().subscribe({
       next: (data: any) => {
-        console.log('data bakc');
+        console.log("data bakc");
         console.log(data);
         this.editProfileForm.patchValue({
           name: data.Name,
@@ -106,46 +106,44 @@ export class ProfileComponent {
         });
       },
       error: (error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       },
       complete: () => {
-        console.log('Completed the call'); // Complete callback
+        console.log("Completed the call"); // Complete callback
       },
     });
   }
 
   // Method to handle form submission
   onSubmit(): void {
-    console.log('onsubmit\n');
+    console.log("onsubmit\n");
     if (this.editProfileForm.valid && this.blocking == 0) {
-      console.log('Form Submitted', this.editProfileForm.value);
+      console.log("Form Submitted", this.editProfileForm.value);
 
-	// let profileData = this.editProfileForm.value;
-		let profileData =
-		{
-			Name: this.editProfileForm.value.name,
-			Email: this.editProfileForm.value.email,
-			Phone:this.editProfileForm.value.phone,
-			OrganizationName: this.editProfileForm.value.OrganizationName,
-			Photourl:this.editProfileForm.value.file
-		}
-		console.log(profileData)
+      // let profileData = this.editProfileForm.value;
+      let profileData = {
+        Name: this.editProfileForm.value.name,
+        Email: this.editProfileForm.value.email,
+        Phone: this.editProfileForm.value.phone,
+        OrganizationName: this.editProfileForm.value.OrganizationName,
+        Photourl: this.editProfileForm.value.file,
+      };
+      console.log(profileData);
 
       this.loginService.editProfile(profileData).subscribe({
         next: (data: any) => {
-          console.log('data bakc');
+          console.log("data bakc");
           console.log(data);
-          
         },
-        error: (error:any) => {
-          console.error('Error:', error);
+        error: (error: any) => {
+          console.error("Error:", error);
         },
         complete: () => {
-          console.log('Completed the call'); // Complete callback
+          console.log("Completed the call"); // Complete callback
         },
       });
     } else {
-      console.log('Form is invalid');
+      console.log("Form is invalid");
     }
   }
 }

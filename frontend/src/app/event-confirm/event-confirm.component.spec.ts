@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { EventConfirmComponent } from './event-confirm.component';
+import { EventConfirmComponent } from "./event-confirm.component";
 
-describe('EventConfirmComponent', () => {
+describe("EventConfirmComponent", () => {
   let component: EventConfirmComponent;
   let fixture: ComponentFixture<EventConfirmComponent>;
 
@@ -16,7 +16,7 @@ describe('EventConfirmComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

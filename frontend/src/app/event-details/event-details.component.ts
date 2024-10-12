@@ -1,23 +1,23 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { EventsService } from '../services/events.service';
-import { LoginService } from '../services/login.service';
-import { OrderConfirmService } from '../services/order-confirm.service';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { EventsService } from "../services/events.service";
+import { LoginService } from "../services/login.service";
+import { OrderConfirmService } from "../services/order-confirm.service";
+import { CommonModule } from "@angular/common";
+import { ActivatedRoute, Router } from "@angular/router";
 
-import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from "@angular/material/card";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatButtonModule } from "@angular/material/button";
 
-import { DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { DatePipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
-  selector: 'app-event-details',
+  selector: "app-event-details",
   standalone: true,
   imports: [
     MatCardModule,
@@ -28,8 +28,8 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
   ],
-  templateUrl: './event-details.component.html',
-  styleUrl: './event-details.component.css',
+  templateUrl: "./event-details.component.html",
+  styleUrl: "./event-details.component.css",
 })
 export class EventDetailsComponent {
   // eventId: number | null = null;
@@ -37,11 +37,11 @@ export class EventDetailsComponent {
     EventID: null,
     EventDate: null,
     TicketPrice: null,
-    VenueName: '',
-    VenueLocation: '',
+    VenueName: "",
+    VenueLocation: "",
   };
 
-  selectedTicketType: string = 'Standard'; //Default to Standard
+  selectedTicketType: string = "Standard"; //Default to Standard
   adjustedTicketPrice: number = 0; // Hold adjusted price
   sponsorshipAmount: number = 0; // Hold sponsorship amount
   userId: number | null = null; // To hold userID
@@ -55,43 +55,43 @@ export class EventDetailsComponent {
   ) {}
 
   ngOnInit() {
-    var id = this.route.snapshot.paramMap.get('id');
+    var id = this.route.snapshot.paramMap.get("id");
     console.log(id);
     // this.eventId = id !== null ? parseInt(id, 10) : null;
 
     this.eventService.viewEventDetails(id).subscribe({
       next: (data) => {
-        this.event.EventName = data[0]['EventName'];
-        this.event.EventID = data[0]['EventID'];
-        this.event.EventDate = new Date(data[0]['EventDate']);
-        this.event.TicketPrice = data[0]['TicketPrice'];
-        this.event.VenueName = data[0]['Venue']['VenueName'];
-        this.event.VenueLocation = data[0]['Venue']['Location'];
-        this.event.Organizer = data[0]['Organization']['OrganizationName'];
+        this.event.EventName = data[0]["EventName"];
+        this.event.EventID = data[0]["EventID"];
+        this.event.EventDate = new Date(data[0]["EventDate"]);
+        this.event.TicketPrice = data[0]["TicketPrice"];
+        this.event.VenueName = data[0]["Venue"]["VenueName"];
+        this.event.VenueLocation = data[0]["Venue"]["Location"];
+        this.event.Organizer = data[0]["Organization"]["OrganizationName"];
         this.adjustTicketPrice(); // Adjust price when data is loaded
       },
       error: (error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       },
       complete: () => {
-        console.log('Completed the call'); // Complete callback
+        console.log("Completed the call"); // Complete callback
       },
     });
 
     // Retrieve the user ID from the JWT token
     this.userId = this.loginService.getUserIdFromToken();
-    console.log('User ID from token:', this.userId);
+    console.log("User ID from token:", this.userId);
   }
 
   // Method to adjust the ticket price
   adjustTicketPrice() {
     switch (this.selectedTicketType) {
-      case 'Premium':
+      case "Premium":
         this.adjustedTicketPrice = parseFloat(
           (this.event.TicketPrice * 1.5).toFixed(2),
         ); // 2 d.p.
         break;
-      case 'VIP':
+      case "VIP":
         this.adjustedTicketPrice = parseFloat(
           (this.event.TicketPrice * 2).toFixed(2),
         );
@@ -104,7 +104,7 @@ export class EventDetailsComponent {
   // Method to buy ticket
   buyTicket() {
     if (!this.userId) {
-      alert('User is not logged in');
+      alert("User is not logged in");
       return;
     }
 
@@ -117,7 +117,7 @@ export class EventDetailsComponent {
 
     this.eventService.purchaseTicket(eventData).subscribe({
       next: (response) => {
-        console.log('Ticket purchased successfully', response);
+        console.log("Ticket purchased successfully", response);
         // Store order details in the OrderConfirmService
         this.orderConfirmService.setOrderData({
           eventDate: this.event.EventDate,
@@ -127,12 +127,12 @@ export class EventDetailsComponent {
           total: this.adjustedTicketPrice,
         });
         // Redirect to /order-confirmation page
-        this.router.navigate(['/order-confirmation'], {});
+        this.router.navigate(["/order-confirmation"], {});
       },
       error: (error) => {
-        console.error('Error purchasing ticket:', error);
+        console.error("Error purchasing ticket:", error);
         alert(
-          'Error: You are permitted to purchase only one ticket per event listed. Please use the dashboard to modify the ticket.',
+          "Error: You are permitted to purchase only one ticket per event listed. Please use the dashboard to modify the ticket.",
         );
       },
     });
@@ -141,7 +141,7 @@ export class EventDetailsComponent {
   // Method to handle sponsorship
   sponsorEvent() {
     if (!this.userId || !this.sponsorshipAmount) {
-      alert('Please enter a sponsorship amount.');
+      alert("Please enter a sponsorship amount.");
       return;
     }
 
@@ -153,14 +153,14 @@ export class EventDetailsComponent {
 
     this.eventService.submitSponsorship(sponsorData).subscribe({
       next: (response) => {
-        alert('Sponsorship submitted successfully!');
-        console.log('Sponsorship response:', response);
+        alert("Sponsorship submitted successfully!");
+        console.log("Sponsorship response:", response);
       },
       error: (error) => {
         alert(
-          'Error: You are permitted to sponsor only once per event listed. Please use the dashboard to modify the sponsorship amount.',
+          "Error: You are permitted to sponsor only once per event listed. Please use the dashboard to modify the sponsorship amount.",
         );
-        console.error('Error:', error);
+        console.error("Error:", error);
       },
     });
   }
