@@ -131,14 +131,31 @@ export class LoginService {
 
   // Method to parse JWT token and retrieve user ID
   getUserIdFromToken(): number | null {
-    const token = this.getToken();
+    // const token = this.getToken();
+    // if (token) {
+    //   try {
+    //     // Decode the JWT token to extract user ID (replace this with a JWT decoding library if necessary)
+    //     const payload = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+    //     return payload.userId;
+    //   } catch (error) {
+    //     console.error("Error parsing JWT token:", error);
+    //     return null;
+    //   }
+    // }
+    const token = this.getToken(); // Retrieve the token from localStorage
     if (token) {
       try {
-        // Decode the JWT token to extract user ID (replace this with a JWT decoding library if necessary)
-        const payload = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
-        return payload.userId;
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join(""),
+        );
+        return JSON.parse(jsonPayload); // Parse the JSON payload from the token
       } catch (error) {
-        console.error("Error parsing JWT token:", error);
+        console.error("Error decoding token:", error);
         return null;
       }
     }

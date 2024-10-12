@@ -79,7 +79,10 @@ export class EventDetailsComponent {
     });
 
     // Retrieve the user ID from the JWT token
-    this.userId = this.loginService.getUserIdFromToken();
+    // this.userId = this.loginService.getUserIdFromToken();
+    this.userId = this.loginService.getDecodedAccessToken(
+      this.loginService.getToken(),
+    );
     console.log("User ID from token:", this.userId);
   }
 

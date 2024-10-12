@@ -81,20 +81,20 @@ app.get("/venues/:id", async (req, res) => {
 
 // Ticket Purchase
 app.post("/userevent/purchase", async (req, res) => {
+  console.log(req.body.UserID.userID);
+  console.log(req.body.EventID);
+  console.log(req.body.TicketType);
+
   try {
-    const { UserID, EventID, TicketType, PurchaseDate } = req.body;
-
-    const userEvent = await UserEvent.create({
-      UserID: UserID,
-      EventID: EventID,
-      TicketType: TicketType,
-      PurchaseDate: PurchaseDate,
+    let data = await UserEvent.create({
+      UserID: req.body.UserID.userID,
+      EventID: req.body.EventID,
+      TicketType: req.body.TicketType,
     });
-
-    res
-      .status(201)
-      .json({ message: "Ticket purchased successfully", userEvent });
+    console.log(data);
+    res.json({ message: "Ticket purchased successfully", data });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -121,16 +121,14 @@ app.get("/userevent/:userId/:eventId", async (req, res) => {
 // Event Sponsorship
 app.post("/eventsponsor", async (req, res) => {
   try {
-    const { UserID, EventID, SponsorshipAmount } = req.body;
-
-    const sponsorEvent = await EventSponsor.create({
-      UserID: UserID,
-      EventID: EventID,
-      SponsorshipAmount: SponsorshipAmount,
+    let sponsorEvent = await EventSponsor.create({
+      UserID: req.body.UserID.userID,
+      EventID: req.body.EventID,
+      SponsorshipAmount: req.body.SponsorshipAmount,
     });
 
     res
-      .status(201)
+      .status(200)
       .json({ message: "Sponsorship submitted successfully", sponsorEvent });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -144,11 +142,11 @@ require("./models/associations"); // This file contains all the association logi
 
 // Sync database and start the server
 sequelize
-  .sync({ force: true }) // force: true will drop tables if they exist
-  //   .sync({ force: false }) // force: true will drop tables if they exist
+  //   .sync({ force: true }) // force: true will drop tables if they exist
+  .sync({ force: false }) // force: true will drop tables if they exist
   .then(() => {
     console.log("Database synced");
-    populateMockData();
+    // populateMockData();
     app.listen(3000, () => console.log("Server is running on port 3000"));
   })
   .catch((err) => console.log("Error syncing database: " + err));

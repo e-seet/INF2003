@@ -62,7 +62,7 @@ router.post("/register", async (req, res) => {
     console.log("Waiting for new request\n");
 
     // Return the created user
-    res.status(201).json(newUser);
+    res.status(200).json(newUser);
   } catch (error) {
     console.error("Error during registration process:", error);
     console.log("Waiting for new request\n");
