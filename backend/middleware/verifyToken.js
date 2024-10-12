@@ -5,6 +5,9 @@ const verifyToken = (req, res, next) => {
   const token = req.headers["authorization"];
   if (!token) return res.status(403).send("Token is required");
 
+  if (token == null || token == "null") {
+    return res.status(403).send({ message: "Unauthorized!" });
+  }
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     req.user = decoded;

@@ -94,6 +94,9 @@ Organization.hasMany(User, {
   as: "user",
   onDelete: "SET NULL", // If organization is deleted, set organizationId to NULL for users
 });
+User.hasMany(Event, {
+  foreignKey: "CreatedBy",
+});
 
 module.exports = {
   User,

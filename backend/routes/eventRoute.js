@@ -66,7 +66,7 @@ router.get("/getEvent/:id", async (req, res) => {
 router.post("/createEvent", async (req, res) => {
   console.log("event/createEvent\n");
 
-  var token;
+  var token = null;
   var decodedToken = null;
   if (
     req.headers.authorization &&
@@ -115,35 +115,49 @@ router.post("/createEvent", async (req, res) => {
     TicketPrice: req.body.ticketPrice,
     VenueID: venueID[0].dataValues.VenueID,
     OrganizationID: decodedToken.organizationID,
+    CreatedBy: decodedToken.userID,
   };
-  console.log("sql data\n");
+  console.log("sql data");
   console.log(sqlData);
-  console.log(typeof sqlData.EventDate);
+  //   console.log(typeof sqlData.EventDate);
 
-  try {
-    data = await Event.create(sqlData);
-    console.log(data);
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  //   try {
+  //     data = await Event.create(sqlData);
+  //     console.log(data);
+  //     res.json(data);
+  //   } catch (error) {
+  //     res.status(500).json({ error: error.message });
+  //   }
+
+  Event.create(sqlData)
+    .then((data) => {
+      console.log(data);
+      res.json(data);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
 });
 
 // Get all of my ticket details
 // Event, User, UserEvent
 router.get("/getTickets", async (req, res) => {
   console.log("/getTickets\n");
-  var token;
+  var token = null;
   var decodedToken = null;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer ")
   ) {
     token = req.headers.authorization.split(" ")[1]; // Extract the token part
-    console.log("token:" + token); // This will output just the token string
   } else {
     console.log("No token found or invalid format");
   }
+
+  if (token == null || token == "null") {
+    return res.status(401).send({ message: "Unauthorized!" });
+  }
+
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).send({ message: "Unauthorized!" });
@@ -153,6 +167,9 @@ router.get("/getTickets", async (req, res) => {
   });
 
   console.log(decodedToken);
+  if (decodedToken.userID) {
+    return res.status(200).send({ message: "error" });
+  }
   console.log(decodedToken.userID);
 
   UserEvent.findAll({
