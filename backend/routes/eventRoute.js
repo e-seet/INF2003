@@ -8,9 +8,12 @@ const User = require("../models/user");
 
 const jwt = require("jsonwebtoken");
 const UserEvent = require("../models/userevent");
+const Category = require("../models/category");
+const EventCategory = require("../models/eventcategory");
+const EventSponsor = require("../models/eventsponsor");
 const SECRET_KEY = "TEMP_KEY";
 
-// •	GET /event/getAllEvents: Get all events.
+// Get all events. [Be it self-organized or by others]
 router.get("/getAllEvents", async (req, res) => {
   try {
     data = await Event.findAll({
@@ -36,7 +39,8 @@ router.get("/getAllEvents", async (req, res) => {
   }
 });
 
-// •	GET /event/getEvent/:id: Get all events.
+// Get a particular event data. By event id.
+// Can be self-organized or others
 router.get("/getEvent/:id", async (req, res) => {
   var id = req.params.id;
   try {
@@ -129,11 +133,11 @@ router.get("/getTicketDetails/:id", async (req, res) => {
 });
 
 //Create a new event.
-// •	GET /event/getEvent/:id: Get all events.
+// Being a organizer and creating a new event
 router.post("/createEvent", async (req, res) => {
   console.log("event/createEvent\n");
 
-  var token;
+  var token = null;
   var decodedToken = null;
   if (
     req.headers.authorization &&
@@ -182,33 +186,50 @@ router.post("/createEvent", async (req, res) => {
     TicketPrice: req.body.ticketPrice,
     VenueID: venueID[0].dataValues.VenueID,
     OrganizationID: decodedToken.organizationID,
+    CreatedBy: decodedToken.userID,
   };
-  console.log("sql data\n");
+  console.log("sql data");
   console.log(sqlData);
-  console.log(typeof sqlData.EventDate);
+  //   console.log(typeof sqlData.EventDate);
 
-  try {
-    data = await Event.create(sqlData);
-    console.log(data);
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  //   try {
+  //     data = await Event.create(sqlData);
+  //     console.log(data);
+  //     res.json(data);
+  //   } catch (error) {
+  //     res.status(500).json({ error: error.message });
+  //   }
+
+  Event.create(sqlData)
+    .then((data) => {
+      console.log(data);
+      res.json(data);
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
 });
 
+// find all of my tickets
+// basically taking my records in user-event
+// means getting back what tickets i brought
 router.get("/getTickets", async (req, res) => {
   console.log("/getTickets\n");
 
-  var token;
+  var token = null;
   var decodedToken = null;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer ")
   ) {
     token = req.headers.authorization.split(" ")[1]; // Extract the token part
-    console.log("token:" + token); // This will output just the token string
   } else {
     console.log("No token found or invalid format");
+  }
+
+  if (token == null || token == "null") {
+    console.log("token is null");
+    return res.status(401).send({ message: "Unauthorized!" });
   }
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
@@ -217,8 +238,6 @@ router.get("/getTickets", async (req, res) => {
     }
     decodedToken = decoded;
   });
-
-  console.log(decodedToken);
   console.log(decodedToken.userID);
 
   try {
@@ -241,7 +260,6 @@ router.get("/getTickets", async (req, res) => {
         { model: User },
       ],
     });
-
     // Return data to client
     res.status(200).json(data);
   } catch (error) {
@@ -341,6 +359,63 @@ router.get("/getTickets", async (req, res) => {
 //     //     res.status(500).json({ error: error.message });
 //     // }
 // });
+
+// for events the user organize
+router.get("/getMyEvents", async (req, res) => {
+  var token = null;
+  var decodedToken = null;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.split(" ")[1]; // Extract the token part
+    console.log("token:" + token); // This will output just the token string
+  } else {
+    console.log("No token found or invalid format");
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    // console.log(decoded);
+    decodedToken = decoded;
+  });
+
+  console.log(decodedToken.userID);
+  try {
+    data = await Event.findAll({
+      where: { CreatedBy: decodedToken.userID },
+      include: [
+        {
+          model: Category,
+          // Specify the fields we want to get from Venue
+          attributes: ["CategoryName"],
+        },
+        {
+          model: EventSponsor,
+          attributes: ["SponsorshipAmount", "UserID"],
+        },
+        {
+          model: Organization,
+          attributes: ["OrganizationName"],
+        },
+        {
+          model: Venue,
+          attributes: ["VenueName", "Location", "Capacity"],
+        },
+      ],
+      order: [
+        ["EventDate", "ASC"], // Sorting by 'EventDate' in ascending order ('ASC')
+      ],
+    });
+    console.log("retreived my events");
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 const eventRoutes = router;
 module.exports = eventRoutes;

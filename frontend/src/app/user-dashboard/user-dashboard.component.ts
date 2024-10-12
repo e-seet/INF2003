@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { LoginService } from "../services/login.service";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { EventsService } from "../services/events.service";
 
 @Component({
   standalone: true,
@@ -19,7 +20,11 @@ export class UserDashboardComponent implements OnInit {
   myEvents: any[] = []; // Initialize as an empty array or use a specific type for events
   notifications: any[] = []; // Initialize as an empty array or use a specific type for notifications
 
-  constructor(private loginService: LoginService) {}
+  constructor(
+    private loginService: LoginService,
+
+    private eventService: EventsService,
+  ) {}
 
   ngOnInit(): void {
     // Extract user details from the JWT token
@@ -31,19 +36,31 @@ export class UserDashboardComponent implements OnInit {
       console.error("Failed to decode token or token is missing.");
     }
 
+    // get all my upcoming events
+    this.eventService.getTickets().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.upcomingEvents = data;
+      },
+      error: (error) => {
+        console.error("Error:", error);
+      },
+      complete: () => {},
+    });
+
     //TEMP DATA
-    this.upcomingEvents = [
-      { id: 1, name: "Event 1", date: new Date(), location: "Location 1" },
-      { id: 2, name: "Event 2", date: new Date(), location: "Location 2" },
-    ];
+    // this.upcomingEvents = [
+    //   //   { id: 1, name: "Event 1", date: new Date(), location: "Location 1" },
+    //   //   { id: 2, name: "Event 2", date: new Date(), location: "Location 2" },
+    // ];
 
     this.myEvents = [
-      {
-        id: 3,
-        name: "My Event 1",
-        date: new Date(),
-        location: "My Location 1",
-      },
+      //   {
+      //     id: 3,
+      //     name: "My Event 1",
+      //     date: new Date(),
+      //     location: "My Location 1",
+      //   },
     ];
   }
 

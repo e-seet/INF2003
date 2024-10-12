@@ -11,9 +11,12 @@ const SECRET_KEY = "TEMP_KEY";
 
 // Middleware to verify token
 const verifyTokenMiddleware = (req, res, next) => {
-  const token = req.headers["authorization"];
+  let token = req.headers["authorization"];
   if (!token) return res.status(403).send("Token is required");
 
+  if (token == null || token == "null") {
+    return res.status(401).send({ message: "Unauthorized!" });
+  }
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) return res.status(401).send("Invalid token");
     req.user = decoded.user;
@@ -140,6 +143,7 @@ router.post("/login", async (req, res) => {
 
 // edit user profile
 router.post("/editProfile", async (req, res) => {
+  var token = null;
   console.log("\nedit profile\n");
   //check for token
   if (
@@ -151,7 +155,9 @@ router.post("/editProfile", async (req, res) => {
   } else {
     console.log("No token found or invalid format");
   }
-
+  if (token == null || token == "null") {
+    return res.status(401).send({ message: "Unauthorized!" });
+  }
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res
@@ -196,8 +202,9 @@ router.post("/editProfile", async (req, res) => {
   updateUser(decodedToken.userID, req.body);
 });
 
-// Get user profile
+// Get the user's organization name
 router.get("/profile/organization", async (req, res) => {
+  var token = null;
   //check for token
   if (
     req.headers.authorization &&
@@ -208,7 +215,9 @@ router.get("/profile/organization", async (req, res) => {
   } else {
     console.log("No token found or invalid format");
   }
-
+  if (token == null || token == "null") {
+    return res.status(401).send({ message: "Unauthorized!" });
+  }
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res
@@ -265,7 +274,7 @@ router.get("/profile/organization", async (req, res) => {
 router.get("/profile", async (req, res) => {
   console.log("profile route\n");
 
-  var token;
+  var token = null;
   var decodedToken = null;
 
   if (
@@ -276,6 +285,9 @@ router.get("/profile", async (req, res) => {
     console.log("token:" + token); // This will output just the token string
   } else {
     console.log("No token found or invalid format");
+  }
+  if (token == null || token == "null") {
+    return res.status(401).send({ message: "Unauthorized!" });
   }
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {

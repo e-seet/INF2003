@@ -2,6 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("./index");
 const Organization = require("./organization");
 const Venue = require("./venue");
+const User = require("./user");
 
 const Event = sequelize.define(
   "Event",
@@ -44,6 +45,16 @@ const Event = sequelize.define(
       },
       onDelete: "CASCADE", // Optional: If an organization is deleted, related events are deleted
     },
+    CreatedBy: {
+      // Foreign key column for Organization
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "UserID",
+      },
+      onDelete: "CASCADE", // Optional: If an organization is deleted, related events are deleted
+    },
   },
   {
     tableName: "Events",
@@ -54,5 +65,6 @@ const Event = sequelize.define(
 Event.belongsTo(Organization, { foreignKey: "OrganizationID" });
 Event.belongsTo(Venue, { foreignKey: "VenueID" });
 // Event.belongsTo(Sponsor, { foreignKey: 'SponsorID' });
+Event.belongsTo(User, { foreignKey: "CreatedBy" });
 
 module.exports = Event;

@@ -102,6 +102,10 @@ Event.hasMany(UserEvent, {
 });
 Event.hasMany(EventSponsor, { foreignKey: "EventID" });
 EventSponsor.belongsTo(Event, { foreignKey: "EventID" });
+User.hasMany(Event, {
+  foreignKey: "CreatedBy",
+});
+
 module.exports = {
   User,
   Event,
