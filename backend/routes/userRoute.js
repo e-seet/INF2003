@@ -198,7 +198,6 @@ router.post("/editProfile", async (req, res) => {
 
 // Get user profile
 router.get("/profile/organization", async (req, res) => {
-  console.log("called this");
   //check for token
   if (
     req.headers.authorization &&

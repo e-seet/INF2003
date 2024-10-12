@@ -6,14 +6,18 @@ import {
 } from "@angular/common/http";
 import { map, tap, catchError } from "rxjs/operators";
 import { Observable, throwError } from "rxjs";
+import { LoginService } from "./login.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class EventsService {
-  constructor(public httpClient: HttpClient) {}
+  constructor(
+    public httpClient: HttpClient,
+    private loginService: LoginService,
+  ) {}
 
-  private url = "localhost:3000/"; // Example API URL
+  private url = "localhost:3000"; // Example API URL
 
   data: any[] = [];
 
@@ -30,8 +34,26 @@ export class EventsService {
         catchError(this.handleError),
       );
   }
+
   createEvent(eventData: any): Observable<any> {
-    return this.httpClient.post(`${this.url}/events`, eventData);
+    var token = this.loginService.getToken();
+
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    console.log("create event in service");
+    console.log(eventData);
+    return this.httpClient
+      .post<
+        any[]
+      >("http://localhost:3000/event/createEvent", eventData, { headers })
+      .pipe(
+        tap((databack) => {
+          console.log(databack);
+        }),
+        catchError(this.handleError),
+      );
   }
 
   viewEventDetails(eventID: any): Observable<any> {
@@ -82,8 +104,12 @@ export class EventsService {
     EventID: number;
     SponsorshipAmount: number;
   }): Observable<any> {
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
     return this.httpClient
-      .post("http://localhost:3000/eventsponsor", sponsorData)
+      .post("http://localhost:3000/eventsponsor", sponsorData, {
+        headers: headers,
+      })
       .pipe(
         tap((response) => {
           console.log("Sponsorship response:", response);

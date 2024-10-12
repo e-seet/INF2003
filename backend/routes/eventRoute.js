@@ -5,6 +5,9 @@ const Event = require("../models/event");
 const Venue = require("../models/venue");
 const Organization = require("../models/organization");
 
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = "TEMP_KEY";
+
 // •	GET /event/getAllEvents: Get all events.
 router.get("/getAllEvents", async (req, res) => {
   try {
@@ -56,7 +59,73 @@ router.get("/getEvent/:id", async (req, res) => {
   }
 });
 
-// •	POST /api/events: Create a new event.
+//Create a new event.
+// •	GET /event/getEvent/:id: Get all events.
+router.post("/createEvent", async (req, res) => {
+  console.log("event/createEvent\n");
+  var token;
+  var decodedToken = null;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.split(" ")[1]; // Extract the token part
+    console.log("token:" + token); // This will output just the token string
+  } else {
+    console.log("No token found or invalid format");
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    // console.log(decoded);
+    decodedToken = decoded;
+  });
+
+  console.log("decoded token");
+  console.log(decodedToken);
+  console.log("\nreq body\n");
+  console.log(req.body);
+  // create event
+  // event catregory
+  // var id = req.params.id;
+
+  console.log(req.body.venueName);
+  // get venue first
+  try {
+    venueID = await Venue.findOrCreate({
+      where: {
+        VenueName: req.body.venueName,
+        Location: req.body.Location,
+        Capacity: req.body.Capacity,
+      },
+    });
+    // console.log(venueID[0].dataValues.VenueID);
+  } catch (error) {
+    console.error("Error updating user:", error);
+  }
+
+  var sqlData = {
+    EventName: req.body.eventName,
+    EventDate: new Date(req.body.eventDate),
+    TicketPrice: req.body.ticketPrice,
+    VenueID: venueID[0].dataValues.VenueID,
+    OrganizationID: decodedToken.organizationID,
+  };
+  console.log("sql data\n");
+  console.log(sqlData);
+  console.log(typeof sqlData.EventDate);
+
+  try {
+    data = await Event.create(sqlData);
+    console.log(data);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // •	POSt /api/events/:id: Update an existing event by ID.
 // •	DELETE /api/events/:id: Delete an event by ID.
 

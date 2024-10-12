@@ -135,6 +135,18 @@ app.post("/eventsponsor", async (req, res) => {
   }
 });
 
+// category
+app.get("/category/getcategories", async (req, res) => {
+  console.log("get categories");
+  try {
+    let categories = await Category.findAll();
+
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Set up associations
 require("./models/associations"); // This file contains all the association logic
 
