@@ -24,6 +24,7 @@ app.use(express.json());
 
 // Enable CORS for all routes
 const cors = require("cors");
+const verifyToken = require("./middleware/verifyToken");
 app.use(cors());
 // temp
 const corsOptions = {
@@ -80,7 +81,7 @@ app.get("/venues/:id", async (req, res) => {
 });
 
 // Ticket Purchase
-app.post("/userevent/purchase", async (req, res) => {
+app.post("/userevent/purchase", verifyToken, async (req, res) => {
   console.log(req.body.UserID.userID);
   console.log(req.body.EventID);
   console.log(req.body.TicketType);

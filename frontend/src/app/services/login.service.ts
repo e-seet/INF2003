@@ -72,16 +72,10 @@ export class LoginService {
 
   // return the profile details of a particualr user based by the userID
   getProfile() {
-    console.log("get profile. Get JWT");
-    var token = localStorage.getItem(this.TOKEN_KEY);
-    // console.log(token);
-    // var decodedToken = this.getDecodedAccessToken(token);
-    // console.log(decodedToken.userID)
+    var token = this.getToken();
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
-
-    console.log("gotten token", token);
 
     return this.httpClient
       .get<any>(`${this.url}/user/profile`, { headers: headers })
