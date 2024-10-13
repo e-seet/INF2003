@@ -1,3 +1,31 @@
+<div class="filter-container">
+  <!-- Start Date Filter -->
+  <mat-form-field appearance="fill">
+    <mat-label>Start Date</mat-label>
+    <input matInput [matDatepicker]="startDatePicker" (dateChange)="applyFilter()" [(ngModel)]="startDate">
+    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #startDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- End Date Filter -->
+  <mat-form-field appearance="fill">
+    <mat-label>End Date</mat-label>
+    <input matInput [matDatepicker]="endDatePicker" (dateChange)="applyFilter()" [(ngModel)]="endDate">
+    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #endDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- Sort by Price Filter -->
+  <mat-form-field appearance="fill">
+    <mat-label>Sort by Price</mat-label>
+    <mat-select [(ngModel)]="priceSortOrder" (selectionChange)="applyFilter()">
+      <mat-option value="asc">Lowest to Highest</mat-option>
+      <mat-option value="desc">Highest to Lowest</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>
+
 <div class="mat-elevation-z8">
   <table class="mat-table" mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="EventID">
