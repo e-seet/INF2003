@@ -65,7 +65,7 @@ export class EventListComponent {
         data.forEach((item: any) => {
           theobjects.push({
             EventID: item.EventID,
-            Organizer: item.Organization.OrganizationName,
+            Organizer: item.Organization ? item.Organization.OrganizationName : 'Unknown Organizer', // Check if Organization exists
             VenueName: item.Venue.VenueName,
             VenueLocation: item.Venue.Location,
             EventName: item.EventName,
