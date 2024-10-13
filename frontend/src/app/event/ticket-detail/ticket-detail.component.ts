@@ -6,8 +6,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { LoginService } from "../../services/login.service";
 import { EventsService } from "../../services/events.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { MatCardModule } from "@angular/material/card";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-ticket-detail",
@@ -19,6 +20,7 @@ import { MatCardModule } from "@angular/material/card";
     MatSelectModule, // For <mat-select>
     ReactiveFormsModule, // I
     MatCardModule,
+    MatButton,
   ],
   templateUrl: "./ticket-detail.component.html",
   styleUrl: "./ticket-detail.component.css",
@@ -40,6 +42,7 @@ export class TicketDetailComponent {
     private loginService: LoginService,
     private eventService: EventsService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -91,5 +94,9 @@ export class TicketDetailComponent {
       default:
         this.adjustedTicketPrice = this.ticket.TicketPrice;
     }
+  }
+
+  goBack() {
+    this.router.navigate(["/myticket"]); // Redirect to events list or another page
   }
 }

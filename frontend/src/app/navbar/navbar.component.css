@@ -1,98 +1,103 @@
 .navbar {
-  width: 100%;
-  background-color: #333;
-  color: #fff;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: "ibm-plex sans-regular", Arial, sans-serif;
-  font-size: 18px;
-  height: 100px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	background-color: #333;
+	color: #fff;
+	padding: 0 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-family: "ibm-plex sans-regular", Arial, sans-serif;
+	font-size: 18px;
+	height: 100px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Navbar left section (logo) styling */
 .navbar-left {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 /* Navbar logo styling */
 .navbar-logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 12px;
-  transition: transform 0.2s;
+	font-size: 24px;
+	font-weight: bold;
+	color: #fff;
+	text-decoration: none;
+	padding: 8px 12px;
+	transition: transform 0.2s;
 }
 
 .navbar-logo:hover {
-  transform: scale(1.1);
+	transform: scale(1.1);
 }
 
 /* Navbar menu list styling */
 .navbar-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	justify-content: left;
+	/* Aligns the menu to the left */
+	margin-left: auto;
+	/* Ensures that the menu is pushed to the left side of the navbar */
 }
 
 /* Navbar menu item styling */
 .navbar-item {
-  margin: 0 15px;
-  display: flex;
-  align-items: center;
+	margin: 0 15px;
+	display: flex;
+	align-items: center;
 }
 
 /* Navbar link styling */
 .navbar-link {
-  text-decoration: none;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition:
-    background-color 0.3s,
-    transform 0.2s;
+	text-decoration: none;
+	color: #fff;
+	padding: 8px 12px;
+	border-radius: 4px;
+	transition:
+		background-color 0.3s,
+		transform 0.2s;
 }
 
 /* Hover effect for links */
 .navbar-link:hover {
-  background-color: #575757;
-  transform: scale(1.05);
+	background-color: #575757;
+	transform: scale(1.05);
 }
 
 /* Navbar right section (buttons) styling */
 .navbar-right {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	/* Pushes the right section (buttons) to the far right */
 }
 
 /* Styling for login and logout buttons */
 .navbar-button {
-  background-color: #444;
-  color: #fff;
-  border: none;
-  padding: 12px;
-  margin-left: 15px;
-  cursor: pointer;
-  border-radius: 6px;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition:
-    background-color 0.3s,
-    transform 0.2s;
+	background-color: #444;
+	color: #fff;
+	border: none;
+	padding: 12px;
+	margin-left: 15px;
+	cursor: pointer;
+	border-radius: 6px;
+	width: 80px;
+	height: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	transition:
+		background-color 0.3s,
+		transform 0.2s;
 }
 
 /* Hover effect for buttons */
 .navbar-button:hover {
-  background-color: #575757;
-  transform: scale(1.05);
+	background-color: #575757;
+	transform: scale(1.05);
 }

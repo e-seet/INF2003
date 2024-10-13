@@ -7,16 +7,18 @@ import { MatSort, MatSortModule } from "@angular/material/sort";
 import { Router } from "@angular/router";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule } from "@angular/material/core";
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select'; 
-import { MatOptionModule } from '@angular/material/core';
+import { FormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatOptionModule } from "@angular/material/core";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-event-list",
   standalone: true,
   imports: [
+    MatButton,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -27,7 +29,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
   ],
   templateUrl: "./event-list.component.html",
   styleUrl: "./event-list.component.css",
@@ -42,7 +44,11 @@ export class EventListComponent {
   ) {}
 
   dataSource = new MatTableDataSource<any>();
-  originalData: any[] = [];  // Keep a copy of the original data
+  originalData: any[] = []; // Keep a copy of the original data
+  currentEvents: any[] = [];
+  pastEvents: any[] = [];
+  showCurrentEvents = true; // Boolean to toggle between current and past events
+  currentView: "Current" | "Past" | "All" = "All";
 
   displayedColumns: string[] = [
     "EventID",
@@ -56,16 +62,35 @@ export class EventListComponent {
 
   startDate: Date | null = null;
   endDate: Date | null = null;
-  priceSortOrder: string = 'asc'; // Variable to track price sorting order
+  priceSortOrder: string = "asc"; // Variable to track price sorting order
+
+  toggleView() {
+    this.showCurrentEvents = !this.showCurrentEvents;
+
+    if (this.showCurrentEvents) {
+      const now = new Date();
+      this.dataSource.data = this.originalData.filter(
+        (event) => new Date(event.EventDate) >= now,
+      );
+    } else {
+      const now = new Date();
+      this.dataSource.data = this.originalData.filter(
+        (event) => new Date(event.EventDate) < now,
+      );
+    }
+  }
 
   ngOnInit() {
     this.eventService.displayEvents().subscribe({
       next: (data) => {
         var theobjects: any[] = [];
         data.forEach((item: any) => {
+          console.log(item);
           theobjects.push({
             EventID: item.EventID,
-            Organizer: item.Organization.OrganizationName,
+            Organizer: item.Organization?.OrganizationName
+              ? item.Organization.OrganizationName
+              : "N/A", // Check if Organization and OrganizationName exist
             VenueName: item.Venue.VenueName,
             VenueLocation: item.Venue.Location,
             EventName: item.EventName,
@@ -73,7 +98,7 @@ export class EventListComponent {
             TicketPrice: item.TicketPrice,
           });
         });
-        this.originalData = theobjects;  // Store the original data
+        this.originalData = theobjects; // Store the original data
         this.dataSource.data = theobjects;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -101,9 +126,9 @@ export class EventListComponent {
     });
 
     // Sort the filtered data by price
-    if (this.priceSortOrder === 'asc') {
+    if (this.priceSortOrder === "asc") {
       filteredData.sort((a, b) => a.TicketPrice - b.TicketPrice);
-    } else if (this.priceSortOrder === 'desc') {
+    } else if (this.priceSortOrder === "desc") {
       filteredData.sort((a, b) => b.TicketPrice - a.TicketPrice);
     }
 
@@ -127,5 +152,46 @@ export class EventListComponent {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  // Filter logic for past and current events
+  applyFilterDate() {
+    const now = new Date();
+
+    this.currentEvents = this.originalData.filter(
+      (event) => new Date(event.EventDate) >= now,
+    );
+    this.pastEvents = this.originalData.filter(
+      (event) => new Date(event.EventDate) < now,
+    );
+
+    // Set the dataSource based on the toggle (current or past events)
+    this.dataSource.data = this.showCurrentEvents
+      ? this.currentEvents
+      : this.pastEvents;
+  }
+
+  // Function to reset all filters and show original data
+  resetFilters() {
+    // Clear filters
+    this.startDate = null;
+    this.endDate = null;
+    // this.priceSortOrder = null;
+    // this.showCurrentEvents = true; // Reset to show current events
+
+    this.currentView = "All";
+    // Reset dataSource to original data
+    this.dataSource.data = this.originalData;
+  }
+
+  // Function to toggle between current and past events
+  toggleViewDate() {
+    this.showCurrentEvents = !this.showCurrentEvents;
+    if (this.showCurrentEvents) {
+      this.currentView = "Current";
+    } else {
+      this.currentView = "Past";
+    }
+    this.applyFilterDate(); // Reapply the filter based on the new view
   }
 }

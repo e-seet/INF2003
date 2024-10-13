@@ -1,30 +1,33 @@
 <div class="ticket-container">
-  <mat-card class="ticket-card" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>
-        <h2>Event Name: {{ ticket.EventName }}</h2>
-      </mat-card-title>
-      <mat-card-subtitle>
-        <h3>Organized by: {{ ticket.Organizer }}</h3>
-      </mat-card-subtitle>
-    </mat-card-header>
+	<mat-card class="ticket-card" appearance="outlined">
+		<mat-card-header>
+			<mat-card-title>
+				<h2>Event Name: {{ ticket.EventName }}</h2>
+			</mat-card-title>
+			<mat-card-subtitle>
+				<h3>Organized by: {{ ticket.Organizer }}</h3>
+			</mat-card-subtitle>
+		</mat-card-header>
 
-    <mat-card-content>
-      <div class="event-info">
-        <div>
-          <h3>
-            Date of Event:
-            {{ ticket.EventDate | date: "longDate" }}
-          </h3>
-        </div>
-        <h3>Price: ${{ adjustedTicketPrice }}</h3>
-        <h3>Venue: {{ ticket.VenueName }}</h3>
-        <h3>Location: {{ ticket.VenueLocation }}</h3>
-        <h3>Ticket Type: {{ ticket.VenueLocation }}</h3>
-      </div>
+		<mat-card-content>
+			<div class="event-info">
+				<div>
+					<h3>
+						Date of Event:
+						{{ ticket.EventDate | date: "longDate" }}
+					</h3>
+				</div>
+				<h3>Price: ${{ adjustedTicketPrice }}</h3>
+				<h3>Venue: {{ ticket.VenueName }}</h3>
+				<h3>Location: {{ ticket.VenueLocation }}</h3>
+				<h3>Ticket Type: {{ ticket.VenueLocation }}</h3>
+			</div>
+			<button mat-raised-button (click)="goBack()">
+				Back
+			</button>
 
-      <!-- Ticket Type Selection -->
-      <!-- <div class="ticket-type-selection">
+			<!-- Ticket Type Selection -->
+			<!-- <div class="ticket-type-selection">
 				<mat-form-field appearance="fill">
 					<mat-label>Ticket Type</mat-label>
 					<mat-select [(value)]="selectedTicketType" (selectionChange)="adjustTicketPrice()">
@@ -34,6 +37,7 @@
 					</mat-select>
 				</mat-form-field>
 			</div> -->
-    </mat-card-content></mat-card
-  >
+
+
+		</mat-card-content></mat-card>
 </div>

@@ -43,12 +43,24 @@ export const routes: Routes = [
   { path: "event-management/:id", component: EventConfirmComponent },
   { path: "event-confirm", component: EventConfirmComponent },
 
-  { path: "organizer", component: OrganizerComponent },
-  { path: "organizer/:id", component: OrganizerDetailsComponent },
+  {
+    path: "organizer",
+    component: OrganizerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "organizer/:id",
+    component: OrganizerDetailsComponent,
+    canActivate: [AuthGuard],
+  },
 
   // for my Tickets. The tickets i brought for
-  { path: "myticket", component: TicketsComponent },
-  { path: "myticket/:id", component: TicketDetailComponent },
+  { path: "myticket", component: TicketsComponent, canActivate: [AuthGuard] },
+  {
+    path: "myticket/:id",
+    component: TicketDetailComponent,
+    canActivate: [AuthGuard],
+  },
 
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
   { path: "edit-event/:id", component: EditEventComponent, canActivate: [AuthGuard] },

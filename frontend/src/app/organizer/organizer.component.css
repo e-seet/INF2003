@@ -1,0 +1,22 @@
+.button-container {
+	display: flex;
+	justify-content: flex-end;
+	/* Aligns the buttons to the right */
+	margin-top: 1rem;
+	/* Adds some spacing above the buttons */
+	margin-bottom: 1rem;
+	/* Adds some spacing below the buttons */
+	gap: 1rem;
+	/* Adds space between the buttons */
+}
+
+.button {
+	min-width: 150px;
+	padding: 10px 16px;
+	/* Adjust button size for consistency */
+}
+
+.mat-elevation-z8 {
+	margin-top: 2rem;
+	/* Adds space from the top */
+}
