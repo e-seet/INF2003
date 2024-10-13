@@ -102,7 +102,7 @@ export class ProfileComponent {
           name: data.Name,
           email: data.Email,
           phone: data.Phone,
-          OrganizationName: data.organization.OrganizationName,
+          OrganizationName: data.Organization.OrganizationName,
         });
       },
       error: (error) => {
