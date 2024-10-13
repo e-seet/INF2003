@@ -217,13 +217,14 @@ router.get("/profile", verifyToken, async (req, res) => {
   console.log("profile route\n");
 
   let decodedToken = req.user;
+  console.log(decodedToken.userID);
   try {
     data = await User.findOne({
       where: { UserID: decodedToken.userID },
       include: [
         {
           model: Organization,
-          as: "organization",
+          //   as: "organization",
           attributes: ["OrganizationName"],
         },
       ],

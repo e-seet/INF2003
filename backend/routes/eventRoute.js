@@ -113,7 +113,7 @@ router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
         },
         {
           model: EventSponsor,
-          attributes: ["SponsorshipAmount", "UserID"],
+          attributes: ["SponsorshipAmount", "UserID", "SponsorLevel"],
           where: { EventID: event_id },
           include: [
             {

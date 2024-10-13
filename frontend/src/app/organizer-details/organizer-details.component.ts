@@ -47,6 +47,7 @@ export class OrganizerDetailsComponent {
     TicketPrice: null,
     VenueName: "",
     VenueLocation: "",
+    SponsorLevel: "",
   };
 
   eventSponsor: any[] = [];

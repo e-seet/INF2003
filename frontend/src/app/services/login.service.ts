@@ -77,6 +77,7 @@ export class LoginService {
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
 
+    console.log("get profile");
     return this.httpClient
       .get<any>(`${this.url}/user/profile`, { headers: headers })
       .pipe(
