@@ -83,7 +83,7 @@ const populateMockData = async () => {
     const eventData = await readCSV(
       path.join(__dirname, "csv_data", "events.csv"),
     );
-    await Event.bulkCreate(eventData);
+    await Event.bulkCreate(eventData, { individualHooks: true });
 
     // 6.	Insert into EventCategory
     // to do

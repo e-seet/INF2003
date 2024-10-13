@@ -43,6 +43,7 @@ const Event = sequelize.define(
         model: Organization,
         key: "OrganizationID",
       },
+      allowNull: true,
       onDelete: "CASCADE", // Optional: If an organization is deleted, related events are deleted
     },
     CreatedBy: {
@@ -58,6 +59,15 @@ const Event = sequelize.define(
   },
   {
     tableName: "Events",
+    hooks: {
+      // Hook to auto-populate OrganizationID before creating an event
+      async beforeCreate(event, options) {
+        const user = await User.findByPk(event.CreatedBy);
+        if (user && user.OrganizationID) {
+          event.OrganizationID = user.OrganizationID;
+        }
+      },
+    },
   },
 );
 
