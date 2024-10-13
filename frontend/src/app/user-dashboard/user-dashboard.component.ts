@@ -80,7 +80,15 @@ export class UserDashboardComponent implements OnInit {
 
   // Define the deleteEvent method
   deleteEvent(eventId: number): void {
-    console.log("Event deleted:", eventId);
-    this.myEvents = this.myEvents.filter((event) => event.id !== eventId);
+    this.eventService.deleteEvent(eventId).subscribe({
+      next: (response) => {
+        console.log("Event deleted successfully:", response);
+        // Remove the deleted event from the frontend
+        this.myEvents = this.myEvents.filter((event) => event.EventID !== eventId);
+      },
+      error: (error) => {
+        console.error("Error deleting event:", error);
+      },
+    });
   }
 }

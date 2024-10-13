@@ -265,5 +265,30 @@ router.get("/getMyEvents", verifyToken, async (req, res) => {
   }
 });
 
+// Delete an event by its ID
+router.delete("/deleteEvent/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  try {
+    // Check if the event belongs to the current user
+    const event = await Event.findOne({
+      where: { EventID: eventId, CreatedBy: decodedToken.userID },
+    });
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found or unauthorized" });
+    }
+
+    // Delete the event
+    await Event.destroy({ where: { EventID: eventId } });
+    res.json({ message: "Event deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    res.status(500).json({ error: "Failed to delete event" });
+  }
+});
+
+
 const eventRoutes = router;
 module.exports = eventRoutes;

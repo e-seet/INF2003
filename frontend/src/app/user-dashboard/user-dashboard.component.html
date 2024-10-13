@@ -41,6 +41,8 @@
   <!-- My Events Section -->
   <div class="my-events">
     <h3>Events You Created</h3>
+    <!-- Display if no events created -->
+    <p *ngIf="myEvents.length === 0">You currently have no events!</p>
     <ul>
       <li *ngFor="let event of myEvents">
         <strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}

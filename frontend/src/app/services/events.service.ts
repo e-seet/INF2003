@@ -192,6 +192,17 @@ export class EventsService {
       );
   }
 
+  deleteEvent(eventId: number): Observable<any> {
+    const token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+  
+    return this.httpClient.delete(`${this.url}/event/deleteEvent/${eventId}`, {
+      headers,
+    });
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = "";
     if (error.error instanceof ErrorEvent) {
