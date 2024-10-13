@@ -10,51 +10,47 @@
     </mat-card-header>
 
     <mat-card-content>
-      <div class="event-info">
-        <div>
-          <h3>
-            Date:
-            {{ event.EventDate | date: "longDate" }}
-          </h3>
-        </div>
-
-        <h3>Price: ${{ adjustedTicketPrice }}</h3>
+      <!-- Event Details Section -->
+      <div class="event-details-section">
+        <h3>Date: {{ event.EventDate | date: "longDate" }}</h3>
         <h3>Venue: {{ event.VenueName }}</h3>
         <h3>Location: {{ event.VenueLocation }}</h3>
       </div>
 
-      <!-- Ticket Type Selection -->
-      <div class="ticket-type-selection">
-        <mat-form-field appearance="fill">
-          <mat-label>Ticket Type</mat-label>
-          <mat-select
-            [(value)]="selectedTicketType"
-            (selectionChange)="adjustTicketPrice()"
-          >
-            <mat-option value="Standard">Standard</mat-option>
-            <mat-option value="Premium">Premium</mat-option>
-            <mat-option value="VIP">VIP</mat-option>
-          </mat-select>
-        </mat-form-field>
+      <!-- Ticket Purchase Section -->
+      <div class="ticket-purchase-section">
+        <h3>Select and Buy Ticket</h3>
+        <div class="ticket-type-selection">
+          <mat-form-field appearance="fill">
+            <mat-label>Ticket Type</mat-label>
+            <mat-select
+              [(value)]="selectedTicketType"
+              (selectionChange)="adjustTicketPrice()"
+            >
+              <mat-option value="Standard">Standard</mat-option>
+              <mat-option value="Premium">Premium</mat-option>
+              <mat-option value="VIP">VIP</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <h3>Price: ${{ adjustedTicketPrice }}</h3>
+        <button mat-raised-button color="primary" (click)="buyTicket()">
+          Buy Ticket
+        </button>
+      </div>
+
+      <!-- Sponsorship Section -->
+      <div class="sponsor-section">
+        <h3>Sponsor this Event</h3>
+        <input
+          type="number"
+          [(ngModel)]="sponsorshipAmount"
+          id="sponsorshipAmount"
+        />
+        <button mat-raised-button color="primary" (click)="sponsorEvent()">
+          Submit Sponsorship Amount
+        </button>
       </div>
     </mat-card-content>
-
-    <!-- Sponsor Section -->
-    <div class="sponsor-section">
-      <input
-        type="number"
-        [(ngModel)]="sponsorshipAmount"
-        id="sponsorshipAmount"
-      />
-      <button mat-raised-button color="primary" (click)="sponsorEvent()">
-        Submit Sponsorship Amount
-      </button>
-    </div>
-
-    <mat-card-actions align="end">
-      <button mat-raised-button color="primary" (click)="buyTicket()">
-        Buy Ticket
-      </button>
-    </mat-card-actions>
   </mat-card>
 </div>
