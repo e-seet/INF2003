@@ -5,6 +5,7 @@ const Event = require("../models/event");
 const Venue = require("../models/venue");
 const Organization = require("../models/organization");
 const User = require("../models/user");
+const { Sequelize } = require("sequelize");
 
 const jwt = require("jsonwebtoken");
 const UserEvent = require("../models/userevent");
@@ -91,6 +92,60 @@ router.get("/getTicketDetails/:id", verifyToken, async (req, res) => {
       ],
     });
     console.log(data);
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// get the event i am organizing
+router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
+  decodedToken = req.user;
+  var event_id = req.params.id;
+  try {
+    data = await Event.findAll({
+      where: { CreatedBy: decodedToken.userID },
+      include: [
+        {
+          model: Category,
+          attributes: ["CategoryName"],
+        },
+        {
+          model: EventSponsor,
+          attributes: ["SponsorshipAmount", "UserID"],
+          where: { EventID: event_id },
+          include: [
+            {
+              model: User, // This represents the sponsor
+              attributes: [
+                "UserID",
+                "Name",
+                "Email",
+                "Phone",
+                "Photourl",
+                "OrganizationID", // Fetching OrganizationID
+              ],
+              include: [
+                {
+                  model: Organization, // Fetching Organization details
+                  attributes: ["OrganizationName"], // Getting the Organization name
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: Organization, // Organization for the event itself, not sponsor
+          attributes: ["OrganizationName"],
+        },
+        {
+          model: Venue,
+          attributes: ["VenueName", "Location", "Capacity"],
+        },
+      ],
+      order: [["EventDate", "ASC"]],
+    });
     res.json(data);
   } catch (error) {
     console.log(error);

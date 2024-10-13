@@ -1,53 +1,37 @@
-<div class="event-container">
-  <mat-card class="event-card" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>
-        <h2>Event Name: {{ event.EventName }}</h2>
-      </mat-card-title>
-      <mat-card-subtitle>
-        <h3>Organized by: {{ event.Organizer }}</h3>
-      </mat-card-subtitle>
-    </mat-card-header>
-
-    <mat-card-content>
-      <div class="event-info">
-        <div>
-          <h3>
-            Date:
-            {{ event.EventDate | date: "longDate" }}
-          </h3>
-        </div>
-
-        <!-- <h3>Price: ${{ adjustedTicketPrice }}</h3> -->
-        <h3>Venue: {{ event.VenueName }}</h3>
-        <h3>Location: {{ event.VenueLocation }}</h3>
-      </div>
-
-      <!-- Ticket Type Selection -->
-      <!-- <div class="ticket-type-selection">
-				<mat-form-field appearance="fill">
-					<mat-label>Ticket Type</mat-label>
-					<mat-select [(value)]="selectedTicketType" (selectionChange)="adjustTicketPrice()">
-						<mat-option value="Standard">Standard</mat-option>
-						<mat-option value="Premium">Premium</mat-option>
-						<mat-option value="VIP">VIP</mat-option>
-					</mat-select>
-				</mat-form-field>
-			</div> -->
-    </mat-card-content>
-
-    <!-- Sponsor Section -->
-    <!-- <div class="sponsor-section">
-			<input type="number" [(ngModel)]="sponsorshipAmount" id="sponsorshipAmount" />
-			<button mat-raised-button color="primary" (click)="sponsorEvent()">
-				Submit Sponsorship Amount
-			</button>
-		</div> -->
-
-    <mat-card-actions align="end">
-      <!-- <button mat-raised-button color="primary" (click)="buyTicket()">
-				Buy Ticket
-			</button> -->
-    </mat-card-actions>
-  </mat-card>
+<div class="event-header-content">
+	<mat-card-title>
+		<h2 class="event-name">Event Name: {{ event.EventName }}</h2>
+	</mat-card-title>
+	<mat-card-subtitle>
+		<h3 class="organizer">Organized by: {{ event.Organizer }}</h3>
+	</mat-card-subtitle>
+	<mat-card-subtitle class="event-details-group">
+		<h3>Date: {{ event.EventDate | date: 'longDate' }}</h3>
+		<h3>Venue: {{ event.VenueName }}</h3>
+		<h3>Location: {{ event.VenueLocation }}</h3>
+	</mat-card-subtitle>
 </div>
+<mat-card-content>
+	<!-- Sponsor Information -->
+	<div *ngFor="let user of eventSponsor" class="sponsor-card-container">
+		<mat-card class="sponsor-card">
+			<mat-card-header>
+				<mat-card-title *ngIf="user.User?.Name" class="card-title">
+					Name: {{ user.User.Name }}
+				</mat-card-title>
+				<mat-card-subtitle *ngIf="user.User?.Email" class="card-subtitle">
+					Email: {{ user.User.Email }}
+				</mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content>
+				<p *ngIf="user.SponsorshipAmount" class="card-content">
+					Sponsored Amount: {{ user.SponsorshipAmount }}
+				</p>
+				<p *ngIf="user.User?.Organization?.OrganizationName" class="card-content">
+					Organization Name: {{ user.User.Organization.OrganizationName }}
+				</p>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</mat-card-content>
+<mat-card-actions align="end">
