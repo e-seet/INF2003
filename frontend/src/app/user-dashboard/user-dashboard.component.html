@@ -43,11 +43,11 @@
     <h3>Events You Created</h3>
     <ul>
       <li *ngFor="let event of myEvents">
-        <strong>{{ event.name }}</strong> - {{ event.date | date: "shortDate" }}
-        <button class="btn-edit-event" [routerLink]="['/edit-event', event.id]">
+        <strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}
+        <button class="btn-edit-event" [routerLink]="['/edit-event', event.EventID]">
           Edit
         </button>
-        <button class="btn-delete-event" (click)="deleteEvent(event.id)">
+        <button class="btn-delete-event" (click)="deleteEvent(event.EventID)">
           Delete
         </button>
       </li>

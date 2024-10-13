@@ -11,6 +11,7 @@ import { UserDashboardComponent } from "./user-dashboard/user-dashboard.componen
 import { OrderConfirmComponent } from "./order-confirm/order-confirm.component";
 import { EventConfirmComponent } from "./event-confirm/event-confirm.component";
 import { ProfileComponent } from "./profile/profile.component";
+import { EditEventComponent } from "./edit-event/edit-event.component";
 import { ContactUsComponent } from "./contact-us/contact-us.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { AuthGuard } from "./auth.guard";
@@ -50,7 +51,7 @@ export const routes: Routes = [
   { path: "myticket/:id", component: TicketDetailComponent },
 
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
-
+  { path: "edit-event/:id", component: EditEventComponent, canActivate: [AuthGuard] },
   { path: "contact-us", component: ContactUsComponent },
   { path: "privacy-policy", component: PrivacyPolicyComponent },
   {

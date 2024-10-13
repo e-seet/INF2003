@@ -49,6 +49,18 @@ export class UserDashboardComponent implements OnInit {
       },
       complete: () => {},
     });
+    
+    // get all my events
+    this.eventService.displayMyEvents().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.myEvents = data;
+      },
+      error: (error) => {
+        console.error("Error:", error);
+      },
+      complete: () => {},
+    });
 
     //TEMP DATA
     // this.upcomingEvents = [
@@ -56,14 +68,14 @@ export class UserDashboardComponent implements OnInit {
     //   //   { id: 2, name: "Event 2", date: new Date(), location: "Location 2" },
     // ];
 
-    this.myEvents = [
-      //   {
-      //     id: 3,
-      //     name: "My Event 1",
-      //     date: new Date(),
-      //     location: "My Location 1",
-      //   },
-    ];
+    //this.myEvents = [
+    //   {
+    //     id: 3,
+    //     name: "My Event 1",
+    //     date: new Date(),
+    //     location: "My Location 1",
+    //   },
+    //];
   }
 
   // Define the deleteEvent method
