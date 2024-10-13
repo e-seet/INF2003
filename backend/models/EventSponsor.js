@@ -47,6 +47,19 @@ const EventSponsor = sequelize.define(
       allowNull: false, // Field cannot be null
       defaultValue: 0, // Default value set to 0 if no amount is provided
     },
+    SponsorLevel: {
+      // Virtual field
+      type: DataTypes.VIRTUAL,
+      get() {
+        const amount = this.getDataValue("SponsorshipAmount");
+        if (amount >= 40000) return "Daimond";
+        if (amount >= 20000) return "Platinum";
+        if (amount >= 10000) return "Gold";
+        if (amount >= 1000) return "Silver";
+        if (amount > 0) return "Bronze";
+        return "No Sponsorship";
+      },
+    },
   },
   {
     tableName: "EventSponsor", // Explicitly naming the table in case you want a custom table name
