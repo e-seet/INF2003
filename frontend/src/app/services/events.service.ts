@@ -17,7 +17,7 @@ export class EventsService {
     private loginService: LoginService,
   ) {}
 
-  private url = "localhost:3000"; // Example API URL
+  private url = "http://localhost:3000"; // Example API URL
 
   data: any[] = [];
 
