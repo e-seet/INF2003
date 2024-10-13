@@ -60,11 +60,12 @@ export class OrganizerDetailsComponent {
 
   ngOnInit() {
     var id = this.route.snapshot.paramMap.get("id");
-    console.log(id);
+    console.log("my id" + id);
     // this.eventId = id !== null ? parseInt(id, 10) : null;
 
     this.eventService.viewMyEventDetails(id).subscribe({
       next: (data) => {
+        console.log(data);
         // Safely access data properties with optional chaining and fallback to "" or "N/A"
         this.event.EventName = data[0]?.["EventName"] ?? "";
         this.event.EventID = data[0]?.["EventID"] ?? "";
@@ -74,10 +75,12 @@ export class OrganizerDetailsComponent {
         this.event.TicketPrice = data[0]?.["TicketPrice"] ?? "";
         this.event.VenueName = data[0]?.["Venue"]?.["VenueName"] ?? "";
         this.event.VenueLocation = data[0]?.["Venue"]?.["Location"] ?? "";
+        this.event.Host = data[0]?.["User"]?.["Name"];
         this.event.Organizer =
           data[0]?.["Organization"]?.["OrganizationName"] ?? "";
         // Safely log the EventSponsors if it exists
-        console.log(data[0]?.["EventSponsors"]);
+        // console.log(data[0]?.["EventSponsors"]);
+        console.log(data[0]["User"]["Name"]);
         this.eventSponsor = data[0]?.["EventSponsors"] ?? []; // Fallback to an empty array if EventSponsors is null or undefined
       },
       error: (error) => {
@@ -92,5 +95,9 @@ export class OrganizerDetailsComponent {
       this.loginService.getToken(),
     );
     console.log("User ID from token:", this.userId);
+  }
+
+  goBack() {
+    this.router.navigate(["/organizer"]); // Redirect to events list or another page
   }
 }

@@ -58,6 +58,10 @@ router.get("/getEvent/:id", async (req, res) => {
           model: Organization,
           attributes: ["OrganizationName"],
         },
+        {
+          model: User, // Fetch the User who created the event
+          attributes: ["Name"], // Fetch the name and email of the user who created the event
+        },
       ],
     });
     res.json(data);
@@ -111,7 +115,7 @@ router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
   decodedToken = req.user;
   console.log("userid");
   console.log(decodedToken.userID);
-  console.log("event id +" + req.params.id);
+  console.log("event id:" + req.params.id);
   var event_id = req.params.id;
   try {
     data = await Event.findAll({
@@ -124,6 +128,8 @@ router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
         {
           model: EventSponsor,
           attributes: ["SponsorshipAmount", "UserID", "SponsorLevel"],
+          // make optional join (left)
+          required: false,
           where: { EventID: event_id },
           include: [
             {
@@ -152,6 +158,10 @@ router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
         {
           model: Venue,
           attributes: ["VenueName", "Location", "Capacity"],
+        },
+        {
+          model: User, // Fetch the User who created the event
+          attributes: ["Name", "Email"], // Fetch the name and email of the user who created the event
         },
       ],
       order: [["EventDate", "ASC"]],

@@ -3,10 +3,18 @@
 		<mat-card-header>
 			<mat-card-title>
 				<h2>Event Name: {{ event.EventName }}</h2>
+
+				<h3>
+					<b>By Speaker</b>:{{event.Host}}
+					<div *ngIf="event.Organizer && event.Organizer !== 'N/A'">
+						from the <B>Organization</B>: {{ event.Organizer }}
+					</div>
+				</h3>
 			</mat-card-title>
-			<mat-card-subtitle *ngIf="event.Organizer && event.Organizer !== 'N/A'">
+
+			<!-- <mat-card-subtitle *ngIf="event.Organizer && event.Organizer !== 'N/A'">
 				<h3>Organized by: {{ event.Organizer }}</h3>
-			</mat-card-subtitle>
+			</mat-card-subtitle> -->
 		</mat-card-header>
 
 		<mat-card-content>

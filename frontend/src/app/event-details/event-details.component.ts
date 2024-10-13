@@ -70,6 +70,7 @@ export class EventDetailsComponent {
         this.event.VenueLocation = data[0]["Venue"]["Location"] ?? "";
         this.event.Organizer =
           data[0]?.["Organization"]?.["OrganizationName"] ?? "";
+        this.event.Host = data[0]?.["User"]?.["Name"];
         this.adjustTicketPrice(); // Adjust price when data is loaded
       },
       error: (error) => {
