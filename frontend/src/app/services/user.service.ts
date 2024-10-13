@@ -35,13 +35,13 @@ export class UserService {
       );
   }
 
-  updateUserProfile(userData: any): Observable<any> {
-    return this.httpClient.put(`${this.apiUrl}/profile`, userData);
-  }
+  //   updateUserProfile(userData: any): Observable<any> {
+  //     return this.httpClient.put(`${this.apiUrl}/profile`, userData);
+  //   }
 
-  uploadProfilePicture(formData: FormData): Observable<any> {
-    return this.httpClient.post(`${this.apiUrl}/profile/picture`, formData);
-  }
+  //   uploadProfilePicture(formData: FormData): Observable<any> {
+  //     return this.httpClient.post(`${this.apiUrl}/profile/picture`, formData);
+  //   }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = "";

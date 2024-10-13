@@ -14,6 +14,7 @@ import { EventsService } from "../services/events.service";
 export class UserDashboardComponent implements OnInit {
   userName: string = "";
   userEmail: string = "";
+  photoUrl: string = "";
 
   // Add these missing properties
   upcomingEvents: any[] = []; // Initialize as an empty array or use a specific type for events
@@ -32,6 +33,7 @@ export class UserDashboardComponent implements OnInit {
     if (decodedToken) {
       this.userName = decodedToken.name;
       this.userEmail = decodedToken.email;
+      this.photoUrl = decodedToken.photoUrl;
     } else {
       console.error("Failed to decode token or token is missing.");
     }

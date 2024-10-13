@@ -25,29 +25,16 @@
   text-align: center;
 }
 
-.event-details {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+.event-details-section,
+.ticket-purchase-section,
+.sponsor-section {
+  padding: 2%;
+  margin-bottom: 2%;
+  border-bottom: 1px solid #ddd;
 }
 
 .event-info {
   padding: 0.5%;
-}
-
-.ticket-type-selection {
-  position: relative;
-  z-index: 10;
-}
-
-.sponsor-section {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  z-index: 15;
 }
 
 mat-grid-tile h3 {
@@ -65,4 +52,11 @@ mat-grid-tile-content {
 
 mat-grid-list {
   margin-bottom: 5px;
+}
+
+.sponsor-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

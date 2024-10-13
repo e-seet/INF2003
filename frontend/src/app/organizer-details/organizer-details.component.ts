@@ -61,7 +61,7 @@ export class OrganizerDetailsComponent {
     var id = this.route.snapshot.paramMap.get("id");
     console.log(id);
     // this.eventId = id !== null ? parseInt(id, 10) : null;
-    console.log("running the ngoninit");
+
     this.eventService.viewMyEventDetails(id).subscribe({
       next: (data) => {
         this.event.EventName = data[0]["EventName"];
@@ -71,10 +71,8 @@ export class OrganizerDetailsComponent {
         this.event.VenueName = data[0]["Venue"]["VenueName"];
         this.event.VenueLocation = data[0]["Venue"]["Location"];
         this.event.Organizer = data[0]["Organization"]["OrganizationName"];
-
         console.log(data);
         console.log(data[0]["EventSponsors"]);
-
         this.eventSponsor = data[0]["EventSponsors"];
       },
       error: (error) => {

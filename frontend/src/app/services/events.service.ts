@@ -17,20 +17,60 @@ export class EventsService {
     private loginService: LoginService,
   ) {}
 
-  private url = "localhost:3000"; // Example API URL
+  private url = "http://localhost:3000"; // Example API URL
 
   data: any[] = [];
 
   // display all event [Just a select * from events]
   displayEvents(): Observable<any> {
-    console.log(
-      "calling services to get events data from the server & database",
-    );
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
     return this.httpClient
-      .get<any[]>("http://localhost:3000/event/getAllEvents")
+      .get<any[]>(this.url + "/event/getAllEvents", { headers })
+      .pipe(
+        tap((data) => {
+          // console.log(data)
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  displayVenue(): Observable<any> {
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
+    return this.httpClient.get<any[]>(this.url + "/venues", { headers }).pipe(
+      tap((databack) => {
+        console.log(databack);
+        console.log("end of service\n");
+      }),
+      catchError(this.handleError),
+    );
+  }
+
+  viewEventDetails(eventID: any): Observable<any> {
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
+    return this.httpClient
+      .get<any[]>(this.url + "/event/getEvent/" + eventID, { headers })
       .pipe(
         tap((databack) => {
-          // console.log(databack)
+          console.log("received data back from service");
+        }),
+        catchError(this.handleError),
+      );
+  }
+  // Check the details of the event im organizing
+  viewMyEventDetails(eventID: any): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .get<any[]>(this.url + "/event/getMyEventDetails/" + eventID, { headers })
+      .pipe(
+        tap((databack) => {
+          console.log("received data back from service");
         }),
         catchError(this.handleError),
       );
@@ -65,7 +105,7 @@ export class EventsService {
       .set("Authorization", `Bearer ${token}`);
 
     return this.httpClient
-      .get<any[]>("http://localhost:3000/event/getTickets", { headers })
+      .get<any[]>(this.url + "/event/getTickets", { headers })
       .pipe(
         tap((data) => {
           console.log(data);
@@ -81,15 +121,11 @@ export class EventsService {
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
 
-    console.log("create event in service");
-    console.log(eventData);
     return this.httpClient
-      .post<
-        any[]
-      >("http://localhost:3000/event/createEvent", eventData, { headers })
+      .post<any[]>(this.url + "/event/createEvent", eventData, { headers })
       .pipe(
-        tap((databack) => {
-          console.log(databack);
+        tap((data) => {
+          //   console.log(data);
         }),
         catchError(this.handleError),
       );
@@ -105,7 +141,7 @@ export class EventsService {
     console.log("token");
     console.log(token);
     return this.httpClient
-      .get<any[]>("http://localhost:3000/event/getMyEvents", { headers })
+      .get<any[]>(this.url + "/event/getMyEvents", { headers })
       .pipe(
         tap((data) => {
           console.log(data);
@@ -114,31 +150,23 @@ export class EventsService {
       );
   }
 
-  viewEventDetails(eventID: any): Observable<any> {
-    console.log(
-      "calling services to get events data from the server & database",
-    );
+  // focus on UserEevent table and a specific event
+  viewTicketDetails(eventID: any): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
     return this.httpClient
-      .get<any[]>("http://localhost:3000/event/getEvent/" + eventID)
+      .get<any[]>(this.url + "/event/getTicketDetails/" + eventID, {
+        headers: headers,
+      })
       .pipe(
-        tap((databack) => {
-          console.log("received data back from service");
+        tap((data) => {
+          console.log(data);
         }),
         catchError(this.handleError),
       );
-  }
-
-  displayVenue(): Observable<any> {
-    console.log("service:");
-
-    return this.httpClient.get<any[]>("http://localhost:3000/venues/").pipe(
-      tap((databack) => {
-        console.log(databack);
-        // console.log(databack)
-        console.log("end of service\n");
-      }),
-      catchError(this.handleError),
-    );
   }
 
   purchaseTicket(eventData: {
@@ -147,8 +175,13 @@ export class EventsService {
     TicketType: string;
     PurchaseDate: Date;
   }): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
     return this.httpClient
-      .post("http://localhost:3000/userevent/purchase", eventData)
+      .post(this.url + "/userevent/purchase", eventData, { headers })
       .pipe(
         tap((response) => {
           console.log("Ticket purchase response:", response);
@@ -162,10 +195,13 @@ export class EventsService {
     EventID: number;
     SponsorshipAmount: number;
   }): Observable<any> {
-    const headers = new HttpHeaders().set("content-type", "application/json");
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
 
     return this.httpClient
-      .post("http://localhost:3000/eventsponsor", sponsorData, {
+      .post(this.url + "/eventsponsor", sponsorData, {
         headers: headers,
       })
       .pipe(

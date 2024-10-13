@@ -95,13 +95,18 @@ Organization.hasMany(User, {
 User.hasMany(Event, {
   foreignKey: "CreatedBy",
 });
-
+Event.hasMany(UserEvent, {
+  foreignKey: "EventID",
+});
 Event.hasMany(EventSponsor, { foreignKey: "EventID" });
 EventSponsor.belongsTo(Event, { foreignKey: "EventID" });
 User.hasMany(Event, {
   foreignKey: "CreatedBy",
 });
 
+User.hasMany(Event, {
+  foreignKey: "CreatedBy",
+});
 // In EventSponsor model
 EventSponsor.belongsTo(User, { foreignKey: "UserID" });
 User.hasMany(EventSponsor, { foreignKey: "UserID" });

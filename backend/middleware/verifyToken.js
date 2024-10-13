@@ -1,20 +1,34 @@
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = "your_secret_key";
+const SECRET_KEY = "TEMP_KEY";
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(403).send("Token is required");
+  let token = null;
 
-  if (token == null || token == "null") {
-    return res.status(403).send({ message: "Unauthorized!" });
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    token = req.headers.authorization.split(" ")[1]; // Extract the token part
+  } else {
+    console.log("No token found or invalid format");
+    return res.status(401).send({ message: "Unauthorized!" });
   }
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY);
+
+  if (token == null || token === "null") {
+    console.log("Token is null");
+    return res.status(401).send({ message: "Unauthorized!" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      console.log("Token verification failed");
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+
+    // Attach the decoded token to the request object
     req.user = decoded;
     next();
-  } catch (error) {
-    res.status(401).send("Invalid token");
-  }
+  });
 };
 
 module.exports = verifyToken;

@@ -61,6 +61,7 @@ export class EventDetailsComponent {
 
     this.eventService.viewEventDetails(id).subscribe({
       next: (data) => {
+        console.log(data[0]);
         this.event.EventName = data[0]["EventName"];
         this.event.EventID = data[0]["EventID"];
         this.event.EventDate = new Date(data[0]["EventDate"]);
