@@ -9,21 +9,6 @@ const verifyToken = require("../middleware/verifyToken");
 
 const SECRET_KEY = "TEMP_KEY";
 
-// Middleware to verify token
-const verifyTokenMiddleware = (req, res, next) => {
-  let token = req.headers["authorization"];
-  if (!token) return res.status(403).send("Token is required");
-
-  if (token == null || token == "null") {
-    return res.status(401).send({ message: "Unauthorized!" });
-  }
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) return res.status(401).send("Invalid token");
-    req.user = decoded.user;
-    next();
-  });
-};
-
 // 1. Register a new user
 router.post("/register", async (req, res) => {
   console.log("Running registration process");
@@ -142,95 +127,49 @@ router.post("/login", async (req, res) => {
 });
 
 // edit user profile
-router.post("/editProfile", async (req, res) => {
-  var token = null;
+router.post("/editProfile", verifyToken, async (req, res) => {
   console.log("\nedit profile\n");
-  //check for token
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer ")
-  ) {
-    token = req.headers.authorization.split(" ")[1]; // Extract the token part
-    console.log("token:" + token); // This will output just the token string
-  } else {
-    console.log("No token found or invalid format");
-  }
-  if (token == null || token == "null") {
-    return res.status(401).send({ message: "Unauthorized!" });
-  }
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) {
-      return res
-        .status(401)
-        .send({ message: "Unauthorized due to session expired!" });
+  let decodedToken = req.user;
+
+  const userId = decodedToken.userID; // Extract userID from decoded token
+  const updatedData = req.body;
+  try {
+    // Find or create the organization by name
+    const orgdata = await Organization.findOrCreate({
+      where: {
+        OrganizationName: updatedData.OrganizationName,
+      },
+    });
+
+    // Set OrganizationID in updated data
+    updatedData.OrganizationID = orgdata[0].OrganizationID;
+
+    // Update user data with the new OrganizationID
+    const [updated] = await User.update(updatedData, {
+      where: { userID: userId },
+    });
+
+    // Handle response based on whether the update was successful
+    if (updated > 0) {
+      res.status(200).json({ message: "User updated successfully." });
+    } else {
+      res.status(400).json({ message: "User not found or no changes made." });
     }
-    // console.log(decoded);
-    decodedToken = decoded;
-  });
-
-  console.log("");
-  //   console.log(req.body)
-  //   console.log(decodedToken.userID)
-  console.log("updating");
-
-  const updateUser = async (userId, updatedData) => {
-    try {
-      // console.log("object details")
-      // console.log(updatedData)
-
-      // find by organization name first then get id
-      orgdata = await Organization.findOrCreate({
-        where: {
-          OrganizationName: updatedData.OrganizationName,
-        },
-      });
-      updatedData.OrganizationID = orgdata[0].OrganizationID;
-      // console.log(updatedData);
-      data = await User.update(updatedData, {
-        where: { userId },
-      });
-      if (data > 0) {
-        console.log("User updated successfully.");
-        console.log(data);
-      } else {
-        console.log("User not found or no changes made.");
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
-  updateUser(decodedToken.userID, req.body);
+  } catch (error) {
+    // Send error response if an exception occurs
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Get the user's organization name
-router.get("/profile/organization", async (req, res) => {
-  var token = null;
-  //check for token
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer ")
-  ) {
-    token = req.headers.authorization.split(" ")[1]; // Extract the token part
-    console.log("token:" + token); // This will output just the token string
-  } else {
-    console.log("No token found or invalid format");
-  }
-  if (token == null || token == "null") {
-    return res.status(401).send({ message: "Unauthorized!" });
-  }
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) {
-      return res
-        .status(401)
-        .send({ message: "Unauthorized due to session expired!" });
-    }
-    // console.log(decoded);
-    decodedToken = decoded;
-  });
+router.get("/profile/organization", verifyToken, async (req, res) => {
+  let decodedToken = req.user;
 
   try {
     const user = await User.findByPk(decodedToken.userID);
-    if (!user) return res.status(404).send("User not found");
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
     res.json(user);
   } catch (error) {
     res.status(500).send("Server error");
@@ -271,51 +210,11 @@ router.get("/profile/organization", async (req, res) => {
 // });
 
 // 3. Get user profile
-router.get("/profile", async (req, res) => {
+router.get("/profile", verifyToken, async (req, res) => {
   console.log("profile route\n");
 
-  var token = null;
-  var decodedToken = null;
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer ")
-  ) {
-    token = req.headers.authorization.split(" ")[1]; // Extract the token part
-    console.log("token:" + token); // This will output just the token string
-  } else {
-    console.log("No token found or invalid format");
-  }
-  if (token == null || token == "null") {
-    return res.status(401).send({ message: "Unauthorized!" });
-  }
-
-  jwt.verify(token, SECRET_KEY, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({ message: "Unauthorized!" });
-    }
-    // console.log(decoded);
-    decodedToken = decoded;
-  });
-
-  console.log("decoded token");
-  console.log(decodedToken);
+  let decodedToken = req.user;
   try {
-    // data = await User.findOne(
-    // 	{
-    // 		where: { UserID: decodedToken.userID},
-    // 		include:[
-    // 			{
-    // 				model: Organization,
-    // 				attributes: ['OrganizationName']
-    // 			}
-    // 		]
-    // 	}
-    // );
-    // console.log("before sending back\n");
-    // console.log(data)
-    // res.json(data);
-
     data = await User.findOne({
       where: { UserID: decodedToken.userID },
       include: [
@@ -331,7 +230,6 @@ router.get("/profile", async (req, res) => {
   } catch (error) {
     console.log("error");
     console.log(error);
-    // res.status(500).json({ error: error.message });
   }
 });
 
