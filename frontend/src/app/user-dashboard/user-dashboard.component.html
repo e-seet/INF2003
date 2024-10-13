@@ -9,6 +9,8 @@
   <!-- Profile Information Section -->
   <div class="profile-info">
     <h3>Your Profile Information</h3>
+    <p><strong>Profile Picture:</strong> </p>
+    <img *ngIf="photoUrl" [src]="photoUrl" alt="Profile Picture" class="profile-img"/>
     <p><strong>Name:</strong> {{ userName }}</p>
     <p><strong>Email:</strong> {{ userEmail }}</p>
     <button class="btn-edit-profile" routerLink="/profile">Edit Profile</button>

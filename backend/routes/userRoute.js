@@ -94,6 +94,7 @@ router.post("/login", async (req, res) => {
         name: user.Name,
         email: user.Email,
         phone: user.Phone,
+        photoUrl: user.Photourl,
         organizationID: user.OrganizationID,
       },
       SECRET_KEY,
@@ -104,6 +105,7 @@ router.post("/login", async (req, res) => {
       Name: user.Name,
       Email: user.Email,
       Phone: user.Phone,
+      photoUrl: user.Photourl,
       OrganizationID: user.OrganizationID,
     };
 
@@ -115,6 +117,7 @@ router.post("/login", async (req, res) => {
         Name: user.Name,
         Email: user.Email,
         Phone: user.Phone,
+        photoUrl: user.Photourl,
         OrganizationID: user.OrganizationID,
       },
     });
