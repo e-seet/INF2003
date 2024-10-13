@@ -42,15 +42,27 @@
 }
 
 .home-footer {
-  margin-top: 30px;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .btn-explore {
-  padding: 10px 20px;
-  background-color: #3f51b5;
-  color: #fff;
+  background: linear-gradient(90deg, #007BFF, #00C6FF); /* Blue gradient */
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-explore:hover {
+  background: linear-gradient(90deg, #0056b3, #0090cc); /* Darker gradient on hover */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Slightly larger shadow on hover */
 }
