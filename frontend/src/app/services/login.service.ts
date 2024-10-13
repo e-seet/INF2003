@@ -16,6 +16,7 @@ export class LoginService {
   private TOKEN_KEY = "authToken"; // Key for storing JWT token in localStorage
   private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn()); // BehaviorSubject to track login status
 
+  private imageurl = "";
   private url = "http://localhost:3000";
 
   constructor(public httpClient: HttpClient) {}
@@ -88,12 +89,20 @@ export class LoginService {
       );
   }
 
+  returnUrl() {
+    return this.imageurl;
+  }
+
   // method to edit profile
   editProfile(profileData: any) {
     var token = localStorage.getItem(this.TOKEN_KEY);
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
+
+    console.log("profile");
+    console.log(profileData.Photourl);
+    this.imageurl = profileData.Photourl;
 
     return this.httpClient
       .post<any>(`${this.url}/user/editProfile`, profileData, {

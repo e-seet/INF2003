@@ -34,6 +34,11 @@ export class UserDashboardComponent implements OnInit {
       this.userName = decodedToken.name;
       this.userEmail = decodedToken.email;
       this.photoUrl = decodedToken.photoUrl;
+
+      var x = this.loginService.returnUrl();
+      if (x != "") {
+        this.photoUrl = x;
+      }
     } else {
       console.error("Failed to decode token or token is missing.");
     }
@@ -49,7 +54,7 @@ export class UserDashboardComponent implements OnInit {
       },
       complete: () => {},
     });
-    
+
     // get all my events
     this.eventService.displayMyEvents().subscribe({
       next: (data) => {
@@ -84,7 +89,9 @@ export class UserDashboardComponent implements OnInit {
       next: (response) => {
         console.log("Event deleted successfully:", response);
         // Remove the deleted event from the frontend
-        this.myEvents = this.myEvents.filter((event) => event.EventID !== eventId);
+        this.myEvents = this.myEvents.filter(
+          (event) => event.EventID !== eventId,
+        );
       },
       error: (error) => {
         console.error("Error deleting event:", error);

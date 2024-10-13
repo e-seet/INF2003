@@ -40,6 +40,7 @@ export class ProfileComponent {
     private fb: FormBuilder,
     private loginService: LoginService,
     private s3Service: S3serviceService,
+    private router: Router,
   ) {
     this.form = this.fb.group({
       file: [null],
@@ -140,6 +141,7 @@ export class ProfileComponent {
         },
         complete: () => {
           console.log("Completed the call"); // Complete callback
+          this.router.navigate(["/user-dashboard"]);
         },
       });
     } else {

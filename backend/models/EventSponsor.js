@@ -52,7 +52,7 @@ const EventSponsor = sequelize.define(
       type: DataTypes.VIRTUAL,
       get() {
         const amount = this.getDataValue("SponsorshipAmount");
-        if (amount >= 40000) return "Daimond";
+        if (amount >= 40000) return "Diamond";
         if (amount >= 20000) return "Platinum";
         if (amount >= 10000) return "Gold";
         if (amount >= 1000) return "Silver";
