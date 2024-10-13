@@ -36,6 +36,26 @@ export class EventsService {
       );
   }
 
+<<<<<<< Updated upstream
+=======
+  // Check the details of the event im organizing
+  viewMyEventDetails(eventID: any): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .get<any[]>(this.url + "/event/getMyEventDetails/" + eventID, { headers })
+      .pipe(
+        tap((databack) => {
+          console.log("received data back from service");
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+>>>>>>> Stashed changes
   // display all event [Just a select * from events]
   getTickets(): Observable<any> {
     var token = this.loginService.getToken();

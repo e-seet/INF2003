@@ -1,0 +1,88 @@
+.event-container {
+	display: flex;
+	justify-content: center;
+	/* Centers the event card */
+	margin-bottom: 2em;
+	/* Adds space between event cards */
+}
+
+.event-card {
+	width: 90%;
+	/* The card takes 90% of the container width */
+	padding: 2em;
+	/* Add padding for spacing */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	/* Light shadow for better visual appearance */
+}
+
+.event-name {
+	font-size: 1.8em;
+	/* Larger font for the event name */
+	margin-bottom: 0.5em;
+}
+
+.organizer {
+	font-size: 1.3em;
+	/* Subtitle font for the organizer */
+	color: gray;
+}
+
+.event-info {
+	margin-top: 1em;
+}
+
+.event-details h3 {
+	font-size: 1.2em;
+	/* Font size for the event details */
+	margin-bottom: 0.8em;
+}
+
+.sponsor-card-container {
+	margin-top: 1.5em;
+}
+
+.sponsor-card {
+	margin-bottom: 1.5em;
+	/* Spacing between sponsor cards */
+	width: 100%;
+	/* Ensure sponsor cards fill the container */
+}
+
+.card-title,
+.card-subtitle,
+.card-content {
+	font-size: 1.1em;
+	/* General font size for sponsor details */
+}
+
+.card-subtitle {
+	color: gray;
+	/* Subtitle color for email */
+}
+
+.event-header-content {
+	display: flex;
+	flex-direction: column;
+	/* Arrange the content vertically */
+	gap: 1em;
+	/* Adds space between each element */
+}
+
+.event-name {
+	font-size: 1.8em;
+	margin-bottom: 0.5em;
+}
+
+.organizer {
+	font-size: 1.3em;
+	color: gray;
+}
+
+.event-details-group {
+	margin-top: 0.8em;
+}
+
+.event-details-group h3 {
+	font-size: 1.2em;
+	margin-bottom: 0.3em;
+}

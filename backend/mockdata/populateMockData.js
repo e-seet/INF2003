@@ -157,7 +157,7 @@ const populateMockData = async () => {
       (value, index, self) =>
         index ===
         self.findIndex(
-          (t) => t.EventID === value.EventID && t.SponsorID === value.SponsorID,
+          (t) => t.EventID === value.EventID && t.UserID === value.UserID,
         ),
     );
     await EventSponsor.bulkCreate(uniqueEventSponsorData);

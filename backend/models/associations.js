@@ -86,12 +86,10 @@ User.belongsToMany(Event, { through: "EventSponsor", foreignKey: "UserID" });
 
 User.belongsTo(Organization, {
   foreignKey: "OrganizationID",
-  as: "organization",
 });
 
 Organization.hasMany(User, {
   foreignKey: "OrganizationID",
-  as: "user",
   onDelete: "SET NULL", // If organization is deleted, set organizationId to NULL for users
 });
 User.hasMany(Event, {
@@ -100,6 +98,14 @@ User.hasMany(Event, {
 
 Event.hasMany(EventSponsor, { foreignKey: "EventID" });
 EventSponsor.belongsTo(Event, { foreignKey: "EventID" });
+User.hasMany(Event, {
+  foreignKey: "CreatedBy",
+});
+
+// In EventSponsor model
+EventSponsor.belongsTo(User, { foreignKey: "UserID" });
+User.hasMany(EventSponsor, { foreignKey: "UserID" });
+
 module.exports = {
   User,
   Event,
