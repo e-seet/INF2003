@@ -5,7 +5,13 @@
 				<h2>Event Name: {{ ticket.EventName }}</h2>
 			</mat-card-title>
 			<mat-card-subtitle>
-				<h3>Organized by: {{ ticket.Organizer }}</h3>
+
+				<h3>
+					<b>By Speaker</b>:{{ticket.Host}}
+					<div *ngIf="ticket.Organizer !== ''">
+						from the <B>Organization</B>: {{ ticket.Organizer }}
+					</div>
+				</h3>
 			</mat-card-subtitle>
 		</mat-card-header>
 
@@ -20,7 +26,7 @@
 				<h3>Price: ${{ adjustedTicketPrice }}</h3>
 				<h3>Venue: {{ ticket.VenueName }}</h3>
 				<h3>Location: {{ ticket.VenueLocation }}</h3>
-				<h3>Ticket Type: {{ ticket.VenueLocation }}</h3>
+				<h3>Ticket Type: {{ ticket.ticketType }}</h3>
 			</div>
 			<button mat-raised-button (click)="goBack()">
 				Back

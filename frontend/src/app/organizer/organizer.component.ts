@@ -74,7 +74,7 @@ export class OrganizerComponent {
           //   console.log(item);
           theobjects.push({
             EventID: item.EventID,
-            //   Organizer: item.Organization.OrganizationName,
+            Organizer: item?.Organization?.OrganizationName,
             VenueName: item.Venue.VenueName,
             VenueLocation: item.Venue.Location,
             EventName: item.EventName,

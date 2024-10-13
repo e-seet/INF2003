@@ -51,19 +51,18 @@ export class TicketDetailComponent {
 
     this.eventService.viewTicketDetails(id).subscribe({
       next: (data) => {
-        console.log(data);
+        console.log("myticket");
+
         this.ticket.EventName = data[0]["EventName"];
         this.ticket.EventID = data[0]["EventID"];
         this.ticket.EventDate = new Date(data[0]["EventDate"]);
         this.ticket.TicketPrice = data[0]["TicketPrice"];
         this.ticket.VenueName = data[0]["Venue"]["VenueName"];
         this.ticket.VenueLocation = data[0]["Venue"]["Location"];
-        this.ticket.Organizer = data[0]["Organization"]["OrganizationName"];
-        this.ticket.ticketType = data[0]["UserEvents"]["TicketType"];
-        // doesnt work in viewEventDetails
-        //this.ticket.TicketType = data[0]["TicketType"];
-        //this.ticket.PurchaseDate = new Date(data[0]["PurchaseDate"]);
-        //this.selectedTicketType = this.ticket.TicketType;
+        this.ticket.Organizer = data[0]?.Organization?.OrganizationName ?? "";
+        this.ticket.ticketType = data[0]["UserEvents"][0]["TicketType"];
+        this.ticket.PurchaseDate = data[0]["UserEvents"][0]["PurchaseDate"];
+        this.ticket.Host = data[0]?.User?.Name ?? "";
         this.adjustTicketPrice(); // Adjust price when data is loaded
       },
       error: (error) => {

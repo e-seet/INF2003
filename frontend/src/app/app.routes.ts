@@ -63,7 +63,11 @@ export const routes: Routes = [
   },
 
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: "edit-event/:id", component: EditEventComponent, canActivate: [AuthGuard] },
+  {
+    path: "edit-event/:id",
+    component: EditEventComponent,
+    canActivate: [AuthGuard],
+  },
   { path: "contact-us", component: ContactUsComponent },
   { path: "privacy-policy", component: PrivacyPolicyComponent },
   {

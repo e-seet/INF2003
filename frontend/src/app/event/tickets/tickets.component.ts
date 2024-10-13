@@ -77,16 +77,16 @@ export class TicketsComponent {
             ticketPrice,
           );
           theobjects.push({
-            UserID: item.UserID,
-            EventID: item.EventID,
-            TicketType: item.TicketType,
-            PurchaseDate: item.PurchaseDate,
-            Organizer: item.Event.Organization.OrganizationName,
-            VenueName: item.Event.Venue.VenueName,
-            VenueLocation: item.Event.Venue.Location,
-            EventName: item.Event.EventName,
-            EventDate: item.Event.EventDate,
-            TicketPrice: adjustedTicketPrice,
+            UserID: item.UserID ?? "Unknown User",
+            EventID: item.EventID ?? "Unknown Event",
+            TicketType: item.TicketType ?? "Standard",
+            PurchaseDate: item.PurchaseDate ?? "Unknown Date",
+            Organizer: item.Event?.Organization?.OrganizationName ?? "",
+            VenueName: item.Event?.Venue?.VenueName ?? "Unknown Venue",
+            VenueLocation: item.Event?.Venue?.Location ?? "Unknown Location",
+            EventName: item.Event?.EventName ?? "Unknown Event Name",
+            EventDate: item.Event?.EventDate ?? "Unknown Event Date",
+            TicketPrice: adjustedTicketPrice ?? "N/A",
           });
         });
         this.originalData = theobjects; // Store the original data

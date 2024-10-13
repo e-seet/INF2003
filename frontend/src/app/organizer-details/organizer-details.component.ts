@@ -65,16 +65,20 @@ export class OrganizerDetailsComponent {
 
     this.eventService.viewMyEventDetails(id).subscribe({
       next: (data) => {
-        this.event.EventName = data[0]["EventName"];
-        this.event.EventID = data[0]["EventID"];
-        this.event.EventDate = new Date(data[0]["EventDate"]);
-        this.event.TicketPrice = data[0]["TicketPrice"];
-        this.event.VenueName = data[0]["Venue"]["VenueName"];
-        this.event.VenueLocation = data[0]["Venue"]["Location"];
-        this.event.Organizer = data[0]["Organization"]["OrganizationName"];
-        console.log(data);
-        console.log(data[0]["EventSponsors"]);
-        this.eventSponsor = data[0]["EventSponsors"];
+        // Safely access data properties with optional chaining and fallback to "" or "N/A"
+        this.event.EventName = data[0]?.["EventName"] ?? "";
+        this.event.EventID = data[0]?.["EventID"] ?? "";
+        this.event.EventDate = data[0]?.["EventDate"]
+          ? new Date(data[0]["EventDate"])
+          : "";
+        this.event.TicketPrice = data[0]?.["TicketPrice"] ?? "";
+        this.event.VenueName = data[0]?.["Venue"]?.["VenueName"] ?? "";
+        this.event.VenueLocation = data[0]?.["Venue"]?.["Location"] ?? "";
+        this.event.Organizer =
+          data[0]?.["Organization"]?.["OrganizationName"] ?? "";
+        // Safely log the EventSponsors if it exists
+        console.log(data[0]?.["EventSponsors"]);
+        this.eventSponsor = data[0]?.["EventSponsors"] ?? []; // Fallback to an empty array if EventSponsors is null or undefined
       },
       error: (error) => {
         console.error("Error:", error);

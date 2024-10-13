@@ -84,14 +84,21 @@ router.get("/getTicketDetails/:id", verifyToken, async (req, res) => {
         },
         {
           model: UserEvent,
-          attributes: ["TicketType", "UserID"],
+          attributes: ["TicketType", "PurchaseDate", "UserID"],
           where: {
             UserID: decodedToken.userID,
           },
         },
+        {
+          model: User, // Fetch the user who created the event
+          attributes: ["Name"], // Fetch only the name of the user
+          where: {
+            UserID: Sequelize.col("Event.CreatedBy"), // Match with CreatedBy field in the Event table
+          },
+        },
       ],
     });
-    console.log(data);
+    // console.log(data);
     res.json(data);
   } catch (error) {
     console.log(error);
@@ -102,6 +109,9 @@ router.get("/getTicketDetails/:id", verifyToken, async (req, res) => {
 // get the event i am organizing
 router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
   decodedToken = req.user;
+  console.log("userid");
+  console.log(decodedToken.userID);
+  console.log("event id +" + req.params.id);
   var event_id = req.params.id;
   try {
     data = await Event.findAll({
@@ -148,6 +158,7 @@ router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
     });
     res.json(data);
   } catch (error) {
+    console.log("got error");
     console.log(error);
     res.status(500).json({ error: error.message });
   }
@@ -288,7 +299,6 @@ router.delete("/deleteEvent/:id", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Failed to delete event" });
   }
 });
-
 
 const eventRoutes = router;
 module.exports = eventRoutes;
