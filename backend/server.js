@@ -100,25 +100,6 @@ app.post("/userevent/purchase", verifyToken, async (req, res) => {
   }
 });
 
-// Ticket Purchase Confirmation
-app.get("/userevent/:userId/:eventId", async (req, res) => {
-  const { userId, eventId } = req.params;
-  try {
-    const orderDetails = await UserEvent.findOne({
-      where: { UserID: userId, EventID: eventId },
-      include: [{ model: Event }, { model: User }], // Include related data if needed
-    });
-
-    if (orderDetails) {
-      res.json(orderDetails);
-    } else {
-      res.status(404).json({ error: "Order not found" });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // Event Sponsorship
 app.post("/eventsponsor", async (req, res) => {
   try {
