@@ -183,35 +183,49 @@ router.post("/createEvent", verifyToken, async (req, res) => {
 
   // get venue first
   try {
-    venueID = await Venue.findOrCreate({
+    const venueID = await Venue.findOrCreate({
       where: {
         VenueName: req.body.venueName,
         Location: req.body.Location,
         Capacity: req.body.Capacity,
       },
     });
-  } catch (error) {
-    console.error("Error updating user:", error);
+
+    var sqlData = {
+      EventName: req.body.eventName,
+      EventDate: new Date(req.body.eventDate),
+      TicketPrice: req.body.ticketPrice,
+      VenueID: venueID[0].dataValues.VenueID,
+      OrganizationID: decodedToken.organizationID,
+      CreatedBy: decodedToken.userID,
+    };
+
+    // Create the event
+    const event = await Event.create(sqlData);
+    console.log(event);
+
+    // Check if user has selected categories and associate them with the event
+    if (req.body.categories && Array.isArray(req.body.categories)) {
+      const categoryPromises = req.body.categories.map(async (categoryName) => {
+        // Find the categoryID by name
+        const category = await Category.findOne({
+          where: { CategoryName: categoryName },
+        });
+        // Create the EventCategory association
+        return EventCategory.create({
+          EventID: event.EventID,
+          CategoryID: category.CategoryID,
+        });
+      });
+
+      // Wait for all category associations to be created
+      await Promise.all(categoryPromises);
+    }
+      res.json(event);
+    } catch (error) {
+    console.error("Error creating event:", error);
+    res.status(500).json({ error: error.message });
   }
-
-  var sqlData = {
-    EventName: req.body.eventName,
-    EventDate: new Date(req.body.eventDate),
-    TicketPrice: req.body.ticketPrice,
-    VenueID: venueID[0].dataValues.VenueID,
-    OrganizationID: decodedToken.organizationID,
-    CreatedBy: decodedToken.userID,
-  };
-
-  console.log(sqlData);
-  Event.create(sqlData)
-    .then((data) => {
-      console.log(data);
-      res.json(data);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error.message });
-    });
 });
 
 // find all of my tickets
