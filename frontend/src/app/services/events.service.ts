@@ -130,7 +130,7 @@ export class EventsService {
       );
   }
 
-  // focus on UserEevent table and a specific event
+  // focus on UserEvent table and a specific event
   viewTicketDetails(eventID: any): Observable<any> {
     var token = this.loginService.getToken();
     const headers = new HttpHeaders()

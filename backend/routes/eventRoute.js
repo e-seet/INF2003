@@ -118,8 +118,8 @@ router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
   console.log("event id:" + req.params.id);
   var event_id = req.params.id;
   try {
-    data = await Event.findAll({
-      where: { CreatedBy: decodedToken.userID },
+    data = await Event.findOne({
+      where: { EventID: event_id, CreatedBy: decodedToken.userID },
       include: [
         {
           model: Category,
