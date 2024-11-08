@@ -77,7 +77,7 @@ export class OrganizerDetailsComponent {
         this.event.VenueLocation = data?.["Venue"]?.["Location"] ?? "";
         this.event.Host = data?.["User"]?.["Name"];
         this.event.Organizer =
-          data[0]?.["Organization"]?.["OrganizationName"] ?? "";
+          data?.["Organization"]?.["OrganizationName"] ?? "";
         // Safely log the EventSponsors if it exists
         // console.log(data[0]?.["EventSponsors"]);
         console.log(data["User"]["Name"]);
