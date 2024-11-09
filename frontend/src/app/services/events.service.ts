@@ -192,7 +192,23 @@ export class EventsService {
       );
   }
 
-  deleteEvent(eventId: number): Observable<any> {
+  updateEvent(eventId: any, eventData: any): Observable<any> {
+    const token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+  
+    return this.httpClient
+      .put(this.url + "/event/updateEvent/" + eventId, eventData, { headers })
+      .pipe(
+        tap((response) => {
+          console.log("Event update response:", response);
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  deleteEvent(eventId: any): Observable<any> {
     const token = this.loginService.getToken();
     const headers = new HttpHeaders()
       .set("content-type", "application/json")

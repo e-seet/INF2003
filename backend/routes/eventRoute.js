@@ -300,6 +300,77 @@ router.get("/getMyEvents", verifyToken, async (req, res) => {
   }
 });
 
+// Update an event by its ID
+router.put("/updateEvent/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  console.log("Update request received for event ID:", eventId);
+  console.log("Decoded Token:", decodedToken);
+  console.log("Request body:", req.body);
+
+  try {
+    // Check if the event belongs to the current user
+    const event = await Event.findOne({
+      where: { EventID: eventId, CreatedBy: decodedToken.userID },
+    });
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found or unauthorized" });
+    }
+
+    // Find or create the venue
+    const venueID = await Venue.findOrCreate({
+      where: {
+        VenueName: req.body.venueName,
+        Location: req.body.location,
+        Capacity: req.body.capacity,
+      },
+    });
+
+    // Prepare updated event data
+    const updatedEventData = {
+      EventName: req.body.eventName,
+      EventDate: new Date(req.body.eventDate),
+      TicketPrice: req.body.ticketPrice,
+      VenueID: venueID[0].dataValues.VenueID,
+      OrganizationID: decodedToken.organizationID,
+    };
+
+    // Update the event
+    await event.update(updatedEventData);
+    console.log("Updated event data:", updatedEventData);
+
+    // Update categories if they are provided
+    if (req.body.categories && Array.isArray(req.body.categories)) {
+      // First, delete existing categories for the event
+      await EventCategory.destroy({ where: { EventID: eventId } });
+
+      // Then, associate new categories
+      const categoryPromises = req.body.categories.map(async (categoryName) => {
+        // Find the categoryID by name
+        const category = await Category.findOne({
+          where: { CategoryName: categoryName },
+        });
+        // Create the EventCategory association
+        return EventCategory.create({
+          EventID: event.EventID,
+          CategoryID: category.CategoryID,
+        });
+      });
+
+      // Wait for all category updates to complete
+      await Promise.all(categoryPromises);
+    }
+
+    res.json({ message: "Event updated successfully", event: updatedEventData });
+
+  } catch (error) {
+    console.error("Error updating event:", error);
+    res.status(500).json({ error: "Failed to update event" });
+  }
+});
+
 // Delete an event by its ID
 router.delete("/deleteEvent/:id", verifyToken, async (req, res) => {
   const eventId = req.params.id;
