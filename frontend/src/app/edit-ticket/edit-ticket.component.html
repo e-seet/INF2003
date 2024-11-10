@@ -1,0 +1,29 @@
+<div class="edit-ticket-container">
+    <h2>Edit Ticket</h2>
+    <form [formGroup]="editTicketForm" (ngSubmit)="onSubmit()">
+        <div>
+        <label>Ticket:</label>
+        <mat-form-field appearance="fill">
+            <mat-label>Select an option</mat-label>
+            <!-- Input field for filtering options outside of the mat-select -->
+            <mat-select [formControl]="myControl" (selectionChange)="adjustTicketPrice()">
+            <!-- Filtered options will appear here -->
+            <mat-option *ngFor="let option of options" [value]="option">
+                {{ option }}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <h3>Price: ${{ adjustedTicketPrice }}</h3>
+        </div>
+        
+        <!-- Button Group -->
+        <button type="submit" class="btn">Update Ticket Type</button>
+
+        <!-- Success/Error Message -->
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+        <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+        </div>
+    </form>
+
+</div>

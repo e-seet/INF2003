@@ -17,6 +17,7 @@ import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.componen
 import { AuthGuard } from "./auth.guard";
 import { TicketsComponent } from "./event/tickets/tickets.component";
 import { TicketDetailComponent } from "./event/ticket-detail/ticket-detail.component";
+import { EditTicketComponent } from "./edit-ticket/edit-ticket.component";
 import { OrganizerComponent } from "./organizer/organizer.component";
 import { OrganizerDetailsComponent } from "./organizer-details/organizer-details.component";
 
@@ -61,6 +62,7 @@ export const routes: Routes = [
     component: TicketDetailComponent,
     canActivate: [AuthGuard],
   },
+  { path: "edit-myticket/:id", component: EditTicketComponent, canActivate: [AuthGuard] },
 
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
   {

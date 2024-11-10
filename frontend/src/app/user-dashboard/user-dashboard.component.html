@@ -19,23 +19,25 @@
   <!-- Upcoming Events Section -->
   <div class="upcoming-events">
     <h3>Your Upcoming Events</h3>
+      <!-- Display if no events -->
+      <p *ngIf="upcomingEvents.length === 0">You currently have no tickets!</p>
     <ul>
       <li *ngFor="let event of upcomingEvents">
         <strong>{{ event.Event.EventName }}</strong> -
         {{ event.date | date: "shortDate" }} on
         {{ event.Event.EventDate | date: "MMMM d, y, h:mm a" }}
 
-        <button
-          class="btn-view-event"
-          [routerLink]="['/myticket', event.Event.EventID]"
-        >
+        <button class="btn-view-event" [routerLink]="['/myticket', event.Event.EventID]">
           View Details
+        </button>
+        <button class="btn-edit-event" [routerLink]="['/edit-myticket', event.Event.EventID]">
+          Edit Ticket
+        </button>
+        <button class="btn-delete-event" (click)="deleteTicket(event.Event.EventID)">
+          Cancel Ticket
         </button>
       </li>
     </ul>
-    <button class="btn-create-event" routerLink="/create-event">
-      Create New Event
-    </button>
   </div>
 
   <!-- My Events Section -->
@@ -46,13 +48,19 @@
     <ul>
       <li *ngFor="let event of myEvents">
         <strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}
+        <button class="btn-view-event" [routerLink]="['/organizer', event.EventID]">
+        View Details
+        </button>
         <button class="btn-edit-event" [routerLink]="['/edit-event', event.EventID]">
-          Edit
+          Edit Event
         </button>
         <button class="btn-delete-event" (click)="deleteEvent(event.EventID)">
-          Delete
+          Delete Event
         </button>
       </li>
     </ul>
+    <button class="btn-create-event" routerLink="/create-event">
+      Create New Event
+    </button>
   </div>
 </div>

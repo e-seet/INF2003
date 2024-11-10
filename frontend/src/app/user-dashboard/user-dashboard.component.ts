@@ -83,6 +83,22 @@ export class UserDashboardComponent implements OnInit {
     //];
   }
 
+    // Define the deleteTicket method
+    deleteTicket(eventId: number): void {
+      this.eventService.deleteTicket(eventId).subscribe({
+        next: (response) => {
+          console.log("Ticket cancelled successfully:", response);
+          // Remove the deleted ticket from the frontend
+          this.upcomingEvents = this.upcomingEvents.filter(
+            (event) => event.Event.EventID !== eventId,
+          );
+        },
+        error: (error) => {
+          console.error("Error cancelling Ticket:", error);
+        },
+      });
+    }
+
   // Define the deleteEvent method
   deleteEvent(eventId: number): void {
     this.eventService.deleteEvent(eventId).subscribe({

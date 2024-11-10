@@ -192,6 +192,33 @@ export class EventsService {
       );
   }
 
+  updateTicket(eventId: any, eventData: any): Observable<any> {
+    const token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+  
+    return this.httpClient
+      .put(this.url + "/event/updateTicket/" + eventId, eventData, { headers })
+      .pipe(
+        tap((response) => {
+          console.log("Event update response:", response);
+        }),
+        catchError(this.handleError)
+      );
+  }
+  
+  deleteTicket(eventId: any): Observable<any> {
+    const token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+  
+    return this.httpClient.delete(`${this.url}/event/deleteTicket/${eventId}`, {
+      headers,
+    });
+  }
+
   updateEvent(eventId: any, eventData: any): Observable<any> {
     const token = this.loginService.getToken();
     const headers = new HttpHeaders()

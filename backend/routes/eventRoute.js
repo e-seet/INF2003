@@ -300,6 +300,65 @@ router.get("/getMyEvents", verifyToken, async (req, res) => {
   }
 });
 
+// Update ticket type by its event ID
+router.put("/updateTicket/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  try {
+    // Check if the ticket belongs to the current user
+    const event = await UserEvent.findOne({
+      where: { EventID: eventId, UserID: decodedToken.userID },
+    });
+
+    if (!event) {
+      return res.status(404).json({ error: "Ticket not found or unauthorized" });
+    }
+
+    // Prepare updated event data
+    const updatedEventData = {
+      TicketType: req.body.ticketType,
+    };
+
+    // Update the event
+    await event.update(updatedEventData);
+    console.log("Updated event ticket data:", updatedEventData);
+
+    res.json({ message: "Event updated successfully", event: updatedEventData });
+
+  } catch (error) {
+    console.error("Error updating event:", error);
+    res.status(500).json({ error: "Failed to update event" });
+  }
+});
+
+// Delete a ticket by its ID
+router.delete("/deleteTicket/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  try {
+    // Find the UserEvent record to delete
+    const userEvent = await UserEvent.findOne({
+      where: {
+        UserID: decodedToken.userID,
+        EventID: eventId,
+      },
+    });
+
+    if (!userEvent) {
+      return res.status(404).json({ error: "Ticket not found or unauthorized" });
+    }
+
+    // Delete the UserEvent record
+    await userEvent.destroy();
+    res.json({ message: "Ticket deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting ticket:", error);
+    res.status(500).json({ error: "Failed to delete ticket" });
+  }
+});
+
 // Update an event by its ID
 router.put("/updateEvent/:id", verifyToken, async (req, res) => {
   const eventId = req.params.id;
