@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -41,6 +42,7 @@ export class EditEventComponent {
     private userService: UserService, // Inject UserService
     private categoryService: CategoryService,
     private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
   ) {}
   editForm!: FormGroup;
@@ -141,6 +143,7 @@ export class EditEventComponent {
         // Handle success response
         this.successMessage = "Event updated successfully!";
         this.errorMessage = ""; // Clear any previous error message
+        this.router.navigate(["/organizer/" + eventId]); // Redirect to details page
       },
       error: (error) => {
         // Handle error response

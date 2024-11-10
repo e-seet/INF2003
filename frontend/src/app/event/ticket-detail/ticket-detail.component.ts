@@ -33,7 +33,6 @@ export class TicketDetailComponent {
     PurchaseDate: null,
   };
 
-  selectedTicketType: string = "";
   adjustedTicketPrice: number = 0; // Hold adjusted price
   sponsorshipAmount: number = 0; // Hold sponsorship amount
 
@@ -74,26 +73,23 @@ export class TicketDetailComponent {
     });
   }
 
-  // Method to adjust the ticket price
-  adjustTicketPrice() {
-    if (!this.selectedTicketType) {
-      this.selectedTicketType = this.ticket.TicketType;
-    }
-    switch (this.selectedTicketType) {
-      case "Premium":
-        this.adjustedTicketPrice = parseFloat(
-          (this.ticket.TicketPrice * 1.5).toFixed(2),
-        ); // 2 d.p.
-        break;
-      case "VIP":
-        this.adjustedTicketPrice = parseFloat(
-          (this.ticket.TicketPrice * 2).toFixed(2),
-        );
-        break;
-      default:
-        this.adjustedTicketPrice = this.ticket.TicketPrice;
-    }
+// Method to adjust the ticket price based on ticket type
+adjustTicketPrice() {
+  switch (this.ticket.ticketType) {
+    case "Premium":
+      this.adjustedTicketPrice = parseFloat(
+        (this.ticket.TicketPrice * 1.5).toFixed(2),
+      );
+      break;
+    case "VIP":
+      this.adjustedTicketPrice = parseFloat(
+        (this.ticket.TicketPrice * 2).toFixed(2),
+      );
+      break;
+    default:
+      this.adjustedTicketPrice = this.ticket.TicketPrice;
   }
+}
 
   goBack() {
     this.router.navigate(["/myticket"]); // Redirect to events list or another page
