@@ -7,32 +7,30 @@
 			<li class="navbar-item">
 				<a routerLink="/events" class="navbar-link">All Events</a>
 			</li>
-			<li class="navbar-item" *ngIf="isLoggedIn">
-				<a routerLink="/organizer" class="navbar-link">My Events</a>
-			</li>
-			<!-- <li class="navbar-item">
+			<li class="navbar-item">
 				<a routerLink="/sponsors" class="navbar-link">Sponsors</a>
-			</li> -->
-			<!-- <li class="navbar-item">
+			</li>
+			<li class="navbar-item">
 				<a routerLink="/contact-us" class="navbar-link">Contact</a>
-			</li> -->
-
-			<!-- <li class="navbar-item">
+			</li>
+			<li class="navbar-item">
 				<a routerLink="/privacy-policy" class="navbar-link">Privacy Policy</a>
-			</li> -->
-
-			<li class="navbar-item" *ngIf="isLoggedIn">
+			</li>
+			<!-- <li class="navbar-item" *ngIf="isLoggedIn">
 				<a routerLink="/myticket" class="navbar-link">My Tickets</a>
 			</li>
+			<li class="navbar-item" *ngIf="isLoggedIn">
+				<a routerLink="/organizer" class="navbar-link">My Events</a>
+			</li> -->
 			<!-- <li class="navbar-item">
 				<a routerLink="/order-confirmation" class="navbar-link">Order Confirmation</a>
 			</li> -->
 			<!-- <li class="navbar-item">
 				<a routerLink="/event-confirm" class="navbar-link">Event Confirm</a>
 			</li> -->
-			<li *ngIf="isLoggedIn" class="navbar-item">
+			<!-- <li *ngIf="isLoggedIn" class="navbar-item">
 				<a routerLink="/create-event" class="navbar-link">Create Event</a>
-			</li>
+			</li> -->
 		</ul>
 		<div class="navbar-right">
 			<button *ngIf="!isLoggedIn" class="navbar-button" routerLink="/login">
