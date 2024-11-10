@@ -87,11 +87,9 @@ export class OrganizerComponent {
         const now = new Date();
 
         this.originalData = theobjects; // Store the original data
+        this.dataSource.data = theobjects;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.dataSource.data = theobjects.filter(
-          (event) => new Date(event.EventDate) > now,
-        );
         this.showCurrentEvents = true;
       },
       error: (error) => {
