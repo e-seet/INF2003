@@ -1,0 +1,28 @@
+<div class="edit-sponsor-container">
+    <h2>Edit Ticket</h2>
+    <form [formGroup]="editSponsorForm" (ngSubmit)="onSubmit()">
+
+        <!-- Sponsorship Field -->
+        <div class="form-group">
+            <label for="SponsorshipAmount">Sponsorship</label>
+            <input
+                id="SponsorshipAmount"
+                formControlName="SponsorshipAmount"
+                type="number"
+                step="0.01"
+                placeholder="Enter Sponsorship"
+                class="form-control"
+            />
+        </div>
+        
+        <!-- Button Group -->
+        <button type="submit" class="btn">Update Amount</button>
+
+        <!-- Success/Error Message -->
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+        <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+        </div>
+    </form>
+
+</div>

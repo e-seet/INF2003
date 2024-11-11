@@ -76,6 +76,24 @@ export class EventsService {
       );
   }
 
+  // display all sponsored events
+  getSponsorEvents(): Observable<any> {
+    var token = this.loginService.getToken();
+    console.log(token);
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .get<any[]>(this.url + "/event/getSponsorEvents", { headers })
+      .pipe(
+        tap((data) => {
+          console.log(data);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
   // display all event [Just a select * from events]
   getTickets(): Observable<any> {
     var token = this.loginService.getToken();
@@ -149,6 +167,25 @@ export class EventsService {
       );
   }
 
+  // focus on EventSponsor table and a specific event
+  viewSponsorDetails(eventID: any): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .get<any[]>(this.url + "/event/getSponsorDetails/" + eventID, {
+        headers: headers,
+      })
+      .pipe(
+        tap((data) => {
+          console.log(data);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
   purchaseTicket(eventData: {
     UserID: number;
     EventID: number;
@@ -190,6 +227,34 @@ export class EventsService {
         }),
         catchError(this.handleError),
       );
+  }
+
+  
+  updateSponsor(eventId: any, eventData: any): Observable<any> {
+    const token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+  
+    return this.httpClient
+      .put(this.url + "/event/updateSponsor/" + eventId, eventData, { headers })
+      .pipe(
+        tap((response) => {
+          console.log("Event update response:", response);
+        }),
+        catchError(this.handleError)
+      );
+  }
+  
+  deleteSponsor(eventId: any): Observable<any> {
+    const token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+  
+    return this.httpClient.delete(`${this.url}/event/deleteSponsor/${eventId}`, {
+      headers,
+    });
   }
 
   updateTicket(eventId: any, eventData: any): Observable<any> {

@@ -1,0 +1,42 @@
+<div class="event-header-content">
+	<mat-card-title>
+		<h2 class="event-name">Event Name: {{ event.EventName }}</h2>
+	</mat-card-title>
+	<mat-card-subtitle>
+
+
+		<h3>
+			<b>By Speaker</b>:{{event.Host}}
+			<div *ngIf="event.Organizer !== ''">
+				from the <B>Organization</B>: {{ event.Organizer }}
+			</div>
+		</h3>
+
+	</mat-card-subtitle>
+	<mat-card-subtitle class="event-details-group">
+		<h3>Date: {{ event.EventDate | date: 'longDate' }}</h3>
+		<h3>Venue: {{ event.VenueName }}</h3>
+		<h3>Location: {{ event.VenueLocation }}</h3>
+	</mat-card-subtitle>
+</div>
+
+<mat-card-content>
+	<!-- Sponsor Information -->
+	<div *ngFor="let sponsor of eventSponsor" class="sponsor-card-container">
+		<mat-card class="sponsor-card">
+			<mat-card-content>
+				<h4>{{ sponsor.SponsorLevel }} Sponsor</h4>
+				<p *ngIf="sponsor.SponsorshipAmount" class="card-content">
+					Sponsored Amount: {{ sponsor.SponsorshipAmount }}
+				</p>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</mat-card-content>
+
+<mat-card-actions align="end">
+	<button mat-raised-button (click)="goBack()">
+		Back
+	</button>
+	<!-- Add any actions or buttons here if needed -->
+</mat-card-actions>

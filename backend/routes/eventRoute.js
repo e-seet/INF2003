@@ -174,6 +174,95 @@ router.get("/getMyEventDetails/:id", verifyToken, async (req, res) => {
   }
 });
 
+// Get all events that the authenticated user has sponsored
+router.get("/getSponsorEvents", verifyToken, async (req, res) => {
+  decodedToken = req.user;
+
+  try {
+    const data = await Event.findAll({
+      include: [
+        {
+          model: EventSponsor,
+          attributes: ["SponsorshipAmount", "SponsorLevel"],
+          where: { UserID: decodedToken.userID },
+        },
+        {
+          model: Venue,
+          attributes: ["VenueName", "Location"],
+        },
+        {
+          model: Organization,
+          attributes: ["OrganizationName"],
+        },
+        {
+          model: User, // Fetch the user who created the event
+          attributes: ["Name"], // Fetch only the name of the user
+          where: {
+            UserID: Sequelize.col("Event.CreatedBy"), // Match with CreatedBy field in the Event table
+          },
+        },
+      ],
+      order: [["EventDate", "ASC"]], // Sort by event date in ascending order
+    });
+
+    if (data.length === 0) {
+      return res.status(404).json({ message: "No sponsored events found" });
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching sponsored events:", error);
+    res.status(500).json({ error: "Failed to retrieve sponsored events" });
+  }
+});
+
+// Get specific event that the authenticated user has sponsored
+router.get("/getSponsorDetails/:id", verifyToken, async (req, res) => {
+  decodedToken = req.user;
+  console.log("userid");
+  console.log(decodedToken.userID);
+  console.log("event id:" + req.params.id);
+  var event_id = req.params.id;
+
+  try {
+    const data = await Event.findAll({
+      where: { EventID: event_id },
+      include: [
+        {
+          model: EventSponsor,
+          attributes: ["SponsorshipAmount", "SponsorLevel"],
+          where: { UserID: decodedToken.userID },
+        },
+        {
+          model: Venue,
+          attributes: ["VenueName", "Location"],
+        },
+        {
+          model: Organization,
+          attributes: ["OrganizationName"],
+        },
+        {
+          model: User, // Fetch the user who created the event
+          attributes: ["Name"], // Fetch only the name of the user
+          where: {
+            UserID: Sequelize.col("Event.CreatedBy"), // Match with CreatedBy field in the Event table
+          },
+        },
+      ],
+      order: [["EventDate", "ASC"]], // Sort by event date in ascending order
+    });
+
+    if (data.length === 0) {
+      return res.status(404).json({ message: "No sponsored events found" });
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching sponsored events:", error);
+    res.status(500).json({ error: "Failed to retrieve sponsored events" });
+  }
+});
+
 //Create a new event.
 // Being a organizer and creating a new event
 router.post("/createEvent", verifyToken, async (req, res) => {
@@ -297,6 +386,65 @@ router.get("/getMyEvents", verifyToken, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Update sponsorship amount by its event ID
+router.put("/updateSponsor/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  try {
+    // Check if the ticket belongs to the current user
+    const event = await EventSponsor.findOne({
+      where: { EventID: eventId, UserID: decodedToken.userID },
+    });
+
+    if (!event) {
+      return res.status(404).json({ error: "Sponsorship not found or unauthorized" });
+    }
+
+    // Prepare updated event data
+    const updatedEventData = {
+      SponsorshipAmount: req.body.SponsorshipAmount,
+    };
+
+    // Update the event
+    await event.update(updatedEventData);
+    console.log("Updated sponsorship data:", updatedEventData);
+
+    res.json({ message: "Sponsorship updated successfully", event: updatedEventData });
+
+  } catch (error) {
+    console.error("Error updating sponsorship:", error);
+    res.status(500).json({ error: "Failed to update sponsorship" });
+  }
+});
+
+// Delete a sponsorship by its ID
+router.delete("/deleteSponsor/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  try {
+    // Find the Sponsorship record to delete
+    const eventSponsor = await EventSponsor.findOne({
+      where: {
+        UserID: decodedToken.userID,
+        EventID: eventId,
+      },
+    });
+
+    if (!eventSponsor) {
+      return res.status(404).json({ error: "Sponsorship not found or unauthorized" });
+    }
+
+    // Delete the Sponsorship record
+    await eventSponsor.destroy();
+    res.json({ message: "Sponsorship deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting Sponsorship:", error);
+    res.status(500).json({ error: "Failed to delete sponsorship" });
   }
 });
 

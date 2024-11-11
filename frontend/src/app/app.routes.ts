@@ -20,6 +20,9 @@ import { TicketDetailComponent } from "./event/ticket-detail/ticket-detail.compo
 import { EditTicketComponent } from "./edit-ticket/edit-ticket.component";
 import { OrganizerComponent } from "./organizer/organizer.component";
 import { OrganizerDetailsComponent } from "./organizer-details/organizer-details.component";
+import { SponsorshipComponent } from "./sponsorship/sponsorship.component";
+import { SponsorshipDetailsComponent } from "./sponsorship-details/sponsorship-details.component";
+import { EditSponsorComponent } from "./edit-sponsor/edit-sponsor.component";
 
 export const routes: Routes = [
   { path: "", component: HomeComponent }, // Set HomeComponent as the default route
@@ -35,6 +38,11 @@ export const routes: Routes = [
   {
     path: "create-event",
     component: CreateEventComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "edit-event/:id",
+    component: EditEventComponent,
     canActivate: [AuthGuard],
   },
   { path: "sponsors", component: SponsorsComponent },
@@ -54,6 +62,18 @@ export const routes: Routes = [
     component: OrganizerDetailsComponent,
     canActivate: [AuthGuard],
   },
+  // for my Sponsorships
+  {
+    path: "sponsorship",
+    component: SponsorshipComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "sponsorship/:id",
+    component: SponsorshipDetailsComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: "edit-sponsor/:id", component: EditSponsorComponent, canActivate: [AuthGuard] },
 
   // for my Tickets. The tickets i brought for
   { path: "myticket", component: TicketsComponent, canActivate: [AuthGuard] },
@@ -65,11 +85,6 @@ export const routes: Routes = [
   { path: "edit-myticket/:id", component: EditTicketComponent, canActivate: [AuthGuard] },
 
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
-  {
-    path: "edit-event/:id",
-    component: EditEventComponent,
-    canActivate: [AuthGuard],
-  },
   { path: "contact-us", component: ContactUsComponent },
   { path: "privacy-policy", component: PrivacyPolicyComponent },
   {
