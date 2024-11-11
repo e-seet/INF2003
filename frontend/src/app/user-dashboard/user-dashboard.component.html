@@ -38,7 +38,7 @@
         </button>
       </li>
     </ul>
-    <button class="btn-view-event" routerLink="/myticket">
+    <button class="btn-view-all-event" routerLink="/myticket">
       View All Tickets
     </button>
   </div>
@@ -62,11 +62,35 @@
         </button>
       </li>
     </ul>
-    <button class="btn-view-event" routerLink="/organizer">
+    <button class="btn-view-all-event" routerLink="/organizer">
       View All Events
     </button>
     <button class="btn-create-event" routerLink="/create-event">
       Create New Event
     </button>
   </div>
+
+    <!-- My Sponsorships Section -->
+    <div class="sponsor-events">
+      <h3>Events You Sponsored</h3>
+      <!-- Display if no events sponsored -->
+      <p *ngIf="myEvents.length === 0">You currently sponsored no events!</p>
+      <ul>
+        <li *ngFor="let event of sponsorEvents">
+          <strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}
+          <button class="btn-view-event" [routerLink]="['/sponsorship', event.EventID]">
+          View Details
+          </button>
+          <button class="btn-edit-event" [routerLink]="['/edit-sponsor', event.EventID]">
+            Edit Sponsorship
+          </button>
+          <button class="btn-delete-event" (click)="deleteSponsor(event.EventID)">
+            Delete Sponsorship
+          </button>
+      </li>
+      </ul>
+      <button class="btn-view-all-event" routerLink="/sponsorship">
+        View All Events
+      </button>
+    </div>
 </div>

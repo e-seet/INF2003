@@ -19,6 +19,7 @@ export class UserDashboardComponent implements OnInit {
   // Add these missing properties
   upcomingEvents: any[] = []; // Initialize as an empty array or use a specific type for events
   myEvents: any[] = []; // Initialize as an empty array or use a specific type for events
+  sponsorEvents: any[] = []; // Initialize as an empty array or use a specific type for events
   notifications: any[] = []; // Initialize as an empty array or use a specific type for notifications
 
   constructor(
@@ -60,6 +61,18 @@ export class UserDashboardComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.myEvents = data;
+      },
+      error: (error) => {
+        console.error("Error:", error);
+      },
+      complete: () => {},
+    });
+
+    // get all my sponsored events
+    this.eventService.getSponsorEvents().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.sponsorEvents = data;
       },
       error: (error) => {
         console.error("Error:", error);
@@ -114,4 +127,20 @@ export class UserDashboardComponent implements OnInit {
       },
     });
   }
+
+    // Define the deleteSponsor method
+    deleteSponsor(eventId: number): void {
+      this.eventService.deleteSponsor(eventId).subscribe({
+        next: (response) => {
+          console.log("Sponsorship deleted successfully:", response);
+          // Remove the deleted sponsorship from the frontend
+          this.sponsorEvents = this.sponsorEvents.filter(
+            (event) => event.EventID !== eventId,
+          );
+        },
+        error: (error) => {
+          console.error("Error deleting sponsorship:", error);
+        },
+      });
+    }
 }
