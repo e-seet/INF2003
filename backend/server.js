@@ -132,6 +132,15 @@ app.get("/category/getcategories", async (req, res) => {
 // Set up associations
 require("./models/associations"); // This file contains all the association logic
 
+// for mongodb
+// For mongodb related
+const connectMongoDB = require("./mongodb/mongodb.js"); // MongoDB connection file
+connectMongoDB();
+const mongoController = require("./mongodb/Controller/controller.js");
+
+app.use("/mongo", mongoController);
+// end of mongodb
+
 // for user
 
 // Sync database and start the server
