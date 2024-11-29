@@ -602,5 +602,31 @@ router.delete("/deleteEvent/:id", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/getFilteredEvents", async (req, res) => {
+  try {
+    console.log("Received query params:", req.query); // Log query params
+    const { startDate, endDate, priceSortOrder } = req.query;
+
+    // Validate inputs (Optional but recommended)
+    if (startDate && isNaN(Date.parse(startDate))) {
+      throw new Error("Invalid startDate format");
+    }
+    if (endDate && isNaN(Date.parse(endDate))) {
+      throw new Error("Invalid endDate format");
+    }
+
+    const events = await Event.filterEvents({
+      startDate: startDate || null,
+      endDate: endDate || null,
+      priceSortOrder: priceSortOrder || "asc",
+    });
+
+    res.json(events);
+  } catch (err) {
+    console.error("Error in /getFilteredEvents route:", err); // Log full error
+    res.status(500).send("An error occurred while fetching events.");
+  }
+});
+
 const eventRoutes = router;
 module.exports = eventRoutes;

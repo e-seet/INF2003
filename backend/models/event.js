@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Op} = require("sequelize");
 const sequelize = require("./index");
 const Organization = require("./organization");
 const Venue = require("./venue");
@@ -76,5 +76,34 @@ Event.belongsTo(Organization, { foreignKey: "OrganizationID" });
 Event.belongsTo(Venue, { foreignKey: "VenueID" });
 // Event.belongsTo(Sponsor, { foreignKey: 'SponsorID' });
 Event.belongsTo(User, { foreignKey: "CreatedBy" });
+
+// Filtering Events
+Event.filterEvents = async function ({ startDate, endDate, priceSortOrder }) {
+  const whereConditions = {};
+
+  // Add filtering by date range
+  if (startDate) {
+    whereConditions.EventDate = { [Op.gte]: startDate }; // EventDate >= startDate
+  }
+  if (endDate) {
+    whereConditions.EventDate = {
+      ...(whereConditions.EventDate || {}),
+      [Op.lte]: endDate, // EventDate <= endDate
+    };
+  }
+
+  // Add ordering by TicketPrice
+  const order = [];
+  if (priceSortOrder === "asc" || priceSortOrder === "desc") {
+    order.push(["TicketPrice", priceSortOrder]);
+  }
+
+  // Fetch filtered events
+  return await Event.findAll({
+    where: whereConditions,
+    order: order,
+    include: [Organization, Venue, User], // Include related models if needed
+  });
+};
 
 module.exports = Event;

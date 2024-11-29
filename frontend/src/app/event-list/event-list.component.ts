@@ -114,27 +114,22 @@ export class EventListComponent {
 
   // Filtering logic based on startDate and endDate
   applyFilter() {
-    const filteredData = this.originalData.filter((event: any) => {
-      const eventDate = new Date(event.EventDate);
-      if (this.startDate && eventDate < this.startDate) {
-        return false;
-      }
-      if (this.endDate && eventDate > this.endDate) {
-        return false;
-      }
-      return true;
-    });
-
-    // Sort the filtered data by price
-    if (this.priceSortOrder === "asc") {
-      filteredData.sort((a, b) => a.TicketPrice - b.TicketPrice);
-    } else if (this.priceSortOrder === "desc") {
-      filteredData.sort((a, b) => b.TicketPrice - a.TicketPrice);
-    }
-
-    this.dataSource.data = filteredData;
+    const startTime = performance.now(); // Start timing
+  
+    this.eventService
+      .getFilteredEvents(this.startDate, this.endDate, this.priceSortOrder)
+      .subscribe({
+        next: (filteredData) => {
+          this.dataSource.data = filteredData; // Update the table with filtered results
+          const endTime = performance.now(); // End timing
+          console.log(`Server-side filtering took ${endTime - startTime} ms`);
+        },
+        error: (error) => {
+          console.error('Error fetching filtered events:', error);
+        },
+      });
   }
-
+  
   // Method to handle row click and set the selected event
   onRowClick(event: any) {
     console.log("Event clicked:", event);
