@@ -122,7 +122,7 @@ export class EventListComponent {
         next: (filteredData) => {
           this.dataSource.data = filteredData; // Update the table with filtered results
           const endTime = performance.now(); // End timing
-          console.log(`Server-side filtering took ${endTime - startTime} ms`);
+          console.log(`Filtering took ${endTime - startTime} ms`);
         },
         error: (error) => {
           console.error('Error fetching filtered events:', error);
