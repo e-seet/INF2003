@@ -23,6 +23,23 @@ const userEventSchema = new mongoose.Schema({
   Attendance: { type: Boolean, default: false }, // Attendance status
 });
 
+// Add Event Schema with versioning for optimistic locking
+const eventSchema = new mongoose.Schema({
+  EventID: { type: String, required: true },
+  EventName: { type: String, required: true },
+  EventDate: { type: Date, required: true },
+  TicketPrice: { type: Number, min: 0 },
+  VenueID: { type: String, required: true },
+  OrganizationID: { type: String, required: true },
+  CreatedBy: { type: String, required: true },
+  version: { type: Number, default: 0 }
+});
+
+// Add indexes
+eventSchema.index({ EventName: 1 });
+eventSchema.index({ EventDate: 1 });
+eventSchema.index({ CreatedBy: 1 });
+
 // Define a compound index to ensure UserID and EventID are unique
 // indexing
 userEventSchema.index({ UserID: 1, EventID: 1 }, { unique: true });
@@ -36,6 +53,7 @@ eventSponsorSchema.index(
 // collection name: eventsponsor, userevent inside mongo compass
 const MongoEventSponsor = mongoose.model("eventsponsor", eventSponsorSchema);
 const MongoUserEvent = mongoose.model("userevent", userEventSchema);
+const MongoEvent = mongoose.model("event", eventSchema);
 
 // Export Models
-module.exports = { MongoEventSponsor, MongoUserEvent };
+module.exports = { MongoEventSponsor, MongoUserEvent, MongoEvent };
