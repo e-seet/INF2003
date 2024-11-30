@@ -44,3 +44,6 @@ Thumbs.db
 # Temporary folders and filespackage-lock.json
 .yarn-integrity
 .yarnrc
+
+#ignore environment file
+.env

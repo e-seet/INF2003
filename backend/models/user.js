@@ -34,6 +34,8 @@ const User = sequelize.define(
     OrganizationID: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      //   allowNull: false,
+      defaultValue: -1,
     },
     admin: {
       type: DataTypes.INTEGER,
@@ -46,8 +48,24 @@ const User = sequelize.define(
         },
       },
     },
+    // for concurrency Not needed for now
+    // Version: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   defaultValue: 0,
+    // },
   },
   {
+    // Add a compound index on admin and OrganizationID
+    //   indexes: [
+    //   {
+    //     fields: ["UserID", "OrganizationID"],
+    //   },
+    // ],
+
+    // Enable optimistic locking
+    // version: true, // Tells Sequelize to use the `Version` field for optimistic locking
+
     hooks: {
       // Hash the password before saving the user
       beforeSave: async (user) => {
