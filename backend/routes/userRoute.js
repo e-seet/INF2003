@@ -6,10 +6,13 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user"); // Assuming a User model exists
 const Organization = require("../models/organization");
 const verifyToken = require("../middleware/verifyToken");
+const sequelize = require("../models/index");
+const { Transaction } = require("sequelize");
 
 const SECRET_KEY = "TEMP_KEY";
 
 // 1. Register a new user
+/*
 router.post("/register", async (req, res) => {
   console.log("Running registration process");
   console.log("Request Body:", req.body);
@@ -63,8 +66,122 @@ router.post("/register", async (req, res) => {
   //     res.status(400).json({ error: error.message });
   // }
 });
+ */
+
+// concurrency
+// 1. Register a new user
+router.post("/register", async (req, res) => {
+  console.log("Running registration process");
+  console.log("Request Body:", req.body);
+
+  const transaction = await sequelize.transaction();
+
+  try {
+    // Step 1: Find or create the Organization within the transaction
+    const [organization, created] = await Organization.findOrCreate({
+      where: { OrganizationName: req.body.OrganizationName },
+      defaults: { OrganizationName: req.body.OrganizationName },
+      transaction,
+    });
+
+    // Step 2: Create a new user with the OrganizationID within the transaction
+    let newUser = await User.create(
+      {
+        Name: req.body.Name,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Phone: req.body.Phone,
+        OrganizationID: organization.OrganizationID,
+      },
+      { transaction },
+    );
+
+    await transaction.commit();
+    console.log("User created successfully:", newUser);
+    console.log("Waiting for new request\n");
+
+    // Return the created user
+    res.status(200).json(newUser);
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error during registration process:", error);
+    console.log("Waiting for new request\n");
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// concurrency for editprofile
+router.post("/editProfile", verifyToken, async (req, res) => {
+  console.log("\nedit profile\n");
+  let decodedToken = req.user;
+
+  const userId = decodedToken.userID;
+  const updatedData = req.body;
+
+  const transaction = await sequelize.transaction();
+
+  try {
+    if (
+      !updatedData.OrganizationName ||
+      typeof updatedData.OrganizationName !== "string"
+    ) {
+      await transaction.rollback();
+      return res
+        .status(400)
+        .json({ message: "Invalid OrganizationName provided." });
+    }
+
+    // Find or create the organization within the transaction
+    const orgdata = await Organization.findOrCreate({
+      where: {
+        OrganizationName: updatedData.OrganizationName,
+      },
+      defaults: {
+        OrganizationName: updatedData.OrganizationName,
+      },
+      transaction,
+    });
+
+    updatedData.OrganizationID = orgdata[0].OrganizationID;
+
+    // Fetch current user data with version
+    const user = await User.findOne({
+      where: { UserID: userId },
+      lock: transaction.LOCK.UPDATE, // Lock the row for updates
+      transaction,
+    });
+
+    if (!user) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Check version for optimistic locking
+    // if (updatedData.version !== user.version) {
+    //   await transaction.rollback();
+    //   return res.status(409).json({
+    //     message:
+    //       "Conflict detected. User profile has been updated by another process.",
+    //   });
+    // }
+
+    // Increment version
+    // updatedData.version = user.version + 1;
+
+    // Update user data within the transaction
+    await user.update(updatedData, { transaction });
+
+    await transaction.commit();
+    res.status(200).json({ message: "User updated successfully." });
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error during profile update:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // POST route for user login
+// /*
 router.post("/login", async (req, res) => {
   try {
     const { Email, Password } = req.body; // Extract email and password from request body
@@ -128,8 +245,10 @@ router.post("/login", async (req, res) => {
       .json({ error: "Something went wrong. Please try again later." });
   }
 });
+// */
 
 // edit user profile
+/* 
 router.post("/editProfile", verifyToken, async (req, res) => {
   console.log("\nedit profile\n");
   let decodedToken = req.user;
@@ -148,7 +267,7 @@ router.post("/editProfile", verifyToken, async (req, res) => {
     updatedData.OrganizationID = orgdata[0].OrganizationID;
 
     // Update user data with the new OrganizationID
-    const [updated] = await User.update(updatedData, {
+    const updated = await User.update(updatedData, {
       where: { userID: userId },
     });
 
@@ -163,6 +282,7 @@ router.post("/editProfile", verifyToken, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+*/
 
 // Get the user's organization name
 router.get("/profile/organization", verifyToken, async (req, res) => {

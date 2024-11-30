@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
 const UserEvent = require("../models/userevent");
 const Category = require("../models/category");
 const EventCategory = require("../models/eventcategory");
-const EventSponsor = require("../models/eventsponsor");
+const EventSponsor = require("../models/EventSponsor");
 const verifyToken = require("../middleware/verifyToken");
 
 // Get all events. [Be it self-organized or by others]
@@ -263,8 +263,77 @@ router.get("/getSponsorDetails/:id", verifyToken, async (req, res) => {
   }
 });
 
+// concurrency for creating new event
+// routes/events.js
+
+router.post("/createEvent", verifyToken, async (req, res) => {
+  let decodedToken = req.user;
+
+  const transaction = await sequelize.transaction();
+  try {
+    // Find or create the venue within the transaction
+    //   const [venue, created] = await Venue.findOrCreate({
+    const [venue] = await Venue.findOrCreate({
+      where: {
+        VenueName: req.body.venueName,
+        Location: req.body.Location,
+        Capacity: req.body.Capacity,
+      },
+      defaults: {
+        VenueName: req.body.venueName,
+        Location: req.body.Location,
+        Capacity: req.body.Capacity,
+      },
+      transaction,
+    });
+
+    const sqlData = {
+      EventName: req.body.eventName,
+      EventDate: new Date(req.body.eventDate),
+      TicketPrice: req.body.ticketPrice,
+      VenueID: venue.VenueID,
+      OrganizationID: decodedToken.organizationID,
+      CreatedBy: decodedToken.userID,
+    };
+
+    // Create the event within the transaction
+    const event = await Event.create(sqlData, { transaction });
+
+    // Associate categories within the transaction
+    if (req.body.categories && Array.isArray(req.body.categories)) {
+      const categoryPromises = req.body.categories.map(async (categoryName) => {
+        const category = await Category.findOne({
+          where: { CategoryName: categoryName },
+          transaction,
+        });
+        if (category) {
+          return EventCategory.create(
+            {
+              EventID: event.EventID,
+              CategoryID: category.CategoryID,
+            },
+            { transaction },
+          );
+        } else {
+          throw new Error(`Category '${categoryName}' not found.`);
+        }
+      });
+
+      await Promise.all(categoryPromises);
+    }
+
+    await transaction.commit();
+    res.json(event);
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error creating event:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Create a new event.
 // Being a organizer and creating a new event
+/* 
 router.post("/createEvent", verifyToken, async (req, res) => {
   let decodedToken = req.user;
   //   console.log(decodedToken);
@@ -310,12 +379,13 @@ router.post("/createEvent", verifyToken, async (req, res) => {
       // Wait for all category associations to be created
       await Promise.all(categoryPromises);
     }
-      res.json(event);
-    } catch (error) {
+    res.json(event);
+  } catch (error) {
     console.error("Error creating event:", error);
     res.status(500).json({ error: error.message });
   }
 });
+*/
 
 // find all of my tickets
 // basically taking my records in user-event
@@ -390,6 +460,57 @@ router.get("/getMyEvents", verifyToken, async (req, res) => {
 });
 
 // Update sponsorship amount by its event ID
+//concurrency
+router.post("/updateSponsor/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  const transaction = await sequelize.transaction();
+  try {
+    // Fetch the sponsorship record within the transaction
+    const eventSponsor = await EventSponsor.findOne({
+      where: { EventID: eventId, UserID: decodedToken.userID },
+      lock: transaction.LOCK.UPDATE, // Lock the row
+      transaction,
+    });
+
+    if (!eventSponsor) {
+      await transaction.rollback();
+      return res
+        .status(404)
+        .json({ error: "Sponsorship not found or unauthorized" });
+    }
+
+    // Validate SponsorshipAmount (NEW VALIDATION ADDED)
+    if (
+      !Number.isFinite(req.body.SponsorshipAmount) ||
+      req.body.SponsorshipAmount < 0
+    ) {
+      await transaction.rollback(); // Roll back the transaction if validation fails
+      return res.status(400).json({ error: "Invalid Sponsorship Amount" });
+    }
+
+    // Increment version and update data
+    await eventSponsor.update(
+      {
+        SponsorshipAmount: req.body.SponsorshipAmount,
+        // version: eventSponsor.version + 1,
+      },
+      { transaction },
+    );
+
+    await transaction.commit();
+    res.json({
+      message: "Sponsorship updated successfully",
+      event: eventSponsor,
+    });
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error updating sponsorship:", error);
+    res.status(500).json({ error: "Failed to update sponsorship" });
+  }
+});
+
 router.put("/updateSponsor/:id", verifyToken, async (req, res) => {
   const eventId = req.params.id;
   const decodedToken = req.user;
@@ -401,7 +522,9 @@ router.put("/updateSponsor/:id", verifyToken, async (req, res) => {
     });
 
     if (!event) {
-      return res.status(404).json({ error: "Sponsorship not found or unauthorized" });
+      return res
+        .status(404)
+        .json({ error: "Sponsorship not found or unauthorized" });
     }
 
     // Prepare updated event data
@@ -413,8 +536,10 @@ router.put("/updateSponsor/:id", verifyToken, async (req, res) => {
     await event.update(updatedEventData);
     console.log("Updated sponsorship data:", updatedEventData);
 
-    res.json({ message: "Sponsorship updated successfully", event: updatedEventData });
-
+    res.json({
+      message: "Sponsorship updated successfully",
+      event: updatedEventData,
+    });
   } catch (error) {
     console.error("Error updating sponsorship:", error);
     res.status(500).json({ error: "Failed to update sponsorship" });
@@ -436,7 +561,9 @@ router.delete("/deleteSponsor/:id", verifyToken, async (req, res) => {
     });
 
     if (!eventSponsor) {
-      return res.status(404).json({ error: "Sponsorship not found or unauthorized" });
+      return res
+        .status(404)
+        .json({ error: "Sponsorship not found or unauthorized" });
     }
 
     // Delete the Sponsorship record
@@ -449,6 +576,47 @@ router.delete("/deleteSponsor/:id", verifyToken, async (req, res) => {
 });
 
 // Update ticket type by its event ID
+// routes/events.js
+router.put("/updateTicket/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  const transaction = await sequelize.transaction();
+  try {
+    // Fetch the ticket with a row lock
+    const userEvent = await UserEvent.findOne({
+      where: { EventID: eventId, UserID: decodedToken.userID },
+      lock: transaction.LOCK.UPDATE, // Lock the row
+      transaction, // Apply the lock within the transaction
+    });
+
+    if (!userEvent) {
+      await transaction.rollback();
+      return res
+        .status(404)
+        .json({ error: "Ticket not found or unauthorized" });
+    }
+
+    // Perform the update
+    await userEvent.update(
+      {
+        TicketType: req.body.ticketType,
+      },
+      { transaction }, // Update within the same transaction
+    );
+
+    // Commit the transaction to release the lock
+    await transaction.commit();
+
+    res.json({ message: "Ticket updated successfully", event: userEvent });
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error updating ticket:", error);
+    res.status(500).json({ error: "Failed to update ticket" });
+  }
+});
+
+/*
 router.put("/updateTicket/:id", verifyToken, async (req, res) => {
   const eventId = req.params.id;
   const decodedToken = req.user;
@@ -460,7 +628,9 @@ router.put("/updateTicket/:id", verifyToken, async (req, res) => {
     });
 
     if (!event) {
-      return res.status(404).json({ error: "Ticket not found or unauthorized" });
+      return res
+        .status(404)
+        .json({ error: "Ticket not found or unauthorized" });
     }
 
     // Prepare updated event data
@@ -472,13 +642,15 @@ router.put("/updateTicket/:id", verifyToken, async (req, res) => {
     await event.update(updatedEventData);
     console.log("Updated event ticket data:", updatedEventData);
 
-    res.json({ message: "Event updated successfully", event: updatedEventData });
-
+    res.json({
+      message: "Event updated successfully",
+      event: updatedEventData,
+    });
   } catch (error) {
     console.error("Error updating event:", error);
     res.status(500).json({ error: "Failed to update event" });
   }
-});
+});*/
 
 // Delete a ticket by its ID
 router.delete("/deleteTicket/:id", verifyToken, async (req, res) => {
@@ -495,7 +667,9 @@ router.delete("/deleteTicket/:id", verifyToken, async (req, res) => {
     });
 
     if (!userEvent) {
-      return res.status(404).json({ error: "Ticket not found or unauthorized" });
+      return res
+        .status(404)
+        .json({ error: "Ticket not found or unauthorized" });
     }
 
     // Delete the UserEvent record
@@ -508,6 +682,93 @@ router.delete("/deleteTicket/:id", verifyToken, async (req, res) => {
 });
 
 // Update an event by its ID
+// concurrency
+router.put("/updateEvent/:id", verifyToken, async (req, res) => {
+  const eventId = req.params.id;
+  const decodedToken = req.user;
+
+  const transaction = await sequelize.transaction();
+  try {
+    // Fetch the event with a row lock
+    const event = await Event.findOne({
+      where: { EventID: eventId, CreatedBy: decodedToken.userID },
+      lock: transaction.LOCK.UPDATE, // Lock the row for updates
+      transaction, // Ensure the lock is part of this transaction
+    });
+
+    if (!event) {
+      await transaction.rollback();
+      return res.status(404).json({ error: "Event not found or unauthorized" });
+    }
+
+    // Find or create the venue with a row lock
+    const venue = await Venue.findOrCreate({
+      where: {
+        VenueName: req.body.venueName,
+        Location: req.body.location,
+        Capacity: req.body.capacity,
+      },
+      defaults: {
+        VenueName: req.body.venueName,
+        Location: req.body.location,
+        Capacity: req.body.capacity,
+      },
+      lock: transaction.LOCK.UPDATE, // Lock the row
+      transaction, // Ensure the lock is part of this transaction
+    });
+
+    // Increment version and update event data
+    await event.update(
+      {
+        EventName: req.body.eventName,
+        EventDate: new Date(req.body.eventDate),
+        TicketPrice: req.body.ticketPrice,
+        VenueID: venue.VenueID,
+        OrganizationID: decodedToken.organizationID,
+        version: event.version + 1,
+      },
+      { transaction },
+    );
+
+    // Update categories if provided
+    if (req.body.categories && Array.isArray(req.body.categories)) {
+      // Delete existing categories within the transaction
+      await EventCategory.destroy({ where: { EventID: eventId }, transaction });
+
+      // Associate new categories with row locking
+      const categoryPromises = req.body.categories.map(async (categoryName) => {
+        const category = await Category.findOne({
+          where: { CategoryName: categoryName },
+          lock: transaction.LOCK.UPDATE, // Lock the row
+          transaction,
+        });
+
+        if (category) {
+          return EventCategory.create(
+            {
+              EventID: event.EventID,
+              CategoryID: category.CategoryID,
+            },
+            { transaction },
+          );
+        } else {
+          throw new Error(`Category '${categoryName}' not found.`);
+        }
+      });
+
+      await Promise.all(categoryPromises);
+    }
+
+    await transaction.commit();
+    res.json({ message: "Event updated successfully", event });
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error updating event:", error);
+    res.status(500).json({ error: "Failed to update event" });
+  }
+});
+
+/*
 router.put("/updateEvent/:id", verifyToken, async (req, res) => {
   const eventId = req.params.id;
   const decodedToken = req.user;
@@ -570,13 +831,16 @@ router.put("/updateEvent/:id", verifyToken, async (req, res) => {
       await Promise.all(categoryPromises);
     }
 
-    res.json({ message: "Event updated successfully", event: updatedEventData });
-
+    res.json({
+      message: "Event updated successfully",
+      event: updatedEventData,
+    });
   } catch (error) {
     console.error("Error updating event:", error);
     res.status(500).json({ error: "Failed to update event" });
   }
 });
+ */
 
 // Delete an event by its ID
 router.delete("/deleteEvent/:id", verifyToken, async (req, res) => {

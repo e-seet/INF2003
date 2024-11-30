@@ -15,7 +15,7 @@ const User = require("../models/user");
 const Event = require("../models/event");
 const EventCategory = require("../models/eventcategory");
 const UserEvent = require("../models/userevent");
-const EventSponsor = require("../models/eventsponsor");
+const EventSponsor = require("../models/EventSponsor");
 
 const fs = require("fs");
 const path = require("path");

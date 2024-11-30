@@ -69,6 +69,7 @@ const EventSponsor = sequelize.define(
       },
     ],
     timestamps: false, // If you don't need `createdAt` and `updatedAt` columns
+    // primaryKey: false, // Do not add a primary key
   },
 );
 

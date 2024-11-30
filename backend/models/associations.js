@@ -5,7 +5,7 @@ const Venue = require("./venue");
 const Organization = require("./organization");
 // const Sponsor = require('./sponsor');
 const UserEvent = require("./userevent");
-const EventSponsor = require("./eventsponsor");
+const EventSponsor = require("./EventSponsor");
 
 const Category = require("./category");
 

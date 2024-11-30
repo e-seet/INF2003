@@ -56,6 +56,12 @@ const Event = sequelize.define(
       },
       onDelete: "CASCADE", // Optional: If an organization is deleted, related events are deleted
     },
+    // for concurrency Not needed for now
+    Version: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
   },
   {
     tableName: "Events",

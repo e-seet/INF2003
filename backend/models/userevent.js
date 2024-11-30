@@ -46,6 +46,10 @@ const UserEvent = sequelize.define(
       allowNull: false,
       defaultValue: DataTypes.NOW, // Automatically set to current date
     },
+    version: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {
     tableName: "UserEvent",

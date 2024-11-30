@@ -7,6 +7,7 @@ import {
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { v4 as uuidv4 } from "uuid";
+import { environment } from "./environment";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +15,8 @@ import { v4 as uuidv4 } from "uuid";
 export class S3serviceService {
   private bucketName = "inf2003bucket";
   private region = "us-east-1";
-  private identityPoolId = "<insert the credentials>";
+  //   private identityPoolId = "<insert the credentials>";
+  private identityPoolId = environment.AWSCognitoIdentity;
   private s3: S3Client;
 
   constructor() {
