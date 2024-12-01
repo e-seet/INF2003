@@ -35,6 +35,59 @@ export class EventsService {
       );
   }
 
+  //display past event
+  displayPastEvents(): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    console.log("token ");
+    console.log(token);
+    return this.httpClient
+      .get<any[]>(this.url + "/event/getAttendedEvents", { headers })
+      .pipe(
+        tap((data) => {
+          // console.log(data)
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  // upload
+  savetoMongoDBPhotos(itemObj: any): Observable<any> {
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .post<any[]>(this.url + "/mongo/savephoto", itemObj, { headers })
+      .pipe(
+        tap((databack) => {
+          console.log(databack);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  getMongoDBPhoto(EventID: any): Observable<any> {
+    console.log("get mongodb photo");
+    var token = this.loginService.getToken();
+    const headers = new HttpHeaders()
+      .set("content-type", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    return this.httpClient
+      .get<any[]>(this.url + "/mongo/getphotos/" + EventID, { headers })
+      .pipe(
+        tap((databack) => {
+          console.log("received data back from service");
+        }),
+        catchError(this.handleError),
+      );
+  }
+
   displayVenue(): Observable<any> {
     const headers = new HttpHeaders().set("content-type", "application/json");
 
@@ -229,32 +282,34 @@ export class EventsService {
       );
   }
 
-  
   updateSponsor(eventId: any, eventData: any): Observable<any> {
     const token = this.loginService.getToken();
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
-  
+
     return this.httpClient
       .put(this.url + "/event/updateSponsor/" + eventId, eventData, { headers })
       .pipe(
         tap((response) => {
           console.log("Event update response:", response);
         }),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
-  
+
   deleteSponsor(eventId: any): Observable<any> {
     const token = this.loginService.getToken();
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
-  
-    return this.httpClient.delete(`${this.url}/event/deleteSponsor/${eventId}`, {
-      headers,
-    });
+
+    return this.httpClient.delete(
+      `${this.url}/event/deleteSponsor/${eventId}`,
+      {
+        headers,
+      },
+    );
   }
 
   updateTicket(eventId: any, eventData: any): Observable<any> {
@@ -262,23 +317,23 @@ export class EventsService {
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
-  
+
     return this.httpClient
       .put(this.url + "/event/updateTicket/" + eventId, eventData, { headers })
       .pipe(
         tap((response) => {
           console.log("Event update response:", response);
         }),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
-  
+
   deleteTicket(eventId: any): Observable<any> {
     const token = this.loginService.getToken();
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
-  
+
     return this.httpClient.delete(`${this.url}/event/deleteTicket/${eventId}`, {
       headers,
     });
@@ -289,14 +344,14 @@ export class EventsService {
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
-  
+
     return this.httpClient
       .put(this.url + "/event/updateEvent/" + eventId, eventData, { headers })
       .pipe(
         tap((response) => {
           console.log("Event update response:", response);
         }),
-        catchError(this.handleError)
+        catchError(this.handleError),
       );
   }
 
@@ -305,7 +360,7 @@ export class EventsService {
     const headers = new HttpHeaders()
       .set("content-type", "application/json")
       .set("Authorization", `Bearer ${token}`);
-  
+
     return this.httpClient.delete(`${this.url}/event/deleteEvent/${eventId}`, {
       headers,
     });

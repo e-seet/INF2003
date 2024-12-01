@@ -1,0 +1,84 @@
+<div class="mat-elevation-z8">
+	<br>
+	<h3>Table Currently Showing: {{this.currentView}} Events </h3>
+	<div class="filter-container">
+		<!-- Start Date Filter -->
+		<mat-form-field appearance="fill">
+			<mat-label>Start Date</mat-label>
+			<input matInput [matDatepicker]="startDatePicker" (dateChange)="applyFilter()" [(ngModel)]="startDate">
+			<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+			<mat-datepicker #startDatePicker></mat-datepicker>
+		</mat-form-field>
+
+		<!-- End Date Filter -->
+		<mat-form-field appearance="fill">
+			<mat-label>End Date</mat-label>
+			<input matInput [matDatepicker]="endDatePicker" (dateChange)="applyFilter()" [(ngModel)]="endDate">
+			<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+			<mat-datepicker #endDatePicker></mat-datepicker>
+		</mat-form-field>
+
+		<!-- Sort by Price Filter -->
+		<mat-form-field appearance="fill">
+			<mat-label>Sort by Price</mat-label>
+			<mat-select [(ngModel)]="priceSortOrder" (selectionChange)="applyFilter()">
+				<mat-option value="asc">Lowest to Highest</mat-option>
+				<mat-option value="desc">Highest to Lowest</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<!-- Toggle Button -->
+		<button mat-raised-button color="primary" class="button " (click)="toggleViewDate()">
+			{{ showCurrentEvents ? 'Show Past Events' : 'Show Upcoming Events' }}
+		</button>
+
+		<button mat-raised-button color="warn" (click)="resetFilters()">
+			Reset
+		</button>
+	</div>
+
+	<!-- Currently Showing:  -->
+	<table class="mat-table" mat-table [dataSource]="dataSource" matSort>
+		<ng-container matColumnDef="EventID">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+			<td mat-cell *matCellDef="let element">{{ element.EventID }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="Organizer">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Organizer</th>
+			<td mat-cell *matCellDef="let element"> {{ element.Organizer ? element.Organizer : 'N/A' }} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="VenueName">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Venue</th>
+			<td mat-cell *matCellDef="let element">{{ element.VenueName }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="VenueLocation">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
+			<td mat-cell *matCellDef="let element">{{ element.VenueLocation }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="EventName">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+			<td mat-cell *matCellDef="let element">{{ element.EventName }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="EventDate">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+			<td mat-cell *matCellDef="let element">{{ element.EventDate | date }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="TicketPrice">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+			<td mat-cell *matCellDef="let element">{{ element.TicketPrice }}</td>
+		</ng-container>
+
+		<!-- Table Header and Row -->
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClick(row)"></tr>
+	</table>
+
+	<!-- Paginator -->
+	<mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+</div>

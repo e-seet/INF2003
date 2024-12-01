@@ -1,0 +1,111 @@
+<div class="event-container">
+	<mat-card class="event-card" appearance="outlined">
+		<mat-card-header>
+			<mat-card-title>
+				<h2>Event Name: {{ event.EventName }}</h2>
+
+				<h3>
+					<b>By Speaker</b>:{{event.Host}}
+					<div *ngIf="event.Organizer && event.Organizer !== 'N/A'">
+						from the <B>Organization</B>: {{ event.Organizer }}
+					</div>
+				</h3>
+			</mat-card-title>
+
+			<!-- <mat-card-subtitle *ngIf="event.Organizer && event.Organizer !== 'N/A'">
+				<h3>Organized by: {{ event.Organizer }}</h3>
+			</mat-card-subtitle> -->
+		</mat-card-header>
+
+		<mat-card-content>
+			<!-- Event Details Section -->
+			<div class="event-details-section">
+				<h3>Occured Date: {{ event.EventDate | date: "longDate" }}</h3>
+				<h3>Venue: {{ event.VenueName }}</h3>
+				<!-- <h3>Location: {{ event.VenueLocation }}</h3> -->
+			</div>
+
+			<!-- Ticket Purchase Section -->
+			<!-- <div class="ticket-purchase-section">
+				<h3>Select and Buy Ticket</h3>
+				<div class="ticket-type-selection">
+					<mat-form-field appearance="fill">
+						<mat-label>Ticket Type</mat-label>
+						<mat-select [(value)]="selectedTicketType" (selectionChange)="adjustTicketPrice()">
+							<mat-option value="Standard">Standard</mat-option>
+							<mat-option value="Premium">Premium</mat-option>
+							<mat-option value="VIP">VIP</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<h3>Price: ${{ adjustedTicketPrice }}</h3>
+				<button mat-raised-button color="primary" (click)="buyTicket()">
+					Buy Ticket
+				</button>
+			</div> -->
+
+			<!-- Sponsorship Section -->
+			<!-- <div class="sponsor-section">
+				<h3>Sponsor this Event</h3>
+				<input type="number" [(ngModel)]="sponsorshipAmount" id="sponsorshipAmount" />
+				<button mat-raised-button color="primary" (click)="sponsorEvent()">
+					Submit Sponsorship Amount
+				</button>
+			</div> -->
+		</mat-card-content>
+		<mat-card-content style="border-bottom: 1px solid #ddd; padding:10%">
+
+			<div class="photo-gallery">
+				<mat-grid-list cols="3" rowHeight="2:1" gutterSize="10px">
+					<mat-grid-tile *ngFor="let photo of photoData">
+						<mat-card>
+							<img mat-card-image [src]="photo" alt="Photo" />
+							<mat-card-content>
+								<p>Event Photo</p>
+							</mat-card-content>
+						</mat-card>
+					</mat-grid-tile>
+				</mat-grid-list>
+			</div>
+		</mat-card-content>
+		<mat-card-content style="margin-top:2%">
+			Choose files and upload!
+			<!-- File Upload Section -->
+			<div class="file-upload-section">
+				<!-- File Input -->
+				<input type="file" #fileInput (change)="onFilesSelected($event)" multiple style="display: none" />
+				<!-- Custom Button to Trigger File Selection -->
+				<button type="button" mat-raised-button color="accent" (click)="fileInput.click()">
+					Choose Files
+				</button> <br>
+
+				<!-- Display Selected Files -->
+				<div *ngIf="selectedFiles.length > 0">
+					<div>Added these Files:</div>
+					<div>Please click upload before submitting</div>
+					<ul>
+						<li *ngFor="let file of selectedFiles; let i = index">
+							{{ file.name }}
+							<button mat-icon-button (click)="removeFile(i)">
+								<mat-icon>delete</mat-icon>
+							</button>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Upload Button -->
+				<button type="button" (click)="onUpload()" mat-raised-button color="primary"
+					[disabled]="selectedFiles.length === 0">
+					Upload
+				</button>
+			</div>
+
+			<div class="button-group">
+				<!-- Save Changes Button -->
+				<button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="this.blocking === 1">
+					Save Changes
+				</button>
+			</div>
+		</mat-card-content>
+	</mat-card>
+</div>

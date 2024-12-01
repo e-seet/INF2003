@@ -9,6 +9,7 @@ const {
   MongoEventSponsor,
   MongoUserEvent,
   MongoRegisteration,
+  MongoPhotoSubmission,
 } = require("../model/model");
 
 // Sponsor for event
@@ -430,6 +431,146 @@ router.post("/sendsms", async (req, res) => {
     res.status(500).json({ message: "Error processing the request", error });
   } finally {
     session.endSession();
+  }
+});
+
+// Save photo
+router.post("/savephoto", async (req, res) => {
+  const session = await MongoPhotoSubmission.startSession();
+  session.startTransaction();
+
+  const { EventId, userID, userName, Photourl } = req.body;
+
+  try {
+    // Check if the record already exists
+    let submission = await MongoPhotoSubmission.findOne({
+      EventID: EventId,
+      AttendeeID: userID,
+    }).session(session);
+
+    if (submission) {
+      // Filter out photos that already exist
+      const newPhotos = Photourl.files.filter(
+        (photo) => !submission.Photos.includes(photo),
+      );
+
+      if (newPhotos.length > 0) {
+        // Append only new photos
+        submission.Photos.push(...newPhotos);
+        await submission.save({ session });
+        await session.commitTransaction();
+        return res.status(200).json({
+          message: "Photos added successfully.",
+          submission,
+        });
+      } else {
+        await session.commitTransaction();
+        return res.status(200).json({
+          message: "No new photos to add. All provided photos already exist.",
+          submission,
+        });
+      }
+    } else {
+      // If no record exists, create a new one
+      submission = new MongoPhotoSubmission({
+        EventID: EventId,
+        AttendeeID: userID,
+        username: userName,
+        Photos: Photourl.files,
+      });
+
+      await submission.save({ session });
+      await session.commitTransaction();
+      return res.status(201).json({
+        message: "New photo submission created successfully.",
+        submission,
+      });
+    }
+  } catch (error) {
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
+    console.error("Error in /savephoto:", error);
+    res.status(500).json({
+      message: "Error saving photos.",
+      error,
+    });
+  } finally {
+    session.endSession();
+  }
+});
+
+// Get photo submissions
+// router.get("/getphotos/:EventID", async (req, res) => {
+//   console.log("getphoto");
+//   console.log(req.query);
+//   //   console.log(req.body);
+
+//   try {
+//     const { EventID } = req.query; // Extract query parameters
+
+//     // Build the query object based on provided filters
+//     const query = { EventID };
+//     // if (EventID) {
+//     //   query.EventID = EventID;
+//     // }
+//     // Fetch photo submissions based on query
+//     const photoSubmissions = await MongoPhotoSubmission.find(query);
+
+//     if (photoSubmissions.length === 0) {
+//       return res.status(404).json({
+//         message: "No photo submissions found.",
+//       });
+//     }
+
+//     return res.status(200).json({
+//       message: "Photo submissions fetched successfully.",
+//       data: photoSubmissions,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching photo submissions:", error);
+//     return res.status(500).json({
+//       message: "Error fetching photo submissions.",
+//       error,
+//     });
+//   }
+// });
+
+router.get("/getphotos/:EventID", async (req, res) => {
+  console.log("Fetching photos by EventID");
+
+  try {
+    // Extract EventID from route parameters
+    const { EventID } = req.params;
+
+    if (!EventID) {
+      return res.status(400).json({
+        message: "EventID is required to fetch photo submissions.",
+      });
+    }
+
+    // Build the query object
+    const query = { EventID };
+
+    // Fetch photo submissions based on query
+    const photoSubmissions = await MongoPhotoSubmission.find(query);
+
+    if (photoSubmissions.length === 0) {
+      return res.status(404).json({
+        message: "No photo submissions found for the provided EventID.",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Photo submissions fetched successfully.",
+      data: photoSubmissions,
+    });
+  } catch (error) {
+    console.error("Error fetching photo submissions:", error);
+    return res.status(500).json({
+      message: "Error fetching photo submissions.",
+      error,
+    });
   }
 });
 

@@ -23,6 +23,8 @@ import { OrganizerDetailsComponent } from "./organizer-details/organizer-details
 import { SponsorshipComponent } from "./sponsorship/sponsorship.component";
 import { SponsorshipDetailsComponent } from "./sponsorship-details/sponsorship-details.component";
 import { EditSponsorComponent } from "./edit-sponsor/edit-sponsor.component";
+import { PastEventComponent } from "./past-event/past-event.component";
+import { PastEventDetailsComponent } from "./past-event-details/past-event-details.component";
 
 export const routes: Routes = [
   { path: "", component: HomeComponent }, // Set HomeComponent as the default route
@@ -35,6 +37,17 @@ export const routes: Routes = [
     component: EventDetailsComponent,
     canActivate: [AuthGuard],
   }, // Dynamic route for event details
+  {
+    path: "pastevents",
+    component: PastEventComponent,
+    canActivate: [AuthGuard],
+  }, // Dynamic route for event details
+  {
+    path: "pastevents/:id",
+    component: PastEventDetailsComponent,
+    canActivate: [AuthGuard],
+  }, // Dynamic route for event details
+
   {
     path: "create-event",
     component: CreateEventComponent,
@@ -73,7 +86,11 @@ export const routes: Routes = [
     component: SponsorshipDetailsComponent,
     canActivate: [AuthGuard],
   },
-  { path: "edit-sponsor/:id", component: EditSponsorComponent, canActivate: [AuthGuard] },
+  {
+    path: "edit-sponsor/:id",
+    component: EditSponsorComponent,
+    canActivate: [AuthGuard],
+  },
 
   // for my Tickets. The tickets i brought for
   { path: "myticket", component: TicketsComponent, canActivate: [AuthGuard] },
@@ -82,7 +99,11 @@ export const routes: Routes = [
     component: TicketDetailComponent,
     canActivate: [AuthGuard],
   },
-  { path: "edit-myticket/:id", component: EditTicketComponent, canActivate: [AuthGuard] },
+  {
+    path: "edit-myticket/:id",
+    component: EditTicketComponent,
+    canActivate: [AuthGuard],
+  },
 
   { path: "profile", component: ProfileComponent, canActivate: [AuthGuard] },
   { path: "contact-us", component: ContactUsComponent },

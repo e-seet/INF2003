@@ -6,6 +6,7 @@ const Venue = require("../models/venue");
 const Organization = require("../models/organization");
 const User = require("../models/user");
 const { Sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 
 const jwt = require("jsonwebtoken");
 const UserEvent = require("../models/userevent");
@@ -863,6 +864,45 @@ router.delete("/deleteEvent/:id", verifyToken, async (req, res) => {
   } catch (error) {
     console.error("Error deleting event:", error);
     res.status(500).json({ error: "Failed to delete event" });
+  }
+});
+
+// get the events that i attended before
+// past events
+router.get("/getAttendedEvents", verifyToken, async (req, res) => {
+  console.log("/getAttendedEvents\n");
+
+  const decodedToken = req.user;
+  try {
+    const data = await Event.findAll({
+      where: {
+        EventDate: { [Op.lt]: new Date() }, // Filter events with EventDate before today
+      },
+      include: [
+        {
+          model: UserEvent,
+          where: { UserID: decodedToken.userID }, // Ensure EventID exists in UserEvent for the user
+          attributes: [], // Don't fetch unnecessary fields from UserEvent
+        },
+        {
+          model: Venue, // Include Venue associated with the Event
+          attributes: ["VenueName", "Location"],
+        },
+        {
+          model: Organization, // Include Organization associated with the Event
+          attributes: ["OrganizationName"],
+        },
+      ],
+      attributes: ["EventID", "EventName", "EventDate", "TicketPrice"], // Fetch only relevant fields from Event
+    });
+
+    // Return data to client
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching user events:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching user events" });
   }
 });
 

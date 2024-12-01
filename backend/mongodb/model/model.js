@@ -37,6 +37,13 @@ const registerSchema = new mongoose.Schema({
   emailverified: { type: Boolean, default: false },
 });
 
+const PhotoSubmissionSchema = new mongoose.Schema({
+  EventID: { type: String, index: true }, // Link to the event
+  AttendeeID: { type: String, index: true }, // Link to the attendee
+  username: { type: String },
+  Photos: [{ type: String }],
+});
+
 // Define a compound index to ensure UserID and EventID are unique
 // indexing
 userEventSchema.index({ UserID: 1, EventID: 1 }, { unique: true });
@@ -56,11 +63,21 @@ registerSchema.index(
   { unique: true, sparse: true }, // Sparse ensures only documents with both fields present are indexed
 );
 
+PhotoSubmissionSchema.index({ EventID: 1, AttendeeID: 1 });
+
+PhotoSubmissionSchema.index({ EventID: 1, "Photos.SubmittedAt": 1 });
+
 // Create Models
 // collection name: eventsponsor, userevent inside mongo compass
 const MongoEventSponsor = mongoose.model("eventsponsor", eventSponsorSchema);
 const MongoUserEvent = mongoose.model("userevent", userEventSchema);
 const MongoRegisteration = mongoose.model("register", registerSchema);
+const MongoPhotoSubmission = mongoose.model("photo", PhotoSubmissionSchema);
 
 // Export Models
-module.exports = { MongoEventSponsor, MongoUserEvent, MongoRegisteration };
+module.exports = {
+  MongoEventSponsor,
+  MongoUserEvent,
+  MongoRegisteration,
+  MongoPhotoSubmission,
+};

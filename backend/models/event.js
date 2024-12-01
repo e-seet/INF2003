@@ -74,6 +74,28 @@ const Event = sequelize.define(
         }
       },
     },
+    indexes: [
+      {
+        name: "idx_event_name", // Custom index name
+        fields: ["EventName"], // Indexing the EventName column
+      },
+      {
+        name: "idx_event_date", // Custom index name
+        fields: ["EventDate"], // Indexing the EventDate column
+      },
+      {
+        name: "idx_event_organization", // Custom index name
+        fields: ["OrganizationID"], // Indexing the OrganizationID column
+      },
+      {
+        name: "idx_event_venue", // Custom index name
+        fields: ["VenueID"], // Indexing the VenueID column
+      },
+      {
+        name: "idx_event_creator", // Custom index name
+        fields: ["CreatedBy"], // Indexing the CreatedBy column
+      },
+    ],
   },
 );
 
