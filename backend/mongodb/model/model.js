@@ -47,6 +47,14 @@ eventSponsorSchema.index(
 );
 
 registerSchema.index({ sessionid: 1 });
+registerSchema.index(
+  { sessionid: 1, handPhone: 1 },
+  { unique: true, sparse: true }, // Sparse ensures only documents with both fields present are indexed
+);
+registerSchema.index(
+  { sessionid: 1, email: 1 },
+  { unique: true, sparse: true }, // Sparse ensures only documents with both fields present are indexed
+);
 
 // Create Models
 // collection name: eventsponsor, userevent inside mongo compass

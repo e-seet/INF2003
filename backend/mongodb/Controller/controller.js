@@ -14,12 +14,18 @@ const {
 // Sponsor for event
 // get all eventsponsors
 router.get("/EventSponsor", async (req, res) => {
+  const session = await MongoRegisteration.startSession();
+  session.startTransaction();
   try {
-    const eventsponsor = await MongoEventSponsor.find();
+    const eventsponsor = await MongoEventSponsor.find().session(session);
     console.log(eventsponsor);
+    await session.commitTransaction();
     res.status(200).json(eventsponsor);
   } catch (error) {
+    await session.abortTransaction();
     res.status(500).json({ message: "Error fetching eventsponsor", error });
+  } finally {
+    session.endSession();
   }
 });
 
@@ -31,11 +37,18 @@ router.get("/EventSponsor", async (req, res) => {
 //get all
 // http://localhost:3000/mongo/UserEvent
 router.get("/UserEvent", async (req, res) => {
+  const session = await MongoUserEvent.startSession();
+  session.startTransaction();
+
   try {
-    const userevent = await MongoUserEvent.find();
+    const userevent = await MongoUserEvent.find().session(session);
+    await session.commitTransaction();
     res.status(200).json(userevent);
   } catch (error) {
+    await session.abortTransaction();
     res.status(500).json({ message: "Error fetching userevent", error });
+  } finally {
+    session.endSession();
   }
 });
 // findbyid[userid + eventid] use this 2 field to query to use indexing
@@ -46,6 +59,8 @@ router.get("/UserEvent", async (req, res) => {
 // send email
 router.post("/sendemail", async (req, res) => {
   console.log("Received in /sendemail");
+  const session = await MongoRegisteration.startSession();
+  session.startTransaction();
 
   //   const { sessionid, email, otp } = req.body;
   let email = req.body.email;
@@ -56,7 +71,9 @@ router.post("/sendemail", async (req, res) => {
     const currentTime = new Date();
 
     // Check if the sessionid already exists
-    const existingRecord = await MongoRegisteration.findOne({ sessionid });
+    const existingRecord = await MongoRegisteration.findOne({
+      sessionid,
+    }).session(session);
 
     // if existing record
     // check if 3 minute passed: if so, take new record, otherwise ask to wait
@@ -79,11 +96,13 @@ router.post("/sendemail", async (req, res) => {
       existingRecord.emailcreatedAt = currentTime;
       existingRecord.emailverified = false;
 
-      await existingRecord.save();
+      await existingRecord.save({ session });
       // I need to send email here
       await awssendemail(email, emailOTP)
         .then((result) => console.log("Email sent successfully:", result))
         .catch((error) => console.error("Failed to send email:", error));
+
+      await session.commitTransaction();
 
       return res.status(200).json({
         message: "Email updated successfully. Please verify your email.",
@@ -101,11 +120,13 @@ router.post("/sendemail", async (req, res) => {
     });
 
     console.log("asve new record");
-    const savedRecord = await newRecord.save();
+    const savedRecord = await newRecord.save({ session });
     // I need to send email here
     await awssendemail(email, emailOTP)
       .then((result) => console.log("Email sent successfully:", result))
       .catch((error) => console.error("Failed to send email:", error));
+
+    await session.commitTransaction();
 
     res.status(201).json({
       message: "New record created. Please verify your email.",
@@ -113,23 +134,30 @@ router.post("/sendemail", async (req, res) => {
     });
   } catch (error) {
     console.error("Error in /sendemail:", error);
+    await session.abortTransaction();
     res.status(500).json({
       message: "Error processing the request",
       error,
     });
+  } finally {
+    session.endSession();
   }
 });
 
 // verify email
 router.post("/verifyemail", async (req, res) => {
   console.log("Received in /verifyemail");
+  const session = await MongoRegisteration.startSession();
+  session.startTransaction();
 
   //   const { sessionid, otp } = req.body;
   console.log(req.body);
   let sessionid = req.body.sessionid;
   try {
     // Find the record by sessionid
-    const existingRecord = await MongoRegisteration.findOne({ sessionid });
+    const existingRecord = await MongoRegisteration.findOne({
+      sessionid,
+    }).session(session);
 
     if (!existingRecord) {
       return res.status(404).json({
@@ -140,7 +168,8 @@ router.post("/verifyemail", async (req, res) => {
     // Check if the OTP matches
     if (existingRecord.emailOTP === req.body.emailotp) {
       existingRecord.emailverified = true; // Mark as verified
-      await existingRecord.save();
+      await existingRecord.save({ session });
+      await session.commitTransaction();
 
       return res.status(200).json({
         message: "Email verified successfully.",
@@ -151,17 +180,22 @@ router.post("/verifyemail", async (req, res) => {
       });
     }
   } catch (error) {
+    await session.abortTransaction();
     console.error("Error in /verifyemail:", error);
     res.status(500).json({
       message: "Error verifying OTP.",
       error,
     });
+  } finally {
+    session.endSession();
   }
 });
 
 // send sms
 router.post("/sendsms", async (req, res) => {
   console.log("Received in /sendsms");
+  const session = await MongoRegisteration.startSession();
+  session.startTransaction();
 
   let phone = req.body.phone;
   let sessionid = req.body.sessionid;
@@ -175,7 +209,9 @@ router.post("/sendsms", async (req, res) => {
     const currentTime = new Date();
 
     // Check if the sessionid already exists
-    const existingRecord = await MongoRegisteration.findOne({ sessionid });
+    const existingRecord = await MongoRegisteration.findOne({
+      sessionid,
+    }).session(session);
 
     if (existingRecord) {
       console.log("Found existing record\n");
@@ -195,13 +231,14 @@ router.post("/sendsms", async (req, res) => {
       existingRecord.hpcreatedAt = currentTime;
       existingRecord.shpverified = false;
 
-      await existingRecord.save();
+      await existingRecord.save({ session });
 
       // Send SMS
       await sendSMS(otp, `Your OTP is: ${otp}`)
         .then((result) => console.log("SMS sent successfully:", result))
         .catch((error) => console.error("Failed to send SMS:", error));
 
+      await session.commitTransaction();
       return res.status(200).json({
         message: "SMS updated successfully. Please verify your phone.",
         record: existingRecord,
@@ -218,12 +255,13 @@ router.post("/sendsms", async (req, res) => {
     });
 
     console.log("Saving new record");
-    const savedRecord = await newRecord.save();
+    await newRecord.save({ session });
 
     // Send SMS
     await sendSMS(otp, `Your OTP is: ${otp}`)
       .then((result) => console.log("SMS sent successfully:", result))
       .catch((error) => console.error("Failed to send SMS:", error));
+    await session.commitTransaction();
 
     res.status(201).json({
       message: "New record created. Please verify your phone.",
@@ -231,15 +269,20 @@ router.post("/sendsms", async (req, res) => {
     });
   } catch (error) {
     console.error("Error in /sendsms:", error);
+    await session.abortTransaction();
     res.status(500).json({
       message: "Error processing the request",
       error,
     });
+  } finally {
+    session.endSession();
   }
 });
 
 router.post("/verifysms", async (req, res) => {
   console.log("Received in /verifysms");
+  const session = await MongoRegisteration.startSession();
+  session.startTransaction();
 
   let sessionid = req.body.sessionid;
   let phoneNumber = req.body.phoneNumber;
@@ -247,7 +290,9 @@ router.post("/verifysms", async (req, res) => {
 
   try {
     // Find the record by sessionid
-    const existingRecord = await MongoRegisteration.findOne({ sessionid });
+    const existingRecord = await MongoRegisteration.findOne({
+      sessionid,
+    }).session(session);
 
     if (!existingRecord) {
       return res.status(404).json({
@@ -258,7 +303,8 @@ router.post("/verifysms", async (req, res) => {
     // Check if the OTP matches
     if (existingRecord.handPhoneOTP === otp) {
       existingRecord.hpverified = true; // Mark as verified
-      await existingRecord.save();
+      await existingRecord.save({ session });
+      await session.commitTransaction();
 
       return res.status(200).json({
         message: "Phone verified successfully.",
@@ -270,22 +316,29 @@ router.post("/verifysms", async (req, res) => {
     }
   } catch (error) {
     console.error("Error in /verifysms:", error);
+    await session.abortTransaction();
     res.status(500).json({
       message: "Error verifying OTP.",
       error,
     });
+  } finally {
+    session.endSession();
   }
 });
 
 router.get("/checkverifications/:sessionid", async (req, res) => {
   console.log("/checkverifications");
+  const session = await MongoRegisteration.startSession();
+  session.startTransaction();
 
   sessionid = req.params;
 
   console.log(sessionid);
   try {
     // Find the record by sessionid
-    const existingRecord = await MongoRegisteration.findOne({ sessionid });
+    const existingRecord = await MongoRegisteration.findOne({
+      sessionid,
+    }).session(session);
 
     if (!existingRecord) {
       return res.status(404).json({
@@ -298,16 +351,86 @@ router.get("/checkverifications/:sessionid", async (req, res) => {
       existingRecord.hpverified === true &&
       existingRecord.emailverified === true;
 
+    await session.commitTransaction();
+
     return res.status(200).json({
       sessionid: sessionid,
       verified: isVerified,
     });
   } catch (error) {
     console.error("Error in /checkstatus:", error);
+    await session.abortTransaction();
+
     res.status(500).json({
       message: "Error checking status.",
       error,
     });
+  } finally {
+    session.endSession();
   }
 });
+module.exports = router;
+
+// Send SMS
+router.post("/sendsms", async (req, res) => {
+  const session = await MongoRegisteration.startSession();
+  session.startTransaction();
+
+  let { phone, sessionid, otp } = req.body;
+  const currentTime = new Date();
+
+  try {
+    const existingRecord = await MongoRegisteration.findOne({
+      sessionid,
+    }).session(session);
+
+    if (existingRecord) {
+      const timeDifference =
+        (currentTime - new Date(existingRecord.smsCreatedAt)) / 1000;
+
+      if (existingRecord.smsCreatedAt && timeDifference < 30) {
+        return res.status(429).json({
+          message: "Please wait 30 seconds before resending the SMS.",
+        });
+      }
+
+      existingRecord.handPhone = phone;
+      existingRecord.handPhoneOTP = otp;
+      existingRecord.hpcreatedAt = currentTime;
+      existingRecord.hpverified = false;
+
+      await existingRecord.save({ session });
+      await sendSMS(otp, `Your OTP is: ${otp}`);
+
+      await session.commitTransaction();
+      return res.status(200).json({
+        message: "SMS updated successfully. Please verify your phone.",
+        record: existingRecord,
+      });
+    }
+
+    const newRecord = new MongoRegisteration({
+      sessionid,
+      handPhone: phone,
+      handPhoneOTP: otp,
+      shpcreatedAt: currentTime,
+      hpverified: false,
+    });
+
+    await newRecord.save({ session });
+    await sendSMS(otp, `Your OTP is: ${otp}`);
+
+    await session.commitTransaction();
+    res.status(201).json({
+      message: "New record created. Please verify your phone.",
+      record: newRecord,
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(500).json({ message: "Error processing the request", error });
+  } finally {
+    session.endSession();
+  }
+});
+
 module.exports = router;
