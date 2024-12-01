@@ -99,6 +99,32 @@ const Event = sequelize.define(
   },
 );
 
+// Filtering Events
+Event.filterEvents = async function ({ startDate, endDate, priceSortOrder }) {
+  const whereConditions = {};
+  // Add filtering by date range
+  if (startDate) {
+    whereConditions.EventDate = { [Op.gte]: startDate }; // EventDate >= startDate
+  }
+  if (endDate) {
+    whereConditions.EventDate = {
+      ...(whereConditions.EventDate || {}),
+      [Op.lte]: endDate, // EventDate <= endDate
+    };
+  }
+  // Add ordering by TicketPrice
+  const order = [];
+  if (priceSortOrder === "asc" || priceSortOrder === "desc") {
+    order.push(["TicketPrice", priceSortOrder]);
+  }
+  // Fetch filtered events
+  return await Event.findAll({
+    where: whereConditions,
+    order: order,
+    include: [Organization, Venue, User], // Include related models if needed
+  });
+};
+
 // Define the relationships
 Event.belongsTo(Organization, { foreignKey: "OrganizationID" });
 Event.belongsTo(Venue, { foreignKey: "VenueID" });

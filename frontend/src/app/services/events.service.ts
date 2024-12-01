@@ -328,6 +328,34 @@ export class EventsService {
       );
   }
 
+  getFilteredEvents(
+    startDate: Date | null,
+    endDate: Date | null,
+    priceSortOrder: string,
+  ): Observable<any[]> {
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
+    // Build query parameters
+    let params: { [key: string]: string } = {};
+    if (startDate) {
+      params["startDate"] = startDate.toISOString();
+    }
+    if (endDate) {
+      params["endDate"] = endDate.toISOString();
+    }
+    if (priceSortOrder) {
+      params["priceSortOrder"] = priceSortOrder;
+    }
+
+    // Make HTTP GET request with query params
+    return this.httpClient
+      .get<any[]>(`${this.url}/event/getFilteredEvents`, { headers, params })
+      .pipe(
+        tap((data) => console.log("Filtered events:", data)),
+        catchError(this.handleError),
+      );
+  }
+
   deleteTicket(eventId: any): Observable<any> {
     const token = this.loginService.getToken();
     const headers = new HttpHeaders()

@@ -617,6 +617,55 @@ router.put("/updateTicket/:id", verifyToken, async (req, res) => {
   }
 });
 
+// Filtering Events
+Event.filterEvents = async function ({ startDate, endDate, priceSortOrder }) {
+  const whereConditions = {};
+  // Add filtering by date range
+  if (startDate) {
+    whereConditions.EventDate = { [Op.gte]: startDate }; // EventDate >= startDate
+  }
+  if (endDate) {
+    whereConditions.EventDate = {
+      ...(whereConditions.EventDate || {}),
+      [Op.lte]: endDate, // EventDate <= endDate
+    };
+  }
+  // Add ordering by TicketPrice
+  const order = [];
+  if (priceSortOrder === "asc" || priceSortOrder === "desc") {
+    order.push(["TicketPrice", priceSortOrder]);
+  }
+  // Fetch filtered events
+  return await Event.findAll({
+    where: whereConditions,
+    order: order,
+    include: [Organization, Venue, User], // Include related models if needed
+  });
+};
+
+router.get("/getFilteredEvents", async (req, res) => {
+  try {
+    console.log("Received query params:", req.query); // Log query params
+    const { startDate, endDate, priceSortOrder } = req.query;
+    // Validate inputs (Optional but recommended)
+    if (startDate && isNaN(Date.parse(startDate))) {
+      throw new Error("Invalid startDate format");
+    }
+    if (endDate && isNaN(Date.parse(endDate))) {
+      throw new Error("Invalid endDate format");
+    }
+    const events = await Event.filterEvents({
+      startDate: startDate || null,
+      endDate: endDate || null,
+      priceSortOrder: priceSortOrder || "asc",
+    });
+    res.json(events);
+  } catch (err) {
+    console.error("Error in /getFilteredEvents route:", err); // Log full error
+    res.status(500).send("An error occurred while fetching events.");
+  }
+});
+
 /*
 router.put("/updateTicket/:id", verifyToken, async (req, res) => {
   const eventId = req.params.id;
