@@ -7,6 +7,8 @@
 // 7.	Insert into UserEvent
 // 8.	Insert into EventSponsor
 
+const sequelize = require("../models");
+
 const Organization = require("../models/organization");
 const Category = require("../models/category");
 
@@ -161,6 +163,17 @@ const populateMockData = async () => {
         ),
     );
     await EventSponsor.bulkCreate(uniqueEventSponsorData);
+
+    // // Create individual indexes after data population
+    // console.log("Creating indexes...");
+
+    // // Index for "ticketprice"
+    // await sequelize.query("CREATE INDEX idx_ticketprice ON events (ticketprice);");
+    // console.log("Index on ticketprice created.");
+
+    // // Index for "eventdate"
+    // await sequelize.query("CREATE INDEX idx_eventdate ON events (eventdate);");
+    // console.log("Index on eventdate created.");
 
     console.log("Mock data inserted successfully.");
   } catch (error) {
