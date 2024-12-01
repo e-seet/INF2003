@@ -1,96 +1,96 @@
 <div class="user-dashboard">
-  <!-- Welcome Header -->
-  <h2>Welcome, {{ userName }}!</h2>
-  <p>
-    This is your personal dashboard where you can manage your profile and
-    events.
-  </p>
+	<!-- Welcome Header -->
+	<h2>Welcome, {{ userName }}!</h2>
+	<p>
+		This is your personal dashboard where you can manage your profile and
+		events.
+	</p>
 
-  <!-- Profile Information Section -->
-  <div class="profile-info">
-    <h3>Your Profile Information</h3>
-    <p><strong>Profile Picture:</strong> </p>
-    <img *ngIf="photoUrl" [src]="photoUrl" alt="Profile Picture" class="profile-img"/>
-    <p><strong>Name:</strong> {{ userName }}</p>
-    <p><strong>Email:</strong> {{ userEmail }}</p>
-    <button class="btn-edit-profile" routerLink="/profile">Edit Profile</button>
-  </div>
+	<!-- Profile Information Section -->
+	<div class="profile-info">
+		<h3>Your Profile Information</h3>
+		<p><strong>Profile Picture:</strong> </p>
+		<img *ngIf="photoUrl" [src]="photoUrl" alt="Profile Picture" class="profile-img" />
+		<p><strong>Name:</strong> {{ userName }}</p>
+		<p><strong>Email:</strong> {{ userEmail }}</p>
+		<button class="btn-edit-profile" routerLink="/profile">Edit Profile</button>
+	</div>
 
-  <!-- Upcoming Events Section -->
-  <div class="upcoming-events">
-    <h3>Your Upcoming Events</h3>
-      <!-- Display if no events -->
-      <p *ngIf="upcomingEvents.length === 0">You currently have no tickets!</p>
-    <ul>
-      <li *ngFor="let event of upcomingEvents">
-        <strong>{{ event.Event.EventName }}</strong> -
-        {{ event.date | date: "shortDate" }} on
-        {{ event.Event.EventDate | date: "MMMM d, y, h:mm a" }}
+	<!-- Upcoming Events Section -->
+	<div class="upcoming-events">
+		<h3>Your Upcoming Events</h3>
+		<!-- Display if no events -->
+		<p *ngIf="upcomingEvents.length === 0">You currently have no tickets!</p>
+		<ul>
+			<li *ngFor="let event of upcomingEvents">
+				<strong>{{ event.Event.EventName }}</strong> -
+				{{ event.date | date: "shortDate" }} on
+				{{ event.Event.EventDate | date: "MMMM d, y, h:mm a" }}
 
-        <button class="btn-view-event" [routerLink]="['/myticket', event.Event.EventID]">
-          View Details
-        </button>
-        <button class="btn-edit-event" [routerLink]="['/edit-myticket', event.Event.EventID]">
-          Edit Ticket
-        </button>
-        <button class="btn-delete-event" (click)="deleteTicket(event.Event.EventID)">
-          Cancel Ticket
-        </button>
-      </li>
-    </ul>
-    <button class="btn-view-all-event" routerLink="/myticket">
-      View All Tickets
-    </button>
-  </div>
+				<button class="btn-view-event" [routerLink]="['/myticket', event.Event.EventID]">
+					View Details
+				</button>
+				<button class="btn-edit-event" [routerLink]="['/edit-myticket', event.Event.EventID]">
+					Edit Ticket
+				</button>
+				<button class="btn-delete-event" (click)="deleteTicket(event.Event.EventID)">
+					Cancel Ticket
+				</button>
+			</li>
+		</ul>
+		<button class="btn-view-all-event" routerLink="/myticket">
+			View All Tickets
+		</button>
+	</div>
 
-  <!-- My Events Section -->
-  <div class="my-events">
-    <h3>Events You Created</h3>
-    <!-- Display if no events created -->
-    <p *ngIf="myEvents.length === 0">You currently have no events!</p>
-    <ul>
-      <li *ngFor="let event of myEvents">
-        <strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}
-        <button class="btn-view-event" [routerLink]="['/organizer', event.EventID]">
-        View Details
-        </button>
-        <button class="btn-edit-event" [routerLink]="['/edit-event', event.EventID]">
-          Edit Event
-        </button>
-        <button class="btn-delete-event" (click)="deleteEvent(event.EventID)">
-          Delete Event
-        </button>
-      </li>
-    </ul>
-    <button class="btn-view-all-event" routerLink="/organizer">
-      View All Events
-    </button>
-    <button class="btn-create-event" routerLink="/create-event">
-      Create New Event
-    </button>
-  </div>
+	<!-- My Events Section -->
+	<div class="my-events">
+		<h3>Events You Created</h3>
+		<!-- Display if no events created -->
+		<p *ngIf="myEvents.length === 0">You currently have no events!</p>
+		<ul>
+			<li *ngFor="let event of myEvents">
+				<strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}
+				<button class="btn-view-event" [routerLink]="['/organizer', event.EventID]">
+					View Details
+				</button>
+				<button class="btn-edit-event" [routerLink]="['/edit-event', event.EventID]">
+					Edit Event
+				</button>
+				<button class="btn-delete-event" (click)="deleteEvent(event.EventID)">
+					Delete Event
+				</button>
+			</li>
+		</ul>
+		<button class="btn-view-all-event" routerLink="/organizer">
+			View All Events
+		</button>
+		<button class="btn-create-event" routerLink="/create-event">
+			Create New Event
+		</button>
+	</div>
 
-    <!-- My Sponsorships Section -->
-    <div class="sponsor-events">
-      <h3>Events You Sponsored</h3>
-      <!-- Display if no events sponsored -->
-      <p *ngIf="myEvents.length === 0">You currently sponsored no events!</p>
-      <ul>
-        <li *ngFor="let event of sponsorEvents">
-          <strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}
-          <button class="btn-view-event" [routerLink]="['/sponsorship', event.EventID]">
-          View Details
-          </button>
-          <button class="btn-edit-event" [routerLink]="['/edit-sponsor', event.EventID]">
-            Edit Sponsorship
-          </button>
-          <button class="btn-delete-event" (click)="deleteSponsor(event.EventID)">
-            Delete Sponsorship
-          </button>
-      </li>
-      </ul>
-      <button class="btn-view-all-event" routerLink="/sponsorship">
-        View All Events
-      </button>
-    </div>
+	<!-- My Sponsorships Section -->
+	<div class="sponsor-events">
+		<h3>Events You Sponsored</h3>
+		<!-- Display if no events sponsored -->
+		<p *ngIf="myEvents.length === 0">You currently sponsored no events!</p>
+		<ul>
+			<li *ngFor="let event of sponsorEvents">
+				<strong>{{ event.EventName }}</strong> - on {{ event.EventDate | date: "MMMM d, y, h:mm a" }}
+				<button class="btn-view-event" [routerLink]="['/sponsorship', event.EventID]">
+					View Details
+				</button>
+				<button class="btn-edit-event" [routerLink]="['/edit-sponsor', event.EventID]">
+					Edit Sponsorship
+				</button>
+				<button class="btn-delete-event" (click)="deleteSponsor(event.EventID)">
+					Delete Sponsorship
+				</button>
+			</li>
+		</ul>
+		<button class="btn-view-all-event" routerLink="/sponsorship">
+			View All Events
+		</button>
+	</div>
 </div>
