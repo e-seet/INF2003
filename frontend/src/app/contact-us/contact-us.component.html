@@ -1,26 +1,25 @@
 <div class="contact-container">
-  <header class="contact-header">
-    <h1>Contact Us</h1>
-    <p>
-      We'd love to hear from you. Feel free to reach out for any inquiries or
-      support.
-    </p>
-  </header>
+	<header class="contact-header">
+		<h1>Contact Us</h1>
+		<p>We'd love to hear from you. Please fill out the form below.</p>
+	</header>
 
-  <section class="contact-info">
-    <h2>General Inquiries</h2>
-    <p>
-      For general questions or feedback, please contact us at
-      eventplanner&#64;gmail.com.
-    </p>
+	<form (ngSubmit)="onSubmit()" [formGroup]="contactForm" class="contact-form">
+		<div class="form-group">
+			<label for="name">Name</label>
+			<input id="name" formControlName="name" class="form-control" required />
+		</div>
 
-    <h2>Support</h2>
-    <p>
-      If you need assistance or have any issues, our support team is here to
-      help. Reach out to us at eventplanner&#64;gmail.com.
-    </p>
+		<div class="form-group">
+			<label for="email">Email</label>
+			<input id="email" formControlName="email" class="form-control" required />
+		</div>
 
-    <h2>Phone</h2>
-    <p>+65 1234 5678</p>
-  </section>
+		<div class="form-group">
+			<label for="message">Message</label>
+			<textarea id="message" formControlName="message" class="form-control" required></textarea>
+		</div>
+
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
 </div>

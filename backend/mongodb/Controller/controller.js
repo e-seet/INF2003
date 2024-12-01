@@ -10,6 +10,7 @@ const {
   MongoUserEvent,
   MongoRegisteration,
   MongoPhotoSubmission,
+  MongoContact,
 } = require("../model/model");
 
 // Sponsor for event
@@ -571,6 +572,25 @@ router.get("/getphotos/:EventID", async (req, res) => {
       message: "Error fetching photo submissions.",
       error,
     });
+  }
+});
+
+router.post("/contact", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    // Create a new contact document
+    const newContact = new MongoContact({
+      name,
+      email,
+      message,
+      createdAt: new Date(),
+    });
+    // Save to MongoDB
+    await newContact.save();
+    res.status(201).json({ message: "Contact form submitted successfully" });
+  } catch (error) {
+    console.error("Error saving contact form data:", error);
+    res.status(500).json({ message: "Error saving contact form data", error });
   }
 });
 

@@ -44,6 +44,13 @@ const PhotoSubmissionSchema = new mongoose.Schema({
   Photos: [{ type: String }],
 });
 
+const contactSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  message: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 // Define a compound index to ensure UserID and EventID are unique
 // indexing
 userEventSchema.index({ UserID: 1, EventID: 1 }, { unique: true });
@@ -73,6 +80,7 @@ const MongoEventSponsor = mongoose.model("eventsponsor", eventSponsorSchema);
 const MongoUserEvent = mongoose.model("userevent", userEventSchema);
 const MongoRegisteration = mongoose.model("register", registerSchema);
 const MongoPhotoSubmission = mongoose.model("photo", PhotoSubmissionSchema);
+const MongoContact = mongoose.model("contact", contactSchema);
 
 // Export Models
 module.exports = {
@@ -80,4 +88,5 @@ module.exports = {
   MongoUserEvent,
   MongoRegisteration,
   MongoPhotoSubmission,
+  MongoContact,
 };
