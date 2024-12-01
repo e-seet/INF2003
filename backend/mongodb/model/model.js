@@ -40,6 +40,13 @@ eventSchema.index({ EventName: 1 });
 eventSchema.index({ EventDate: 1 });
 eventSchema.index({ CreatedBy: 1 });
 
+const contactSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  message: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 // Define a compound index to ensure UserID and EventID are unique
 // indexing
 userEventSchema.index({ UserID: 1, EventID: 1 }, { unique: true });
@@ -54,6 +61,7 @@ eventSponsorSchema.index(
 const MongoEventSponsor = mongoose.model("eventsponsor", eventSponsorSchema);
 const MongoUserEvent = mongoose.model("userevent", userEventSchema);
 const MongoEvent = mongoose.model("event", eventSchema);
+const MongoContact = mongoose.model("contact", contactSchema);
 
 // Export Models
-module.exports = { MongoEventSponsor, MongoUserEvent, MongoEvent };
+module.exports = { MongoEventSponsor, MongoUserEvent, MongoEvent, MongoContact };

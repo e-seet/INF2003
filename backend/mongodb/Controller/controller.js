@@ -1,8 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { MongoEventSponsor, MongoUserEvent, MongoEvent } = require("../model/model");
-const verifyToken = require("../../middleware/verifyToken");
-const mongoose = require('mongoose');
+const AWS = require("aws-sdk");
+const { awssendemail, sendSMS } = require("./helper");
+
+// const MongoEventSponsor = require("../model/model");
+// const MongoUserEvent = require("../model/model");
+const {
+  MongoEventSponsor,
+  MongoUserEvent,
+  MongoRegisteration,
+} = require("../model/model");
 
 // EVENT SPONSOR ROUTES
 // Get all event sponsors
@@ -392,6 +399,29 @@ router.get("/Venue/:id", async (req, res) => {
     res.status(200).json(venue);
   } catch (error) {
     res.status(500).json({ message: "Error fetching venue", error });
+  }
+});
+
+// Handle contact form submissions
+router.post("/contact", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+
+    // Create a new contact document
+    const newContact = new MongoContact({
+      name,
+      email,
+      message,
+      createdAt: new Date(),
+    });
+
+    // Save to MongoDB
+    await newContact.save();
+
+    res.status(201).json({ message: "Contact form submitted successfully" });
+  } catch (error) {
+    console.error("Error saving contact form data:", error);
+    res.status(500).json({ message: "Error saving contact form data", error });
   }
 });
 

@@ -139,6 +139,7 @@ connectMongoDB();
 const mongoController = require("./mongodb/Controller/controller.js");
 
 app.use("/mongo", mongoController);
+app.use('/api', mongoController); // Prefix routes with /api
 // end of mongodb
 
 // for concurrency
@@ -312,7 +313,10 @@ sequelize
         console.log("Mock data populated successfully.");
 
         // Start server
-        app.listen(3000, () => console.log("Server is running on port 3000"));
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+          console.log(`Server is running on port ${PORT}`);
+        });
 
         //concurrency type of code
         // the 2 are ok and checked
