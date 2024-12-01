@@ -1,111 +1,96 @@
 <div class="register-container">
-  <h2>Create an Account</h2>
+	<h2>Create an Account</h2>
 
-  <form class="register-form">
-    <!-- Name Field -->
-    <div class="form-group">
-      <label for="name">Full Name</label>
-      <input
-        id="name"
-        type="text"
-        [(ngModel)]="name"
-        name="name"
-        class="form-control"
-        placeholder="Enter your full name"
-        required
-      />
-      <div class="validation-error" *ngIf="nameError">{{ nameError }}</div>
-    </div>
+	<form class="register-form">
+		<!-- Name Field -->
+		<div class="form-group">
+			<label for="name">Full Name</label>
+			<input id="name" type="text" [(ngModel)]="name" name="name" class="form-control"
+				placeholder="Enter your full name" required />
+			<div class="validation-error" *ngIf="nameError">{{ nameError }}</div>
+		</div>
 
-    <!-- Email Field -->
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        [(ngModel)]="email"
-        name="email"
-        class="form-control"
-        placeholder="Enter your email address"
-        required
-      />
-      <div class="validation-error" *ngIf="emailError">{{ emailError }}</div>
-    </div>
+		<!-- Email Field -->
+		<div class="form-group">
+			<label for="email">Email</label>
+			<input id="email" type="email" [(ngModel)]="email" name="email" class="form-control"
+				placeholder="Enter your email address" required />
+			<div class="validation-error" *ngIf="emailError">{{ emailError }}</div>
+			<button type="button" class="btn btn-primary" (click)="sendEmailOTP()">
+				Send OTP to Email
+			</button>
 
-    <!-- Phone Number Field -->
-    <div class="form-group">
-      <label for="phone">Phone Number</label>
-      <input
-        id="phone"
-        type="tel"
-        [(ngModel)]="phoneNumber"
-        name="phoneNumber"
-        class="form-control"
-        placeholder="Enter your phone number"
-        required
-      />
-      <div class="validation-error" *ngIf="phoneNumberError">
-        {{ phoneNumberError }}
-      </div>
-    </div>
+			<div class="form-group">
+				<label for="verification">Verification Code</label>
+				<input id="verification" type="text" [(ngModel)]="emailVerificationCode" name="verificationCode"
+					class="form-control" placeholder="Enter the verification code sent to your email" />
+			</div>
 
-    <!-- Organization Name Field -->
-    <div class="form-group">
-      <label for="organization">Organization Name</label>
-      <input
-        id="organization"
-        type="text"
-        [(ngModel)]="organizationName"
-        name="organizationName"
-        class="form-control"
-        placeholder="Enter your organization name"
-        required
-      />
-      <div class="validation-error" *ngIf="organizationNameError">
-        {{ organizationNameError }}
-      </div>
-    </div>
+			<button type="button" class="btn btn-primary" (click)="VerifyEmailOTP()">
+				Verify
+			</button>
+		</div>
 
-    <!-- Password Field -->
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        class="form-control"
-        placeholder="Enter your password"
-        required
-      />
-      <div class="validation-error" *ngIf="passwordError">
-        {{ passwordError }}
-      </div>
-    </div>
+		<!-- Phone Number Field -->
+		<div class="form-group">
+			<label for="phone">Singapore Phone Number</label>
+			<input id="phone" type="tel" (ngModelChange)="validatePhoneNumberSMS()" [(ngModel)]="phoneNumber"
+				name="phoneNumber" class="form-control" placeholder="Enter your phone number" required />
+			<div class="validation-error" *ngIf="phoneNumberError">
+				{{ phoneNumberError }}
+			</div>
+			<button type="button" class="btn btn-primary" (click)="sendPhoneOTP()">
+				Send OTP
+			</button>
+			<div class="form-group">
+				<label for="verification">Verification Code</label>
+				<input id="verification" type="text" [(ngModel)]="phoneVerificationCode" name="verificationCode"
+					class="form-control" placeholder="Enter the verification code sent to your phone" />
+			</div>
+			<button type="button" class="btn btn-primary" (click)="VerifyPhoneOTP()">
+				Verify
+			</button>
 
-    <!-- Confirm Password Field -->
-    <div class="form-group">
-      <label for="confirm-password">Confirm Password</label>
-      <input
-        id="confirm-password"
-        type="password"
-        [(ngModel)]="confirmPassword"
-        name="confirmPassword"
-        class="form-control"
-        placeholder="Confirm your password"
-        required
-      />
-      <div class="validation-error" *ngIf="confirmPasswordError">
-        {{ confirmPasswordError }}
-      </div>
-    </div>
+		</div>
 
-    <!-- Submit Button -->
-    <button type="button" class="btn btn-primary" (click)="register()">
-      Register
-    </button>
 
-    <!-- Error Message Display -->
-    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
-  </form>
+
+		<!-- Organization Name Field -->
+		<div class="form-group">
+			<label for="organization">Organization Name</label>
+			<input id="organization" type="text" [(ngModel)]="organizationName" name="organizationName"
+				class="form-control" placeholder="Enter your organization name" required />
+			<div class="validation-error" *ngIf="organizationNameError">
+				{{ organizationNameError }}
+			</div>
+		</div>
+
+		<!-- Password Field -->
+		<div class="form-group">
+			<label for="password">Password</label>
+			<input id="password" type="password" [(ngModel)]="password" name="password" class="form-control"
+				placeholder="Enter your password" required />
+			<div class="validation-error" *ngIf="passwordError">
+				{{ passwordError }}
+			</div>
+		</div>
+
+		<!-- Confirm Password Field -->
+		<div class="form-group">
+			<label for="confirm-password">Confirm Password</label>
+			<input id="confirm-password" type="password" [(ngModel)]="confirmPassword" name="confirmPassword"
+				class="form-control" placeholder="Confirm your password" required />
+			<div class="validation-error" *ngIf="confirmPasswordError">
+				{{ confirmPasswordError }}
+			</div>
+		</div>
+
+		<!-- Submit Button -->
+		<button type="button" class="btn btn-primary" (click)="register()">
+			Register
+		</button>
+
+		<!-- Error Message Display -->
+		<div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+	</form>
 </div>

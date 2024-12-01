@@ -23,6 +23,20 @@ const userEventSchema = new mongoose.Schema({
   Attendance: { type: Boolean, default: false }, // Attendance status
 });
 
+const registerSchema = new mongoose.Schema({
+  sessionid: { type: String, required: true }, // User identifier
+
+  handPhone: { type: String },
+  handPhoneOTP: { type: String },
+  hpcreatedAt: { type: Date },
+  hpverified: { type: Boolean, default: false },
+
+  email: { type: String },
+  emailOTP: { type: String },
+  emailcreatedAt: { type: Date },
+  emailverified: { type: Boolean, default: false },
+});
+
 // Define a compound index to ensure UserID and EventID are unique
 // indexing
 userEventSchema.index({ UserID: 1, EventID: 1 }, { unique: true });
@@ -32,10 +46,13 @@ eventSponsorSchema.index(
   { unique: true },
 );
 
+registerSchema.index({ sessionid: 1 });
+
 // Create Models
 // collection name: eventsponsor, userevent inside mongo compass
 const MongoEventSponsor = mongoose.model("eventsponsor", eventSponsorSchema);
 const MongoUserEvent = mongoose.model("userevent", userEventSchema);
+const MongoRegisteration = mongoose.model("register", registerSchema);
 
 // Export Models
-module.exports = { MongoEventSponsor, MongoUserEvent };
+module.exports = { MongoEventSponsor, MongoUserEvent, MongoRegisteration };

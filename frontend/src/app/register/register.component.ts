@@ -28,10 +28,132 @@ export class RegisterComponent {
   confirmPasswordError: string = "";
   organizationNameError: string = "";
 
+  //   phoneNumberError2: string | null = null;
+  phoneNumberValid: boolean = false;
+  phoneVerificationCode: string = "";
+  emailVerificationCode: string = "";
+
+  emailbackup: string = "";
+  phonebackup: string = "";
+  emailOTP: boolean = false;
+  phoneOTP: boolean = false;
+  bothVerified: boolean = false;
+
   constructor(
     private router: Router,
     private loginService: LoginService,
   ) {}
+
+  sendEmailOTP() {
+    console.log("send otp");
+    console.log(this.email);
+    this.loginService.sendemailOTP(this.email).subscribe({
+      next: (data) => {
+        // console.log("User registered successfully:", data);
+        alert("Email Sent!");
+        this.emailbackup = this.email;
+      },
+      error: (error) => {
+        console.error("Error during OTP:", error);
+        this.errorMessage = "OTP send failed. Please try again.";
+      },
+      complete: () => {
+        this.emailOTP = true;
+        console.log("OTP request completed.");
+      },
+    });
+  }
+
+  VerifyEmailOTP() {
+    console.log("email otp:");
+    console.log(this.emailVerificationCode);
+
+    this.loginService
+      .VerifyEmailOTP(this.emailVerificationCode, this.emailbackup)
+      .subscribe({
+        next: (data) => {
+          // console.log("User registered successfully:", data);
+          alert("Verified!");
+        },
+        error: (error) => {
+          console.error("Error during Verification:", error);
+          this.errorMessage = "Verification failed. Please try again.";
+        },
+        complete: () => {
+          console.log("Verification completed.");
+          this.phoneOTP = true;
+        },
+      });
+  }
+
+  sendPhoneOTP() {
+    console.log("send otp:");
+    this.loginService.sendPhoneOTP(this.phoneNumber).subscribe({
+      next: (data) => {
+        // console.log("User registered successfully:", data);
+        alert("OTP Sent!");
+        this.phonebackup = this.phoneNumber;
+      },
+      error: (error) => {
+        console.error("Error during OTP:", error);
+        this.errorMessage = "OTP send failed. Please try again.";
+      },
+      complete: () => console.log("OTP request completed."),
+    });
+  }
+
+  VerifyPhoneOTP() {
+    this.loginService
+      .VerifyPhoneOTP(this.phoneVerificationCode, this.phonebackup)
+      .subscribe({
+        next: (data) => {
+          // console.log("User registered successfully:", data);
+          alert("Verified!");
+        },
+        error: (error) => {
+          console.error("Error during Verification:", error);
+          this.errorMessage = "Verification failed. Please try again.";
+        },
+        complete: () => {
+          console.log("Verification completed.");
+          this.phoneOTP = true;
+        },
+      });
+  }
+
+  validatePhoneNumberSMS() {
+    // const phoneRegex = /^\+?\d{8}$/; // Accepts numbers with or without '+' and 8-11 digits
+    const phoneRegex = /^\d{8}$/;
+    if (!phoneRegex.test(this.phoneNumber)) {
+      this.phoneNumberError = "Please enter a phone number (8).";
+      this.phoneNumberValid = false;
+    } else {
+      console.log("Valid phone number");
+      this.phoneNumberError = ""; // Clear error message
+      this.phoneNumberValid = true;
+      console.log("sending number");
+    }
+  }
+
+  verification() {
+    if ((this.emailOTP == true && this, this.phoneOTP == true))
+      this.loginService.VerifyBoth().subscribe({
+        next: (data) => {
+          console.log("User validated both", data);
+          //   alert("Verified!");
+        },
+        error: (error) => {
+          console.log("error", error);
+          //   console.error("Error during Verification:", error);
+          //   this.errorMessage = "Verification failed. Please try again.";
+        },
+        complete: () => {
+          //   console.log("Verification completed.");
+          //   this.phoneOTP = true;
+          this.bothVerified = true;
+        },
+      });
+  }
 
   // Method to handle registration
   register() {
@@ -63,6 +185,11 @@ export class RegisterComponent {
       this.confirmPasswordError = "Passwords do not match";
     }
 
+    // check both are done
+    if (this.bothVerified == false) {
+      this.verification();
+    }
+
     // If no validation errors, proceed with registration
     if (
       !this.nameError &&
@@ -70,7 +197,8 @@ export class RegisterComponent {
       !this.phoneNumberError &&
       !this.organizationNameError && // Include check for organizationNameError
       !this.passwordError &&
-      !this.confirmPasswordError
+      !this.confirmPasswordError &&
+      this.bothVerified == true
     ) {
       // Construct user data object
       const userData = {
@@ -118,7 +246,8 @@ export class RegisterComponent {
 
   // Validate phone number format
   validatePhoneNumber(phoneNumber: string): boolean {
-    const phonePattern = /^\+?\d{6,15}$/; // Accepts numbers with or without '+' and 6-15 digits
+    // const phonePattern = /^\+?\d{8,10}$/; // Accepts numbers with or without '+' and 8-10 digits
+    const phonePattern = /^\d{8}$/;
     return phonePattern.test(phoneNumber);
   }
 }

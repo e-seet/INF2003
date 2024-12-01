@@ -15,8 +15,8 @@ import { environment } from "./environment";
 export class S3serviceService {
   private bucketName = "inf2003bucket";
   private region = "us-east-1";
-  //   private identityPoolId = "<insert the credentials>";
-  private identityPoolId = environment.AWSCognitoIdentity;
+  private identityPoolId = environment.AWSCognitoIdentity.split("=")[1];
+
   private s3: S3Client;
 
   constructor() {
@@ -33,6 +33,9 @@ export class S3serviceService {
   // Upload file to S3
   async uploadFile(file: File): Promise<{ fileId: string; location: string }> {
     const fileId = uuidv4(); // Generate a unique file ID
+
+    console.log("upload file");
+    console.log(this.identityPoolId);
 
     // Configure the S3 upload parameters
     let params = {

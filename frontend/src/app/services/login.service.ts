@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, throwError } from "rxjs";
 import { tap, catchError } from "rxjs/operators";
 // Import the jwt-decode function
 import { jwtDecode } from "jwt-decode";
+import { v4 as uuidv4 } from "uuid";
 
 @Injectable({
   providedIn: "root",
@@ -15,11 +16,128 @@ import { jwtDecode } from "jwt-decode";
 export class LoginService {
   private TOKEN_KEY = "authToken"; // Key for storing JWT token in localStorage
   private loggedIn = new BehaviorSubject<boolean>(this.isLoggedIn()); // BehaviorSubject to track login status
-
+  private sessionid = "";
   private imageurl = "";
   private url = "http://localhost:3000";
 
   constructor(public httpClient: HttpClient) {}
+
+  getsessionid() {
+    return this.sessionid;
+  }
+
+  sendPhoneOTP(phone: string): Observable<any> {
+    console.log("login service send phone otp:");
+    if (this.sessionid == "") {
+      this.sessionid = uuidv4();
+    }
+    console.log("sending phone, session id" + this.sessionid);
+    let otp = Math.floor(Math.random() * 899999 + 100000);
+
+    let myitem: any = {};
+    myitem.sessionid = this.sessionid;
+    myitem.phone = phone;
+    myitem.otp = otp;
+
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
+    return this.httpClient
+      .post<any[]>(`${this.url}/mongo/sendsms`, myitem, { headers: headers })
+      .pipe(
+        tap((response) => {
+          console.log("User verified email successfully", response);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  VerifyPhoneOTP(smsotp: string, phoneNumber: string) {
+    console.log("login service check phone otp:");
+    console.log(this.sessionid);
+    console.log(smsotp);
+    console.log(phoneNumber);
+
+    let myitem: any = {};
+    myitem.sessionid = this.sessionid;
+    myitem.phoneNumber = phoneNumber;
+    myitem.smsotp = smsotp;
+    const headers = new HttpHeaders().set("content-type", "application/json");
+    return this.httpClient
+      .post<any[]>(`${this.url}/mongo/verifysms`, myitem, { headers: headers })
+      .pipe(
+        tap((response) => {
+          console.log("User verified sms successfully", response);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  sendemailOTP(email: string): Observable<any> {
+    console.log("login service send email otp:");
+    if (this.sessionid == "") {
+      this.sessionid = uuidv4();
+    }
+    console.log("sending email, session id" + this.sessionid);
+    //this stores in mongodb
+    let otp = Math.floor(Math.random() * 899999 + 100000);
+
+    let myitem: any = {};
+    myitem.sessionid = this.sessionid;
+    myitem.email = email;
+    myitem.otp = otp;
+
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
+    return this.httpClient
+      .post<any[]>(`${this.url}/mongo/sendemail`, myitem, { headers: headers })
+      .pipe(
+        tap((response) => {
+          console.log("User registered successfully", response);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  VerifyEmailOTP(emailotp: string, email: string) {
+    console.log("login service check email otp:");
+    console.log(this.sessionid);
+    console.log(email);
+    console.log(emailotp);
+
+    let myitem: any = {};
+    myitem.sessionid = this.sessionid;
+    myitem.email = email;
+    myitem.emailotp = emailotp;
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
+    return this.httpClient
+      .post<
+        any[]
+      >(`${this.url}/mongo/verifyemail`, myitem, { headers: headers })
+      .pipe(
+        tap((response) => {
+          console.log("User registered successfully", response);
+        }),
+        catchError(this.handleError),
+      );
+  }
+
+  VerifyBoth() {
+    let myitem: any = {};
+    myitem.sessionid = this.sessionid;
+    const headers = new HttpHeaders().set("content-type", "application/json");
+
+    return this.httpClient
+      .get<
+        any[]
+      >(`${this.url}/mongo/checkverifications/${this.sessionid}`, { headers: headers })
+      .pipe(
+        tap((response) => {
+          console.log("User registered successfully", response);
+        }),
+        catchError(this.handleError),
+      );
+  }
 
   // Observable to broadcast the login status
   get isLoggedIn$(): Observable<boolean> {
@@ -184,6 +302,9 @@ export class LoginService {
         console.error("Error decoding token:", error);
         return null;
       }
+    } else {
+      this.sessionid = uuidv4();
+      console.log(this.sessionid);
     }
     return null;
   }
